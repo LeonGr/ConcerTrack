@@ -1,4 +1,4 @@
-<style lang="sass">
+<style lang="scss">
 $purple-red: #530030;
 $red: #7E0030;
 $orange-red: #CA283D;

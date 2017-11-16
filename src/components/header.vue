@@ -1,4 +1,10 @@
-<style lang="sass" scoped>
+<style lang="scss">
+$purple-red: #530030;
+$red: #7E0030;
+$orange-red: #CA283D;
+$orange: #F0443A;
+$orange-yellow: #FF7E4A;
+
 header {
     height: 50px;
     width: 100%;

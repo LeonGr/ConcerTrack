@@ -1,19 +1,15 @@
-let Vue = require('vue')
-let App = require('./app.vue');
-let VueRouter = require('vue-router')
+// The Vue build version to load with the `import` command
+// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
+import Vue from 'vue'
+import App from './app'
+import router from './router'
 
-Vue.use(VueRouter);
+Vue.config.productionTip = false
 
-Vue.config.debug = true;
-
-import ArtistView from './components/body/artist-view.vue'
-import SearchView from './components/body/search-view.vue'
-
-let router = new VueRouter({
-    history: true,
-    routes: [
-        { path: '/artists/:artist', component: ArtistView },
-        { path: '/', component: SearchView },
-        { path: '*', redirect: '/' }
-    ]
+/* eslint-disable no-new */
+new Vue({
+  el: '#app',
+  router,
+  template: '<App/>',
+  components: { App }
 })
