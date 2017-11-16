@@ -5,6 +5,13 @@ const autoprefixer = require('gulp-autoprefixer');
 const cleanCSS = require('gulp-clean-css');
 const babel = require('gulp-babel');
 const uglify = require('gulp-uglify');
+const vueify = require('gulp-vueify');
+
+gulp.task('vueify', function () {
+  return gulp.src('src/components/**/*.vue')
+    .pipe(vueify())
+    .pipe(gulp.dest('./dist'));
+});
 
 gulp.task('Compile SCSS', function(){
     return gulp.src('src/web/work/scss/*.scss')
