@@ -29,7 +29,7 @@ var getEventsHere = function getEventsHere() {
         response.forEach(function (event) {
             if (event.venue.country == "Netherlands") {
                 console.log(event);
-                output.innerHTML = JSON.stringify(event, undefined, 2);
+                output.innerHTML += JSON.stringify(event, undefined, 4);
             }
         });
     });
