@@ -14,11 +14,15 @@ header {
     box-shadow: 0 0 9px 0 rgba(0,0,0,.3);
     background-color: white;
 
-    h2 {
+    #header-title-link {
         position: absolute;
         left: 20px;
-        font-size: 30px;
+        text-decoration: none;
         color: #333;
+
+        h2 {
+            font-size: 30px;
+        }
     }
 
     span {
@@ -52,7 +56,9 @@ header {
 
 <template>
     <header>
-        <h2>ConcerTrack</h2>
+        <router-link :to="'/'" id="header-title-link">
+            <h2>ConcerTrack</h2>
+        </router-link>
         <span></span>
         <span></span>
         <span></span>
