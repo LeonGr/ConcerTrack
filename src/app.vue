@@ -18,7 +18,17 @@ html {
 }
 
 #app {
+    #site-header {
+        height: 50px;
+    }
 
+    #site-body {
+        height: calc(100% - 100px);
+    }
+
+    #site-footer {
+        height: 50px;
+    }
 }
 </style>
 
@@ -30,8 +40,9 @@ html {
     <site-body>
         <router-view></router-view>
     </site-body>
-</div>
 
+    <site-footer></site-footer>
+</div>
 </template>
 
 <script>
@@ -39,15 +50,17 @@ import store from './store'
 
 import SiteHeader from './components/header.vue'
 import SiteBody from './components/body.vue'
+import SiteFooter from './components/footer.vue'
 
 export default {
     data () {
         return {}
     },
 
-components: {
-    SiteHeader,
-    SiteBody
+    components: {
+        SiteHeader,
+        SiteBody,
+        SiteFooter
+        }
     }
-}
 </script>
