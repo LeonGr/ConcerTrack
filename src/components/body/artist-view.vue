@@ -117,7 +117,7 @@
                         {{ event.venue.city }}
                         {{ event.venue.country }}
                         <a v-if="event.ticketUrl" :href="event.ticketUrl">Tickets</a>
-                        <a v-else href="">Search for tickets online</a>
+                        <a v-else :href="event.searchUrl">Search for tickets online</a>
                     </div>
                 </div>
             </div>
@@ -201,14 +201,15 @@ export default {
             getEvents(this.artist).then(data => {
                 this.events = data;
                 this.events.forEach((event) => {
+                    let date = new Date(event.datetime);
+                    let months = ["Jan","Feb","Mar","Apr","May", "June","July","Aug","Sept","Oct","Nov","Dec"];
+                    event.datetime = `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+
                     if(event.offers.length){
                         event.ticketUrl = event.offers[0].url;
+                    } else {
+                        event.searchUrl = "https://duckduckgo.com/?q=" + this.artistInfo.name + " " + event.datetime;
                     }
-
-                    let date = new Date(event.datetime);
-                    let months = ['Jan','Feb','Mar','Apr','May',
-'June','July','Aug','Sept','Oct','Nov','Dec'];
-                    event.datetime = `${date.getDate()}-${months[date.getMonth()]}-${date.getFullYear()}`;
                 })
             })
 

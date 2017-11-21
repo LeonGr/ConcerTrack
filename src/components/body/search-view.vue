@@ -33,23 +33,38 @@ $orange-yellow: #FF7E4A;
         border: 1px solid #ccc;
         box-shadow: 0 0 9px 0 rgba(0,0,0,.3);
         border-radius: 5px;
-        width: 500px;
-        height: 200px;
+        //width: 500px;
+        //height: 250px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
 
         h1 {
             color: #333;
-            margin: 30px 0 0 30px;
+            margin-top: 20px;
             font-size: 22px;
             width: 100%;
             font-weight: 100;
+            margin-left: 20px;
+        }
+
+        #errorMessage {
+            height: 25px;
+            color: $orange-red;
+            font-weight: 100;
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        form {
+            margin: 20px;
         }
 
         input {
             width: 400px;
             height: 30px;
             padding: 20px;
-            margin: 30px;
-            border: 1px solid $orange-red;
+            border: 1px solid $orange-yellow;
             border-radius: 5px;
             font-size: 25px;
 
@@ -66,6 +81,7 @@ $orange-yellow: #FF7E4A;
             <form v-on:submit.prevent="submitForm">
                 <input v-model="artist" type="text" placeholder="Artist name">
             </form>
+            <h2 id="errorMessage">{{ errorMessage }}</h2>
         </div>
     </div>
 </template>
@@ -74,7 +90,8 @@ $orange-yellow: #FF7E4A;
 export default {
     data: function() {
         return {
-            artist: ''
+            artist: '',
+            errorMessage: '   '
         }
     },
 
@@ -84,10 +101,9 @@ export default {
 
     methods: {
         submitForm: function() {
-            //this.$router.replace({ path: "/" + "artists/" + this.artist })
             this.doesArtistExist(this.artist).then(data => {
                 if (data.id) {
-                    this.$router.replace({ path: "/" + "artists/" + this.artist })
+                    this.$router.push({ path: "/" + "artists/" + this.artist })
                 }
             })
         },
@@ -109,8 +125,15 @@ export default {
                     resolve(response);
                 }).catch(error => {
                     console.log(error);
+                    this.actOnError(error);
                 })
             })
+        },
+
+        actOnError: function(error) {
+            if (error.toString().includes("SyntaxError")) {
+                this.errorMessage = "Sorry, we couldn't find that artist :(";
+            }
         }
     }
 }
