@@ -109,6 +109,9 @@
                     <br>
                     {{ artistInfo.upcoming_event_count }} upcoming events:
                 </p>
+                <p v-else>
+                    No upcoming events :(
+                </p>
 
                 <div id="event-list">
                     <div  v-for="event in events" :key="event.datetime" class="event-div">
