@@ -28,6 +28,13 @@ $orange-yellow: #FF7E4A;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
+
+    img {
+        width: 800px;
+        top: 100px;
+        position: absolute;
+    }
 
     #search-container {
         border: 1px solid #ccc;
@@ -76,6 +83,7 @@ $orange-yellow: #FF7E4A;
 
 <template>
     <div id="search-body">
+        <img src="static/map.svg" alt="">
         <div id="search-container">
             <h1>Search for events from an artist:</h1>
             <form v-on:submit.prevent="submitForm">
