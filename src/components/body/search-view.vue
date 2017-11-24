@@ -116,8 +116,7 @@ export default {
 
     methods: {
         selectInput: function() {
-            console.log(this.artistList)
-            //if (this.artistList) return;
+            if (this.artistList.length) return;
 
             let fetchArtistList = () => {
                 return new Promise((resolve, reject) => {
@@ -146,26 +145,38 @@ export default {
 
         inputChanged: function() {
             if (this.artist.length > 1) {
-                console.time("Loop")
-                let numberOfMatches = 0;
-                for (let i = 0, x = this.artistList.length; i < x; i++) {
-                    if (this.artistList[i].toLowerCase().includes(this.artist.toLowerCase())) {
-                        numberOfMatches++;
+                if (this.artist.length > this.lastInputLength && this.matching.length > 0) {
+                    console.log('Added more text filter from current list')
+                    console.time("Loop")
+                    let newMatching = [];
+                    let numberOfMatches = 0;
+                    for (let i = 0, x = this.matching.length; i < x; i++) {
+                        if (this.matching[i].toLowerCase().includes(this.artist.toLowerCase())) {
+                            newMatching.push(this.matching[i]);
+                            numberOfMatches++;
+                        }
                     }
-                }
-                console.log(numberOfMatches);
-                console.timeEnd("Loop")
+                    console.log(numberOfMatches);
+                    this.matching = newMatching;
+                    console.timeEnd("Loop")
+                } else {
+                    console.log('Else')
+                    this.matching = [];
 
-                //if (this.matching.length == 0) {
-                //    console.log('Initial load')
-                //} else if (this.artist.length > this.lastInputLength) {
-                //    console.log('Added more text filter from current list')
-                //} else {
-                //    console.log('Removed text check full list again')
-                //}
-            } else {
-                this.matching = [];
+                    console.log('Initial load')
+                    console.time("Loop")
+                    let numberOfMatches = 0;
+                    for (let i = 0, x = this.artistList.length; i < x; i++) {
+                        if (this.artistList[i].toLowerCase().includes(this.artist.toLowerCase())) {
+                            this.matching.push(this.artistList[i]);
+                            numberOfMatches++;
+                        }
+                    }
+                    console.log(numberOfMatches);
+                    console.timeEnd("Loop")
+                }
             }
+
             this.lastInputLength = this.artist.length;
         },
 
