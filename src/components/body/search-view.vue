@@ -23,20 +23,22 @@ $orange-yellow: #FF7E4A;
 
 #search-body {
     position: absolute;
+    top: 50px;
     width: 100%;
     min-height: calc(100% - 100px);
     display: flex;
     align-items: center;
-    justify-content: center;
-    flex-direction: column;
+    justify-content: space-around;
+    flex-direction: row;
+
+    background-color: #F54;
 
     img {
-        width: 800px;
-        top: 100px;
-        position: absolute;
+        width: 400px;
     }
 
     #search-container {
+        background-color: white;
         border: 1px solid #ccc;
         box-shadow: 0 0 9px 0 rgba(0,0,0,.3);
         border-radius: 5px;
@@ -51,14 +53,14 @@ $orange-yellow: #FF7E4A;
             margin-top: 20px;
             font-size: 22px;
             width: 100%;
-            font-weight: 100;
+            font-weight: 300;
             margin-left: 20px;
         }
 
         #errorMessage {
             height: 25px;
-            color: $orange-red;
-            font-weight: 100;
+            color: $orange;
+            font-weight: 300;
             margin-left: 20px;
             margin-bottom: 20px;
         }
@@ -83,14 +85,16 @@ $orange-yellow: #FF7E4A;
 
 <template>
     <div id="search-body">
-        <img src="static/map.svg" alt="">
         <div id="search-container">
             <h1>Search for events from an artist:</h1>
             <form v-on:submit.prevent="submitForm">
-                <input v-model="artist" type="text" placeholder="Artist name">
+                <input v-on:input="inputChanged" v-on:focus="selectInput" v-model="artist" type="text" placeholder="Artist name">
             </form>
+            {{ artist }}
+            {{ matching }}
             <h2 id="errorMessage">{{ errorMessage }}</h2>
         </div>
+        <img src="static/map.svg" alt="">
     </div>
 </template>
 
@@ -99,7 +103,10 @@ export default {
     data: function() {
         return {
             artist: '',
-            errorMessage: '   '
+            errorMessage: '',
+            artistList: [],
+            matching: [],
+            lastInputLength: 0
         }
     },
 
@@ -108,6 +115,60 @@ export default {
     },
 
     methods: {
+        selectInput: function() {
+            console.log(this.artistList)
+            //if (this.artistList) return;
+
+            let fetchArtistList = () => {
+                return new Promise((resolve, reject) => {
+                    fetch("http://localhost:8080/static/AllListSorted.json", {
+                        method: 'GET',
+                        headers: {
+                            'accept': "application/json"
+                        }
+                    }).then(response => {
+                        return response.json()
+                    }).then(response => {
+                        resolve(response);
+                    }).catch(error => {
+                        console.log(error);
+                    })
+                })
+            }
+
+            console.time("LoadList")
+            fetchArtistList().then(data => {
+                this.artistList = data;
+                console.log(this.artistList)
+            })
+            console.timeEnd("LoadList")
+        },
+
+        inputChanged: function() {
+            if (this.artist.length > 1) {
+                console.time("Loop")
+                let numberOfMatches = 0;
+                for (let i = 0, x = this.artistList.length; i < x; i++) {
+                    if (this.artistList[i].toLowerCase().includes(this.artist.toLowerCase())) {
+                        numberOfMatches++;
+                    }
+                }
+                console.log(numberOfMatches);
+                console.timeEnd("Loop")
+
+                //if (this.matching.length == 0) {
+                //    console.log('Initial load')
+                //} else if (this.artist.length > this.lastInputLength) {
+                //    console.log('Added more text filter from current list')
+                //} else {
+                //    console.log('Removed text check full list again')
+                //}
+            } else {
+                this.matching = [];
+            }
+            this.lastInputLength = this.artist.length;
+        },
+
         submitForm: function() {
             this.doesArtistExist(this.artist).then(data => {
                 if (data.id) {
