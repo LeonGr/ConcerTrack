@@ -94,6 +94,11 @@ $orange-yellow: #FF7E4A;
 
             li {
                 padding: 4px 20px;
+
+                &:hover {
+                    cursor: pointer;
+                    background-color: $orange;
+                }
             }
 
             .selected {
@@ -112,7 +117,7 @@ $orange-yellow: #FF7E4A;
                 <input id="input-field" v-on:input="inputChanged" v-on:focus="selectInput" v-model="artist" type="text" placeholder="Artist name" autocomplete="off">
             </form>
             <ul id="search-results" v-if="showMatching.length">
-                <li v-for="match in showMatching">{{ match }}</li>
+                <li v-for="match in showMatching" v-on:click="clickSearchResult($event)">{{ match }}</li>
             </ul>
             <h2 id="errorMessage">{{ errorMessage }}</h2>
         </div>
@@ -133,7 +138,7 @@ export default {
             startMatching: [],
             showMatching: [],
             lastInputLength: 0,
-            maxResults: 10,
+            maxResults: 20,
             selectedSuggestion: null
         }
     },
@@ -242,6 +247,12 @@ export default {
                 }
 
             }
+        },
+
+        clickSearchResult: function(event) {
+            this.artist = event.target.innerText;
+
+            this.submitForm();
         },
 
         inputChanged: function() {

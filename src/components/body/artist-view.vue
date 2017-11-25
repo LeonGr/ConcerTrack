@@ -132,6 +132,20 @@
 </template>
 
 <script>
+//TODO:
+// - When you hover over a search results this.selectedSuggestion should be set to that
+// - Add easter egg with my name which shows my dope picture and like 'hi Im the developer'
+// - Make landing page prettier
+// - Add "more results"?
+// - Add search to artist-view
+// - Make list of events prettier
+// - Show related artists in artist-view
+// - Save location in localStorage and show that event at the top
+// - Add tracked artists to localStorage and make a page to show those
+// - Make a page that shows all events at your location from your tracked artists
+// - Do security checks
+// - Add more artists
+// - Make people be able to report wrong artists
 export default {
     data: function() {
         return {
@@ -231,8 +245,8 @@ export default {
             */
             getEvents(this.artist).then(data => {
                 this.events = data;
-                console.log("BIT event data:")
-                console.log(this.events)
+                //console.log("BIT event data:")
+                //console.log(this.events)
 
                 this.events.forEach((event) => {
                     // Change ISO date to readable date format
@@ -261,8 +275,8 @@ export default {
             */
             getArtistInfo(this.artist).then(data => {
                 this.artistInfo = data;
-                console.log("BIT data: ")
-                console.log(this.artistInfo);
+                //console.log("BIT data: ")
+                //console.log(this.artistInfo);
             })
         },
 
@@ -342,8 +356,8 @@ export default {
                 this.lastFMData = data.artist;
                 this.artistBio = data.artist.bio.summary;
                 this.imageUrl = data.artist.image[data.artist.image.length - 1]["#text"];
-                console.log("Last FM data: ");
-                console.log(data.artist);
+                //console.log("Last FM data: ");
+                //console.log(data.artist);
             })
         }
     }
