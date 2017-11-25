@@ -42,11 +42,10 @@ $orange-yellow: #FF7E4A;
         border: 1px solid #ccc;
         box-shadow: 0 0 9px 0 rgba(0,0,0,.3);
         border-radius: 5px;
-        //width: 500px;
-        //height: 250px;
         display: flex;
         flex-direction: column;
         justify-content: center;
+        position: relative;
 
         h1 {
             color: #333;
@@ -74,10 +73,27 @@ $orange-yellow: #FF7E4A;
             height: 30px;
             padding: 20px;
             border: 1px solid $orange-yellow;
-            border-radius: 5px;
+            //border-radius: 5px;
             font-size: 25px;
 
             outline: none;
+            box-shadow: 0 1px 9px 0 rgba(0,0,0,.3);
+        }
+
+        #search-results {
+            border: 1px solid $orange-yellow;
+            width: 440px;
+            position: absolute;
+            list-style: none;
+            margin: 20px;
+            margin-top: 47px;
+            background-color: white;
+            top: 88px;
+            box-shadow: 0 3px 9px 0 rgba(0,0,0,.3);
+
+            li {
+                margin: 4px 20px;
+            }
         }
     }
 }
@@ -90,8 +106,9 @@ $orange-yellow: #FF7E4A;
             <form v-on:submit.prevent="submitForm">
                 <input v-on:input="inputChanged" v-on:focus="selectInput" v-model="artist" type="text" placeholder="Artist name">
             </form>
-            {{ artist }}
-            {{ showMatching }}
+            <ul id="search-results" v-if="showMatching.length">
+                <li v-for="match in showMatching">{{ match }}</li>
+            </ul>
             <h2 id="errorMessage">{{ errorMessage }}</h2>
         </div>
         <img src="static/map.svg" alt="">
@@ -106,6 +123,7 @@ export default {
             errorMessage: '',
             artistList: [],
             matching: [],
+            startMatching: [],
             showMatching: [],
             lastInputLength: 0
         }
@@ -121,7 +139,7 @@ export default {
 
             let fetchArtistList = () => {
                 return new Promise((resolve, reject) => {
-                    fetch("http://localhost:8080/static/AllListSorted.json", {
+                    fetch("http://localhost:8080/static/AllList.json", {
                         method: 'GET',
                         headers: {
                             'accept': "application/json"
@@ -146,37 +164,54 @@ export default {
                 if (this.artist.length > this.lastInputLength && this.matching.length > 0) {
 
                     let newMatching = [];
-                    let numberOfMatches = 0;
+                    let newStartMatching = [];
+
+                    for(let i = 0, x = this.startMatching.length; i < x; i++) {
+                        if (this.startMatching[i].toLowerCase().startsWith(this.artist.toLowerCase())) {
+                            newStartMatching.push(this.startMatching[i]);
+                        }
+                    }
 
                     for (let i = 0, x = this.matching.length; i < x; i++) {
                         if (this.matching[i].toLowerCase().includes(this.artist.toLowerCase())) {
                             newMatching.push(this.matching[i]);
-                            numberOfMatches++;
                         }
                     }
+
                     this.matching = newMatching;
+                    this.startMatching = newStartMatching;
                 } else {
                     this.matching = [];
-
-                    let numberOfMatches = 0;
+                    this.startMatching = []
 
                     for (let i = 0, x = this.artistList.length; i < x; i++) {
-                        if (this.artistList[i].toLowerCase().includes(this.artist.toLowerCase())) {
-                            this.matching.push(this.artistList[i]);
-                            numberOfMatches++;
+                        let artistFromList = this.artistList[i];
+
+                        if (artistFromList.toLowerCase().startsWith(this.artist.toLowerCase())) {
+                            this.startMatching.push(artistFromList)
+                        } else if (artistFromList.toLowerCase().includes(this.artist.toLowerCase())) {
+                            this.matching.push(artistFromList);
                         }
                     }
                 }
 
                 this.showMatching = [];
                 let maxResults = 10;
-                let numberOfResults = this.matching.length >= maxResults ? maxResults : this.matching.length;
 
-                for(let i = 0; i < numberOfResults; i++) {
-                    this.showMatching.push(this.matching[i]);
+                for(let i = 0, x = maxResults; i < x; i++) {
+                    if (i < this.startMatching.length)
+                        this.showMatching.push(this.startMatching[i]);
+                }
+
+                if (this.showMatching.length < maxResults) {
+                    let stillNeeded = maxResults - this.showMatching.length;
+                    for(let i = 0, x = stillNeeded; i < x; i++) {
+                        if (i < this.matching.length)
+                            this.showMatching.push(this.matching[i]);
+                    }
                 }
             } else {
-                this.matching = this.showMatching = [];
+                this.matching = this.startMatching = this.showMatching = [];
             }
 
             this.lastInputLength = this.artist.length;

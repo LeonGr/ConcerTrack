@@ -106,7 +106,7 @@
             </div>
 
             <div id="event-container">
-                <p v-if="onTour">
+                <p v-if="events.length">
                     Currently on tour!
                     <br>
                     {{ artistInfo.upcoming_event_count }} upcoming events:
@@ -271,7 +271,6 @@ export default {
                 }
                 this.lastFMData = data.artist;
                 this.artistBio = data.artist.bio.summary;
-                this.onTour = data.artist.ontour == 1 ? true : false;
                 this.imageUrl = data.artist.image[data.artist.image.length - 1]["#text"];
                 console.log(data.artist);
             })
