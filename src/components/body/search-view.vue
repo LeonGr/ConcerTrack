@@ -91,7 +91,7 @@ $orange-yellow: #FF7E4A;
                 <input v-on:input="inputChanged" v-on:focus="selectInput" v-model="artist" type="text" placeholder="Artist name">
             </form>
             {{ artist }}
-            {{ matching }}
+            {{ showMatching }}
             <h2 id="errorMessage">{{ errorMessage }}</h2>
         </div>
         <img src="static/map.svg" alt="">
@@ -106,6 +106,7 @@ export default {
             errorMessage: '',
             artistList: [],
             matching: [],
+            showMatching: [],
             lastInputLength: 0
         }
     },
@@ -135,46 +136,47 @@ export default {
                 })
             }
 
-            console.time("LoadList")
             fetchArtistList().then(data => {
                 this.artistList = data;
-                console.log(this.artistList)
-            })
-            console.timeEnd("LoadList")
+            });
         },
 
         inputChanged: function() {
             if (this.artist.length > 1) {
                 if (this.artist.length > this.lastInputLength && this.matching.length > 0) {
-                    console.log('Added more text filter from current list')
-                    console.time("Loop")
+
                     let newMatching = [];
                     let numberOfMatches = 0;
+
                     for (let i = 0, x = this.matching.length; i < x; i++) {
                         if (this.matching[i].toLowerCase().includes(this.artist.toLowerCase())) {
                             newMatching.push(this.matching[i]);
                             numberOfMatches++;
                         }
                     }
-                    console.log(numberOfMatches);
                     this.matching = newMatching;
-                    console.timeEnd("Loop")
                 } else {
-                    console.log('Else')
                     this.matching = [];
 
-                    console.log('Initial load')
-                    console.time("Loop")
                     let numberOfMatches = 0;
+
                     for (let i = 0, x = this.artistList.length; i < x; i++) {
                         if (this.artistList[i].toLowerCase().includes(this.artist.toLowerCase())) {
                             this.matching.push(this.artistList[i]);
                             numberOfMatches++;
                         }
                     }
-                    console.log(numberOfMatches);
-                    console.timeEnd("Loop")
                 }
+
+                this.showMatching = [];
+                let maxResults = 10;
+                let numberOfResults = this.matching.length >= maxResults ? maxResults : this.matching.length;
+
+                for(let i = 0; i < numberOfResults; i++) {
+                    this.showMatching.push(this.matching[i]);
+                }
+            } else {
+                this.matching = this.showMatching = [];
             }
 
             this.lastInputLength = this.artist.length;
