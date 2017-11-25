@@ -39,6 +39,7 @@ footer {
 
 <template>
     <footer>
+        <!--spans for coloured squares-->
         <span></span>
         <span></span>
         <span></span>

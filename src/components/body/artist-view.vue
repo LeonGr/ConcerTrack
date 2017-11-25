@@ -79,9 +79,10 @@
     <div id="output-container">
         <div id="output">
             <div id="left-side">
-                <!--<img :src="artistInfo.image_url" alt="">-->
+                <!--If we get an image from lastFM show it. Otherwise use the one from BIT-->
                 <img :src="imageUrl" alt="" v-if="imageUrl">
                 <img :src="artistInfo.image_url" alt="" v-else>
+
                 <div id="info-container">
                     <h1>{{ artistInfo.name }}</h1>
 
@@ -131,10 +132,10 @@
 </template>
 
 <script>
-//TODO: find missing spaces in artist name
 export default {
     data: function() {
         return {
+            // Init local variables
             artist: '',
             artistInfo: {},
             bandcampUrl: '',
@@ -147,12 +148,14 @@ export default {
     },
 
     watch: {
+        // If the route changes (user types other artist into url) we renew the information
         '$route' () {
             this.getAllInformation();
         }
     },
 
     mounted: function() {
+        // If the page loads for the first time get all information
         this.getAllInformation();
     },
 
@@ -164,11 +167,13 @@ export default {
         },
 
         getArtistEvents: function() {
+            // Store artist from url in local variable
             this.artist = this.$route.params.artist
 
             const apiURL = "https://rest.bandsintown.com/"
             const apiExtension = "?app_id='ConcerTrack v0.0.1'"
 
+            // Get artist information from API
             let getArtistInfo = (artist) => {
                 return new Promise((resolve, reject) => {
                     fetch(apiURL + "artists/" + artist + apiExtension, {
@@ -186,6 +191,7 @@ export default {
                 })
             }
 
+            // Get artist's events from API
             let getEvents = (artist) => {
                 return new Promise((resolve, reject) => {
                     fetch(apiURL + "artists/" + artist + "/events" + apiExtension, {
@@ -205,11 +211,14 @@ export default {
 
             getEvents(this.artist).then(data => {
                 this.events = data;
+
                 this.events.forEach((event) => {
+                    // Change ISO date to readable date format
                     let date = new Date(event.datetime);
                     let months = ["Jan","Feb","Mar","Apr","May", "June","July","Aug","Sept","Oct","Nov","Dec"];
                     event.datetime = `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
 
+                    // If we have a ticket url show it otherwise redirect to search
                     if(event.offers.length){
                         event.ticketUrl = event.offers[0].url;
                     } else {
@@ -220,31 +229,34 @@ export default {
 
             getArtistInfo(this.artist).then(data => {
                 this.artistInfo = data;
+                console.log("BIT data: ")
                 console.log(this.artistInfo);
             })
         },
 
         checkBandcampAccount: function() {
-            let checkBandcampUrl = () => {
-                return new Promise((resolve, reject) => {
-                    fetch("https://" + this.artist.toLowerCase() + ".bandcamp.com", {
-                        method: 'GET',
-                        mode : 'no-cors',
-                    }).then(response => {
-                        return response
-                    }).then(response => {
-                        resolve(response);
-                    }).catch(error => {
-                        console.log(error);
-                    })
-                })
-            }
-
+            //let checkBandcampUrl = () => {
+            //    return new Promise((resolve, reject) => {
+            //        fetch("https://" + this.artist.toLowerCase() + ".bandcamp.com", {
+            //            method: 'GET',
+            //            mode : 'no-cors',
+            //        }).then(response => {
+            //            return response
+            //        }).then(response => {
+            //            resolve(response);
+            //        }).catch(error => {
+            //            console.log(error);
+            //        })
+            //    })
+            //}
             //this.bandcampUrl = "https://" + this.artist.toLowerCase() + ".bandcamp.com";
+
+            // Cant get results from bandcamp yet so we just redirect to the search page
             this.bandcampUrl = "https://bandcamp.com/search?q=" + this.artist.toLowerCase();
         },
 
         getLastFMInfo: function() {
+            // Get information from Last.fm API
             let getData = () => {
 				let apiUrl = "https://ws.audioscrobbler.com/2.0/"
 				let apiParams = "?method=artist.getinfo&api_key=a4629fdacfd93267704f599b874a59bf&format=json&artist="
@@ -269,9 +281,11 @@ export default {
                     throw data.message;
                     return;
                 }
+
                 this.lastFMData = data.artist;
                 this.artistBio = data.artist.bio.summary;
                 this.imageUrl = data.artist.image[data.artist.image.length - 1]["#text"];
+                console.log("Last FM data: ");
                 console.log(data.artist);
             })
         }
