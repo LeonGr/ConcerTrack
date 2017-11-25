@@ -93,7 +93,11 @@ $orange-yellow: #FF7E4A;
             box-shadow: 0 3px 9px 0 rgba(0,0,0,.3);
 
             li {
-                margin: 4px 20px;
+                padding: 4px 20px;
+            }
+
+            .selected {
+                background-color: $orange;
             }
         }
     }
@@ -104,8 +108,8 @@ $orange-yellow: #FF7E4A;
     <div id="search-body">
         <div id="search-container">
             <h1>Search for events from an artist:</h1>
-            <form v-on:submit.prevent="submitForm">
-                <input v-on:input="inputChanged" v-on:focus="selectInput" v-model="artist" type="text" placeholder="Artist name">
+            <form v-on:submit.prevent>
+                <input id="input-field" v-on:input="inputChanged" v-on:focus="selectInput" v-model="artist" type="text" placeholder="Artist name" autocomplete="off">
             </form>
             <ul id="search-results" v-if="showMatching.length">
                 <li v-for="match in showMatching">{{ match }}</li>
@@ -128,18 +132,42 @@ export default {
             matching: [],
             startMatching: [],
             showMatching: [],
-            lastInputLength: 0
+            lastInputLength: 0,
+            maxResults: 10,
+            selectedSuggestion: null
         }
     },
 
     mounted: function() {
         // Should happen when search-view is loaded the first time:
-        console.log("Mounted")
+
+        // Listen for arrowkey events to select search results
+
+        let inputField = document.getElementById('input-field');
+
+        // Extra function because we can't use `this` in eventlistener function
+        let callSelectFuncion = (key) => {
+            if (key == 'ArrowDown')
+                this.selectSuggestion('down')
+            else if (key == 'ArrowUp')
+                this.selectSuggestion('up')
+            else if (key == 'Enter') {
+                this.submitSearch();
+            }
+        }
+
+        // Listen for keypresses when we selected input
+        inputField.addEventListener("keydown", function(e) {
+            callSelectFuncion(e.key);
+
+            // Stop the cursor from moving around when we select stuff
+            if (e.key.includes("ArrowUp") || e.key.includes("ArrowDown")) e.preventDefault();
+        });
     },
 
     methods: {
-        // Load artist list from json file when user selects the input field
         selectInput: function() {
+            // Load artist list from json file when user selects the input field
             // If it has been loaded return
             if (this.artistList.length) return;
 
@@ -163,6 +191,57 @@ export default {
             fetchArtistList().then(data => {
                 this.artistList = data;
             });
+        },
+
+        submitSearch: function() {
+            // If we made a selection set artist to that
+            if (this.selectedSuggestion != null) {
+                let suggestionContainer = document.getElementById('search-results');
+                let searchResults = suggestionContainer.children;
+
+                this.artist = searchResults[this.selectedSuggestion].innerText;
+            }
+
+            // Submit form with current artist in input
+            this.submitForm();
+        },
+
+        // Highlight selected suggestion
+        selectSuggestion: function(direction) {
+            let suggestionContainer = document.getElementById('search-results');
+
+            // If there are no search results yet return
+            if (!suggestionContainer) return;
+
+            let suggestions = suggestionContainer.children;
+
+            if (direction == 'up') {
+                // If it's null or 0 (false values) go to the bottom
+                if (!this.selectedSuggestion) {
+                    suggestions[this.maxResults - 1].classList.add('selected');
+                    suggestions[0].classList.remove('selected');
+                    this.selectedSuggestion = this.maxResults - 1;
+                } else {
+                    this.selectedSuggestion--;
+                    suggestions[this.selectedSuggestion + 1].classList.remove('selected');
+                    suggestions[this.selectedSuggestion].classList.add('selected');
+                }
+            } else if (direction == 'down') {
+                // If it is null select the first one
+                if (this.selectedSuggestion == null) {
+                    this.selectedSuggestion = 0;
+                    suggestions[this.selectedSuggestion].classList.add('selected');
+                } else if (this.selectedSuggestion == this.maxResults - 1) {
+                    suggestions[0].classList.add('selected');
+                    suggestions[this.maxResults - 1].classList.remove('selected')
+                    this.selectedSuggestion = 0;
+                } else {
+                    this.selectedSuggestion++
+                    suggestions[this.selectedSuggestion - 1].classList.remove('selected');
+                    suggestions[this.selectedSuggestion].classList.add('selected');
+                }
+
+            }
         },
 
         inputChanged: function() {
@@ -222,7 +301,7 @@ export default {
 
                 // We dont want a huge list so we only show a specified amount of results
                 this.showMatching = [];
-                let maxResults = 10;
+                let maxResults = this.maxResults;
 
                 // First we try to fill the results with results that start with the imput
                 for(let i = 0, x = maxResults; i < x; i++) {
@@ -250,6 +329,9 @@ export default {
         },
 
         submitForm: function() {
+            // If there is no input return
+            if (!this.artist) return;
+
             // Check if we get a response from BIT API before we redirect
             this.doesArtistExist(this.artist).then(data => {
                 // If the response contains an ID redirect to artist-view
