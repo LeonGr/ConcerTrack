@@ -97,7 +97,6 @@ $orange-yellow: #FF7E4A;
 
                 &:hover {
                     cursor: pointer;
-                    background-color: $orange;
                 }
             }
 
@@ -114,10 +113,10 @@ $orange-yellow: #FF7E4A;
         <div id="search-container">
             <h1>Search for events from an artist:</h1>
             <form v-on:submit.prevent>
-                <input id="input-field" v-on:input="inputChanged" v-on:focus="selectInput" v-model="artist" type="text" placeholder="Artist name" autocomplete="off">
+                <input id="input-field" v-on:input="inputChanged" v-on:focus="selectInput" v-model="inputValue" type="text" placeholder="Artist name" autocomplete="off">
             </form>
             <ul id="search-results" v-if="showMatching.length">
-                <li v-for="match in showMatching" v-on:click="clickSearchResult($event)">{{ match }}</li>
+                <li v-for="match in showMatching" v-on:click="clickSearchResult($event)" v-on:mouseover="hoverSearchResult($event)">{{ match }}</li>
             </ul>
             <h2 id="errorMessage">{{ errorMessage }}</h2>
         </div>
@@ -131,16 +130,19 @@ export default {
     data: function() {
         // Declare local data variables
         return {
-            artist: '',
+            inputValue: '',
             errorMessage: '',
-            artistList: [],
+            listOfArtists: [],
             matching: [],
             startMatching: [],
             showMatching: [],
             lastInputLength: 0,
-            maxResults: 20,
+            maxResults: 10,
             selectedSuggestion: null
         }
+    },
+
+    watch: {
     },
 
     mounted: function() {
@@ -174,7 +176,7 @@ export default {
         selectInput: function() {
             // Load artist list from json file when user selects the input field
             // If it has been loaded return
-            if (this.artistList.length) return;
+            if (this.listOfArtists.length) return;
 
             let fetchArtistList = () => {
                 return new Promise((resolve, reject) => {
@@ -194,7 +196,7 @@ export default {
             }
 
             fetchArtistList().then(data => {
-                this.artistList = data;
+                this.listOfArtists = data;
             });
         },
 
@@ -204,7 +206,7 @@ export default {
                 let suggestionContainer = document.getElementById('search-results');
                 let searchResults = suggestionContainer.children;
 
-                this.artist = searchResults[this.selectedSuggestion].innerText;
+                this.inputValue = searchResults[this.selectedSuggestion].innerText;
             }
 
             // Submit form with current artist in input
@@ -220,15 +222,17 @@ export default {
 
             let suggestions = suggestionContainer.children;
 
+            for(let i = 0, x = suggestions.length; i < x; i++) {
+                suggestions[i].classList.remove('selected');
+            }
+
             if (direction == 'up') {
                 // If it's null or 0 (false values) go to the bottom
                 if (!this.selectedSuggestion) {
                     suggestions[this.maxResults - 1].classList.add('selected');
-                    suggestions[0].classList.remove('selected');
                     this.selectedSuggestion = this.maxResults - 1;
                 } else {
                     this.selectedSuggestion--;
-                    suggestions[this.selectedSuggestion + 1].classList.remove('selected');
                     suggestions[this.selectedSuggestion].classList.add('selected');
                 }
             } else if (direction == 'down') {
@@ -238,11 +242,9 @@ export default {
                     suggestions[this.selectedSuggestion].classList.add('selected');
                 } else if (this.selectedSuggestion == this.maxResults - 1) {
                     suggestions[0].classList.add('selected');
-                    suggestions[this.maxResults - 1].classList.remove('selected')
                     this.selectedSuggestion = 0;
                 } else {
                     this.selectedSuggestion++
-                    suggestions[this.selectedSuggestion - 1].classList.remove('selected');
                     suggestions[this.selectedSuggestion].classList.add('selected');
                 }
 
@@ -250,17 +252,31 @@ export default {
         },
 
         clickSearchResult: function(event) {
-            this.artist = event.target.innerText;
+            this.inputValue = event.target.innerText;
 
             this.submitForm();
         },
 
-        inputChanged: function() {
+        // For consistency we also set the selected suggestion on mouseover
+        hoverSearchResult: function(event) {
+            let suggestionContainer = document.getElementById('search-results');
+            let searchResults = suggestionContainer.children;
 
+            for(let i = 0, x = searchResults.length; i < x; i++) {
+                searchResults[i].classList.remove('selected');
+
+                if (event.target == searchResults[i]) {
+                    this.selectedSuggestion = i;
+                    event.target.classList.add('selected');
+                }
+            }
+        },
+
+        inputChanged: function() {
             // Start giving suggestions when input is more than minimal amount of characters
             const MIN_CHARS = 1;
 
-            let input = this.artist.toLowerCase();//.replace(/[^a-zA-Z]/g, ""); <- uncomment to filter special characters
+            let input = this.inputValue.toLowerCase();//.replace(/[^a-zA-Z]/g, ""); <- uncomment to filter special characters
 
             if (input.length > MIN_CHARS) {
 
@@ -299,8 +315,8 @@ export default {
                     this.matching = [];
                     this.startMatching = []
 
-                    for (let i = 0, x = this.artistList.length; i < x; i++) {
-                        let artistFromList = this.artistList[i];
+                    for (let i = 0, x = this.listOfArtists.length; i < x; i++) {
+                        let artistFromList = this.listOfArtists[i];
 
                         if (artistFromList.toLowerCase().startsWith(input))
                             this.startMatching.push(artistFromList)
@@ -336,18 +352,18 @@ export default {
             }
 
             // Store input length to compare if we have more or less input than last time
-            this.lastInputLength = this.artist.length;
+            this.lastInputLength = this.inputValue.length;
         },
 
         submitForm: function() {
             // If there is no input return
-            if (!this.artist) return;
+            if (!this.inputValue) return;
 
             // Check if we get a response from BIT API before we redirect
-            this.doesArtistExist(this.artist).then(data => {
+            this.doesArtistExist(this.inputValue).then(data => {
                 // If the response contains an ID redirect to artist-view
                 if (data.id) {
-                    this.$router.push({ path: "/" + "artists/" + this.artist })
+                    this.$router.push({ path: "/" + "artists/" + this.inputValue })
                 }
             })
         },

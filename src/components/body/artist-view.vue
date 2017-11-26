@@ -133,7 +133,6 @@
 
 <script>
 //TODO:
-// - When you hover over a search results this.selectedSuggestion should be set to that
 // - Add easter egg with my name which shows my dope picture and like 'hi Im the developer'
 // - Make landing page prettier
 // - Add "more results"?
@@ -281,22 +280,6 @@ export default {
         },
 
         checkBandcampAccount: function() {
-            //let checkBandcampUrl = () => {
-            //    return new Promise((resolve, reject) => {
-            //        fetch("https://" + this.artist.toLowerCase() + ".bandcamp.com", {
-            //            method: 'GET',
-            //            mode : 'no-cors',
-            //        }).then(response => {
-            //            return response
-            //        }).then(response => {
-            //            resolve(response);
-            //        }).catch(error => {
-            //            console.log(error);
-            //        })
-            //    })
-            //}
-            //this.bandcampUrl = "https://" + this.artist.toLowerCase() + ".bandcamp.com";
-
             // Cant get results from bandcamp yet so we just redirect to the search page
             this.bandcampUrl = "https://bandcamp.com/search?q=" + this.artist.toLowerCase();
         },
@@ -305,11 +288,8 @@ export default {
         getLastFMInfo: function() {
 
             let getData = () => {
-                // This is how lastFM wants the url otherwise we get problems with long names
-                let artist = this.artist.split(" ").join("+");
-
-                // It also doesn't like &
-                artist = artist.split("&").join("%26");
+                // Encode so lastfm doesn't get trouble with names with for example &
+                let artist = encodeURIComponent(this.artist);
 
 				let apiUrl = "https://ws.audioscrobbler.com/2.0/"
 				let apiParams = "?method=artist.getinfo&api_key=a4629fdacfd93267704f599b874a59bf&format=json&artist="
