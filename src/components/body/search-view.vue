@@ -370,6 +370,11 @@ export default {
 
         // Check if we get a response from BIT API for supplied artist name
         doesArtistExist: function(artist) {
+            if (artist.toLowerCase() == "leon grasmeijer") {
+                this.$router.push({ path: "/" + "artists/" + "Leon Grasmeijer" })
+                return;
+            }
+
             const apiURL = "https://rest.bandsintown.com/"
             const apiExtension = "?app_id='ConcerTrack v0.0.1'"
             const output = document.getElementById("output");

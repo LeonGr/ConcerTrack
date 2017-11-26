@@ -36,13 +36,18 @@
 
             p {
                 margin-top: 20px;
+
+            }
+
+            a {
+                color: #17A1FF;
             }
 
             #info-container {
                 float: right;
                 width: 50%;
 
-                a {
+                .link-icon {
                     color: inherit;
 
                     i {
@@ -87,16 +92,16 @@
                     <h1>{{ artistInfo.name }}</h1>
 
 
-                    <a :href="artistInfo.facebook_page_url" v-if="artistInfo.facebook_page_url">
+                    <a :href="artistInfo.facebook_page_url" v-if="artistInfo.facebook_page_url" class="link-icon">
                         <i class="fa fa-facebook-official" aria-hidden="true"></i>
                     </a>
 
-                    <a :href="bandcampUrl" v-if="bandcampUrl">
+                    <a :href="bandcampUrl" v-if="bandcampUrl" class="link-icon">
                         <i class="fa fa-bandcamp" aria-hidden="true"></i>
                     </a>
 
 
-                    <a :href="lastFMData.url" v-if="lastFMData.url">
+                    <a :href="lastFMData.url" v-if="lastFMData.url" class="link-icon">
                         <i class="fa fa-lastfm-square" aria-hidden="true"></i>
                     </a>
 
@@ -133,7 +138,6 @@
 
 <script>
 //TODO:
-// - Add easter egg with my name which shows my dope picture and like 'hi Im the developer'
 // - Make landing page prettier
 // - Add "more results"?
 // - Add search to artist-view
