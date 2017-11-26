@@ -1,6 +1,6 @@
 {
-  "name": "concertrack",
-  "version": "1.0.0",
+  "name": "ConcerTrack",
+  "version": "0.1.0",
   "description": "Find out when your favourite artists are hosting events",
   "author": "LeonGr <leongrasmeijer@gmail.com>",
   "private": true,
