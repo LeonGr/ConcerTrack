@@ -151,6 +151,7 @@
 // - Make people be able to report wrong artists
 export default {
     data: function() {
+        this.getAllInformation();
         return {
             // Init local variables
             artist: '',
@@ -173,7 +174,6 @@ export default {
 
     mounted: function() {
         // If the page loads for the first time get all information
-        this.getAllInformation();
     },
 
     methods: {
