@@ -18,6 +18,11 @@
             height: 100%;
             width: 50%;
 
+            #autocomplete-container {
+                width: 480px;
+                height: 100px;
+            }
+
             h1 {
                 margin-top: 50px;
                 //line-height: 0.7
@@ -102,6 +107,7 @@
     <div id="output-container">
         <div id="output">
             <div id="left-side">
+                <autocomplete title="Search artist:"></autocomplete>
                 <!--If we get an image from lastFM show it. Otherwise use the one from BIT-->
                 <img :src="imageUrl" alt="" v-if="imageUrl">
 

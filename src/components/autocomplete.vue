@@ -37,8 +37,8 @@ $orange-yellow: #FF7E4A;
     }
 
     input {
-        width: 400px;
-        height: 30px;
+        width: 100%;
+        box-sizing: border-box;
         padding: 20px;
         border: 1px solid $orange-yellow;
         //border-radius: 5px;
@@ -76,8 +76,9 @@ $orange-yellow: #FF7E4A;
 
 <template>
     <div id="autocomplete-container">
+        <h1>{{ title }}</h1>
         <form v-on:submit.prevent>
-            <input id="input-field" v-on:input="inputChanged" v-on:focus="selectInput" v-model="inputValue" type="text" placeholder="Artist name" autocomplete="off">
+            <input id="input-field" v-on:input="inputChanged" v-on:focus="selectInput" v-on:focusout="deselectInput" v-model="inputValue" type="text" placeholder="Artist name" autocomplete="off">
         </form>
         <ul id="search-results" v-if="showMatching.length">
             <li v-for="match in showMatching" v-on:click="clickSearchResult($event)" v-on:mouseover="hoverSearchResult($event)">{{ match }}</li>
@@ -100,6 +101,10 @@ export default {
             selectedSuggestion: null,
             errorMessage: ''
         }
+    },
+
+    props: {
+        title: ''
     },
 
     mounted: function() {
@@ -155,6 +160,10 @@ export default {
             fetchArtistList().then(data => {
                 this.listOfData = data;
             });
+        },
+
+        deselectInput: function() {
+            this.showMatching = this.allMatching = this.startMatching = [];
         },
 
         submitSearch: function() {
@@ -230,6 +239,7 @@ export default {
         },
 
         inputChanged: function() {
+            this.selectedSuggestion = null;
             // Start giving suggestions when input is more than minimal amount of characters
             const MIN_CHARS = 1;
 
