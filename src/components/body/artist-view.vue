@@ -58,21 +58,39 @@
             }
         }
 
-
-        #event-container {
-            overflow: auto;
+        #right-side {
             height: 100%;
             width: 50%;
 
-            p {
-                margin-left: 20px;
-                margin-top: 50px;
-                font-weight: bold;
+            #local-events {
+                margin: 20px;
+                margin-bottom: 0;
+
+                p {
+                    font-weight: bold;
+                }
             }
 
-            #event-list {
-                .event-div {
-                    margin: 20px;
+            #ask-location {
+                margin: 20px;
+                margin-bottom: 0;
+            }
+
+
+            #event-container {
+                overflow: auto;
+                width: 100%;
+
+                p {
+                    margin-left: 20px;
+                    margin-top: 50px;
+                    font-weight: bold;
+                }
+
+                #event-list {
+                    .event-div {
+                        margin: 20px;
+                    }
                 }
             }
         }
@@ -86,7 +104,6 @@
             <div id="left-side">
                 <!--If we get an image from lastFM show it. Otherwise use the one from BIT-->
                 <img :src="imageUrl" alt="" v-if="imageUrl">
-                <img :src="artistInfo.image_url" alt="" v-else>
 
                 <div id="info-container">
                     <h1>{{ artistInfo.name }}</h1>
@@ -111,24 +128,33 @@
                 </div>
             </div>
 
-            <div id="event-container">
-                <p v-if="events.length">
-                    Currently on tour!
-                    <br>
-                    {{ artistInfo.upcoming_event_count }} upcoming events:
-                </p>
-                <p v-else>
-                    No upcoming events :(
-                </p>
+            <div id="right-side">
+                <div id="local-events" v-if="locationSet">
+                    <p v-if="localEvents">Local events:</p>
+                    <p v-else>No local upcoming events :(</p>
+                </div>
+                <div id="ask-location" v-else>
+                    No location set, do you want to set it now so we can show you events in your country?
+                </div>
+                <div id="event-container">
+                    <p v-if="events.length">
+                        Currently on tour!
+                        <br>
+                        {{ artistInfo.upcoming_event_count }} upcoming events:
+                    </p>
+                    <p v-else>
+                        No upcoming events :(
+                    </p>
 
-                <div id="event-list">
-                    <div  v-for="event in events" :key="event.datetime" class="event-div">
-                        {{ event.datetime }}
-                        {{ event.venue.name }}
-                        {{ event.venue.city }}
-                        {{ event.venue.country }}
-                        <a v-if="event.ticketUrl" :href="event.ticketUrl">Tickets</a>
-                        <a v-else :href="event.searchUrl">Search for tickets online</a>
+                    <div id="event-list">
+                        <div  v-for="event in events" :key="event.datetime" class="event-div">
+                            {{ event.datetime }}
+                            {{ event.venue.name }}
+                            {{ event.venue.city }}
+                            {{ event.venue.country }}
+                            <a v-if="event.ticketUrl" :href="event.ticketUrl">Tickets</a>
+                            <a v-else :href="event.searchUrl">Search for tickets online</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -161,7 +187,8 @@ export default {
             lastFMData: {},
             artistBio: '',
             onTour: false,
-            imageUrl: ''
+            imageUrl: '',
+            locationSet: false
         }
     },
 
@@ -339,7 +366,7 @@ export default {
 
                 this.lastFMData = data.artist;
                 this.artistBio = data.artist.bio.summary;
-                this.imageUrl = data.artist.image[data.artist.image.length - 1]["#text"];
+                this.imageUrl = data.artist.image[data.artist.image.length - 1]["#text"] || this.artistInfo.image_url;
                 //console.log("Last FM data: ");
                 //console.log(data.artist);
             })

@@ -5,146 +5,101 @@ $orange-red: #CA283D;
 $orange: #F0443A;
 $orange-yellow: #FF7E4A;
 
-// change colour of input placeholder text
-*::-webkit-input-placeholder {
-    color: #ccc;
-}
-*:-moz-placeholder {
-    /* FF 4-18 */
-    color: #ccc;
-}
-*::-moz-placeholder {
-    /* FF 19+ */
-    color: #ccc;
-}
-*:-ms-input-placeholder {
-    /* IE 10+ */
-    color: #ccc;
-}
-
-#search-body {
-    position: absolute;
-    top: 50px;
-    width: 100%;
-    min-height: calc(100% - 100px);
+#autocomplete-container {
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 9px 0 rgba(0,0,0,.3);
+    border-radius: 5px;
     display: flex;
-    align-items: center;
-    justify-content: space-around;
-    flex-direction: row;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
 
-    background-color: #F54;
-
-    img {
-        width: 400px;
+    h1 {
+        color: #333;
+        margin-top: 20px;
+        font-size: 22px;
+        width: 100%;
+        font-weight: 300;
+        margin-left: 20px;
     }
 
-    #search-container {
+    #errorMessage {
+        height: 25px;
+        color: $orange;
+        font-weight: 300;
+        margin-left: 20px;
+        margin-bottom: 20px;
+    }
+
+    form {
+        margin: 20px;
+    }
+
+    input {
+        width: 400px;
+        height: 30px;
+        padding: 20px;
+        border: 1px solid $orange-yellow;
+        //border-radius: 5px;
+        font-size: 25px;
+
+        outline: none;
+        box-shadow: 0 1px 9px 0 rgba(0,0,0,.3);
+    }
+
+    #search-results {
+        border: 1px solid $orange-yellow;
+        width: 440px;
+        position: absolute;
+        list-style: none;
+        margin: 20px;
+        margin-top: 47px;
         background-color: white;
-        border: 1px solid #ccc;
-        box-shadow: 0 0 9px 0 rgba(0,0,0,.3);
-        border-radius: 5px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        position: relative;
+        top: 88px;
+        box-shadow: 0 3px 9px 0 rgba(0,0,0,.3);
 
-        h1 {
-            color: #333;
-            margin-top: 20px;
-            font-size: 22px;
-            width: 100%;
-            font-weight: 300;
-            margin-left: 20px;
-        }
+        li {
+            padding: 4px 20px;
 
-        #errorMessage {
-            height: 25px;
-            color: $orange;
-            font-weight: 300;
-            margin-left: 20px;
-            margin-bottom: 20px;
-        }
-
-        form {
-            margin: 20px;
-        }
-
-        input {
-            width: 400px;
-            height: 30px;
-            padding: 20px;
-            border: 1px solid $orange-yellow;
-            //border-radius: 5px;
-            font-size: 25px;
-
-            outline: none;
-            box-shadow: 0 1px 9px 0 rgba(0,0,0,.3);
-        }
-
-        #search-results {
-            border: 1px solid $orange-yellow;
-            width: 440px;
-            position: absolute;
-            list-style: none;
-            margin: 20px;
-            margin-top: 47px;
-            background-color: white;
-            top: 88px;
-            box-shadow: 0 3px 9px 0 rgba(0,0,0,.3);
-
-            li {
-                padding: 4px 20px;
-
-                &:hover {
-                    cursor: pointer;
-                }
+            &:hover {
+                cursor: pointer;
             }
+        }
 
-            .selected {
-                background-color: $orange;
-            }
+        .selected {
+            background-color: $orange;
         }
     }
 }
 </style>
 
 <template>
-    <div id="search-body">
-        <div id="search-container">
-            <h1>Search for events from an artist:</h1>
-            <form v-on:submit.prevent>
-                <input id="input-field" v-on:input="inputChanged" v-on:focus="selectInput" v-model="inputValue" type="text" placeholder="Artist name" autocomplete="off">
-            </form>
-            <ul id="search-results" v-if="showMatching.length">
-                <li v-for="match in showMatching" v-on:click="clickSearchResult($event)" v-on:mouseover="hoverSearchResult($event)">{{ match }}</li>
-            </ul>
-            <h2 id="errorMessage">{{ errorMessage }}</h2>
-        </div>
-
-        <autocomplete></autocomplete>
-
-        <img src="static/map.svg" alt="">
+    <div id="autocomplete-container">
+        <form v-on:submit.prevent>
+            <input id="input-field" v-on:input="inputChanged" v-on:focus="selectInput" v-model="inputValue" type="text" placeholder="Artist name" autocomplete="off">
+        </form>
+        <ul id="search-results" v-if="showMatching.length">
+            <li v-for="match in showMatching" v-on:click="clickSearchResult($event)" v-on:mouseover="hoverSearchResult($event)">{{ match }}</li>
+        </ul>
+        <h2 id="errorMessage">{{ errorMessage }}</h2>
     </div>
 </template>
 
 <script>
 export default {
     data: function() {
-        // Declare local data variables
         return {
             inputValue: '',
-            errorMessage: '',
-            listOfArtists: [],
-            matching: [],
+            listOfData: [],
+            allMatching: [],
             startMatching: [],
             showMatching: [],
             lastInputLength: 0,
             maxResults: 10,
-            selectedSuggestion: null
+            selectedSuggestion: null,
+            errorMessage: ''
         }
-    },
-
-    watch: {
     },
 
     mounted: function() {
@@ -178,7 +133,7 @@ export default {
         selectInput: function() {
             // Load artist list from json file when user selects the input field
             // If it has been loaded return
-            if (this.listOfArtists.length) return;
+            if (this.listOfData.length) return;
 
             let fetchArtistList = () => {
                 return new Promise((resolve, reject) => {
@@ -198,7 +153,7 @@ export default {
             }
 
             fetchArtistList().then(data => {
-                this.listOfArtists = data;
+                this.listOfData = data;
             });
         },
 
@@ -284,7 +239,7 @@ export default {
 
                 // If the user adds more text to the input field and we already have more than 0 results
                 // Show matching artists from current matching list
-                if (input.length > this.lastInputLength && this.matching.length > 0) {
+                if (input.length > this.lastInputLength && this.allMatching.length > 0) {
 
                     // Create temporary arrays to store new results
                     let newMatching = [];
@@ -299,32 +254,32 @@ export default {
                     }
 
                     // Add all artists that contain the input but don't start with it to matching array
-                    for (let i = 0, x = this.matching.length; i < x; i++) {
+                    for (let i = 0, x = this.allMatching.length; i < x; i++) {
 
-                        let artistFromMatchingList = this.matching[i];
+                        let artistFromMatchingList = this.allMatching[i];
 
                         if (artistFromMatchingList.toLowerCase().includes(input) && !artistFromMatchingList.startsWith(input))
-                            newMatching.push(this.matching[i]);
+                            newMatching.push(this.allMatching[i]);
                     }
 
                     // Copy to main arrays
-                    this.matching = newMatching;
+                    this.allMatching = newMatching;
                     this.startMatching = newStartMatching;
                 } else {
                     // If the user removes input or it was empty before look through the whole list of artists
 
                     // Remove old results
-                    this.matching = [];
+                    this.allMatching = [];
                     this.startMatching = []
 
-                    for (let i = 0, x = this.listOfArtists.length; i < x; i++) {
-                        let artistFromList = this.listOfArtists[i];
+                    for (let i = 0, x = this.listOfData.length; i < x; i++) {
+                        let artistFromList = this.listOfData[i];
 
                         if (artistFromList.toLowerCase().startsWith(input))
                             this.startMatching.push(artistFromList)
 
                         else if (artistFromList.toLowerCase().includes(input) && !artistFromList.startsWith(input))
-                            this.matching.push(artistFromList);
+                            this.allMatching.push(artistFromList);
                     }
                 }
 
@@ -344,13 +299,13 @@ export default {
 
                     for(let i = 0, x = stillNeeded; i < x; i++) {
 
-                        if (i < this.matching.length)
-                            this.showMatching.push(this.matching[i]);
+                        if (i < this.allMatching.length)
+                            this.showMatching.push(this.allMatching[i]);
                     }
                 }
             } else {
                 // If the imput is less than MIN_CHARS empty all results
-                this.matching = this.startMatching = this.showMatching = [];
+                this.allMatching = this.startMatching = this.showMatching = [];
             }
 
             // Store input length to compare if we have more or less input than last time
