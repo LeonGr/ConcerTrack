@@ -1,89 +1,14 @@
-<style lang="scss" scoped>
-$purple-red: #530030;
-$red: #7E0030;
-$orange-red: #CA283D;
-$orange: #F0443A;
-$orange-yellow: #FF7E4A;
-
-#autocomplete-container {
-    background-color: white;
-    border: 1px solid #ccc;
-    box-shadow: 0 0 9px 0 rgba(0,0,0,.3);
-    border-radius: 5px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    position: relative;
-
-    h1 {
-        color: #333;
-        margin-top: 20px;
-        font-size: 22px;
-        width: 100%;
-        font-weight: 300;
-        margin-left: 20px;
-    }
-
-    #errorMessage {
-        height: 25px;
-        color: $orange;
-        font-weight: 300;
-        margin-left: 20px;
-        margin-bottom: 20px;
-    }
-
-    form {
-        margin: 20px;
-    }
-
-    input {
-        width: 100%;
-        box-sizing: border-box;
-        padding: 20px;
-        border: 1px solid $orange-yellow;
-        //border-radius: 5px;
-        font-size: 25px;
-
-        outline: none;
-        box-shadow: 0 1px 9px 0 rgba(0,0,0,.3);
-    }
-
-    #search-results {
-        border: 1px solid $orange-yellow;
-        width: 440px;
-        position: absolute;
-        list-style: none;
-        margin: 20px;
-        margin-top: 47px;
-        background-color: white;
-        top: 88px;
-        box-shadow: 0 3px 9px 0 rgba(0,0,0,.3);
-
-        li {
-            padding: 4px 20px;
-
-            &:hover {
-                cursor: pointer;
-            }
-        }
-
-        .selected {
-            background-color: $orange;
-        }
-    }
-}
-</style>
-
 <template>
     <div id="autocomplete-container">
-        <h1>{{ title }}</h1>
-        <form v-on:submit.prevent>
-            <input id="input-field" v-on:input="inputChanged" v-on:focus="selectInput" v-on:focusout="deselectInput" v-model="inputValue" type="text" placeholder="Artist name" autocomplete="off">
+        <form v-on:submit.prevent id="autocomplete-form">
+            <h1>{{ title }}</h1>
+            <input id="input-field" v-on:input="inputChanged" v-on:focus="selectInput" v-model="inputValue" type="text" :placeholder="placeholder" autocomplete="off">
+            <h1 v-if="errorMessage" id="errorMessage">{{ errorMessage }}</h1>
+            <h1 v-else style="color: transparent; user-select: none;">Filler</h1>
         </form>
         <ul id="search-results" v-if="showMatching.length">
             <li v-for="match in showMatching" v-on:click="clickSearchResult($event)" v-on:mouseover="hoverSearchResult($event)">{{ match }}</li>
         </ul>
-        <h2 id="errorMessage">{{ errorMessage }}</h2>
     </div>
 </template>
 
@@ -104,15 +29,26 @@ export default {
     },
 
     props: {
-        title: ''
+        title: '',
+        placeholder: ''
     },
 
     mounted: function() {
+        let deselectInput = () => {
+            this.deselectInput();
+        }
+
+        window.addEventListener("mousedown", function(event) {
+            if (!(event.target.localName == "li" || event.target.localName == "input")) {
+                deselectInput();
+            }
+        })
+
+        let inputField = document.getElementById('input-field');
         // Should happen when search-view is loaded the first time:
 
         // Listen for arrowkey events to select search results
 
-        let inputField = document.getElementById('input-field');
 
         // Extra function because we can't use `this` in eventlistener function
         let callSelectFuncion = (key) => {
@@ -247,6 +183,8 @@ export default {
 
             if (input.length > MIN_CHARS) {
 
+
+
                 // If the user adds more text to the input field and we already have more than 0 results
                 // Show matching artists from current matching list
                 if (input.length > this.lastInputLength && this.allMatching.length > 0) {
@@ -313,6 +251,7 @@ export default {
                             this.showMatching.push(this.allMatching[i]);
                     }
                 }
+
             } else {
                 // If the imput is less than MIN_CHARS empty all results
                 this.allMatching = this.startMatching = this.showMatching = [];
@@ -320,6 +259,7 @@ export default {
 
             // Store input length to compare if we have more or less input than last time
             this.lastInputLength = this.inputValue.length;
+
         },
 
         submitForm: function() {

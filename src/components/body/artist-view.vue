@@ -18,10 +18,7 @@
             height: 100%;
             width: 50%;
 
-            #autocomplete-container {
-                width: 480px;
-                height: 100px;
-            }
+
 
             h1 {
                 margin-top: 50px;
@@ -78,21 +75,23 @@
 
             #ask-location {
                 margin: 20px;
-                margin-bottom: 0;
+                height: 80px;
             }
 
 
             #event-container {
-                overflow: auto;
                 width: 100%;
+                height: calc(100% - 120px);
 
                 p {
                     margin-left: 20px;
-                    margin-top: 50px;
                     font-weight: bold;
                 }
 
                 #event-list {
+                    overflow: auto;
+                    height: 100%;
+
                     .event-div {
                         margin: 20px;
                     }
@@ -103,13 +102,86 @@
 }
 </style>
 
+<style lang="scss">
+$purple-red: #530030;
+$red: #7E0030;
+$orange-red: #CA283D;
+$orange: #F0443A;
+$orange-yellow: #FF7E4A;
+#search {
+    position: absolute;
+    top: -50px;
+    right: 250px;
+    height: 50px;
+    z-index: 5;
+
+    #autocomplete-container {
+
+        h1 {
+            font-size: 20px;
+            font-weight: 300;
+        }
+
+        #errorMessage {
+            color: $orange;
+        }
+
+        form {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #input-field {
+            padding: 10px;
+            height: 50px;
+            font-size: 20px;
+            border: 1px solid $orange-yellow;
+            box-sizing: border-box;
+            outline: none;
+            margin-left: 10px;
+            width: 250px;
+        }
+
+        #search-results {
+            border: 1px solid $orange-yellow;
+            position: absolute;
+            top: 49px;
+            right: 0px;
+            list-style: none;
+            background-color: white;
+            box-sizing: border-box;
+            width: 250px;
+
+            li {
+                padding: 4px 20px;
+
+                &:hover {
+                    cursor: pointer;
+                }
+            }
+
+            .selected {
+                background-color: $orange-yellow;
+            }
+        }
+    }
+}
+</style>
+
 <template>
     <div id="output-container">
         <div id="output">
             <div id="left-side">
-                <autocomplete title="Search artist:"></autocomplete>
+                <span id="search">
+                    <autocomplete
+                        title=""
+                        placeholder="Search another artist">
+                    </autocomplete>
+                </span>
                 <!--If we get an image from lastFM show it. Otherwise use the one from BIT-->
-                <img :src="imageUrl" alt="" v-if="imageUrl">
+                <img :src="imageUrl" alt="" v-if="imageUrl" id="artist-image">
 
                 <div id="info-container">
                     <h1>{{ artistInfo.name }}</h1>
@@ -131,6 +203,7 @@
                     <p v-if="lastFMData" v-html="artistBio">
                         {{ artistBio }}
                     </p>
+
                 </div>
             </div>
 
@@ -142,6 +215,7 @@
                 <div id="ask-location" v-else>
                     No location set, do you want to set it now so we can show you events in your country?
                 </div>
+
                 <div id="event-container">
                     <p v-if="events.length">
                         Currently on tour!
@@ -151,7 +225,7 @@
                     <p v-else>
                         No upcoming events :(
                     </p>
-
+                    <hr>
                     <div id="event-list">
                         <div  v-for="event in events" :key="event.datetime" class="event-div">
                             {{ event.datetime }}
