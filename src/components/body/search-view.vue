@@ -59,7 +59,7 @@ $orange-yellow: #FF7E4A;
     padding: 20px;
 
     color: #333;
-    width: 420px;
+    width: 440px;
 
     h1 {
         font-weight: 300;
@@ -117,7 +117,9 @@ $orange-yellow: #FF7E4A;
     <div id="search-body">
         <autocomplete
             title="Search for events from an artist:"
-            placeholder="Artist name">
+            placeholder="Artist name"
+            data="http://localhost:8080/static/AllList.json"
+            callback="artistSearch">
         </autocomplete>
 
         <img src="static/map.svg" alt="">
@@ -125,6 +127,8 @@ $orange-yellow: #FF7E4A;
 </template>
 
 <script>
+import store from '@/store/index.js'
+
 export default {
     data: function() {
         // Declare local data variables
@@ -139,6 +143,24 @@ export default {
     },
 
     methods: {
+        callBackForm: function(callback, value) {
+            if (callback == "artistSearch") {
+                let artist = value;
+
+                // Check if we get a response from BIT API before we redirect
+                store.doesArtistExist(artist).then(data => {
+                    // If the response contains an ID redirect to artist-view
+                    if (data.id) {
+                        this.$router.push({ path: "/" + "artists/" + artist })
+                    }
+                }).catch(error => {
+                    // If we get an error that means the artist has not been found
+                    if (error.toString().includes("SyntaxError")) {
+                        this.$children[0].errorMessage = "Sorry, we couldn't find that artist :(";
+                    }
+                })
+            }
+        },
     }
 }
 </script>

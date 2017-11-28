@@ -30,7 +30,9 @@ export default {
 
     props: {
         title: '',
-        placeholder: ''
+        placeholder: '',
+        data: '',
+        callback: ''
     },
 
     mounted: function() {
@@ -78,7 +80,7 @@ export default {
 
             let fetchArtistList = () => {
                 return new Promise((resolve, reject) => {
-                    fetch("http://localhost:8080/static/AllList.json", {
+                    fetch(this.data, {
                         method: 'GET',
                         headers: {
                             'accept': "application/json"
@@ -183,8 +185,6 @@ export default {
 
             if (input.length > MIN_CHARS) {
 
-
-
                 // If the user adds more text to the input field and we already have more than 0 results
                 // Show matching artists from current matching list
                 if (input.length > this.lastInputLength && this.allMatching.length > 0) {
@@ -266,49 +266,10 @@ export default {
             // If there is no input return
             if (!this.inputValue) return;
 
-            // Check if we get a response from BIT API before we redirect
-            this.doesArtistExist(this.inputValue).then(data => {
-                // If the response contains an ID redirect to artist-view
-                if (data.id) {
-                    this.$router.push({ path: "/" + "artists/" + this.inputValue })
-                }
-            })
+            this.showMatching = this.allMatching = this.startMatching = [];
+            this.$parent.callBackForm(this.callback, this.inputValue);
+            this.inputValue = "";
         },
-
-        // Check if we get a response from BIT API for supplied artist name
-        doesArtistExist: function(artist) {
-            if (artist.toLowerCase() == "leon grasmeijer") {
-                this.$router.push({ path: "/" + "artists/" + "Leon Grasmeijer" })
-                return;
-            }
-
-            const apiURL = "https://rest.bandsintown.com/"
-            const apiExtension = "?app_id='ConcerTrack v0.0.1'"
-            const output = document.getElementById("output");
-
-            return new Promise((resolve, reject) => {
-                fetch(apiURL + "artists/" + artist + apiExtension, {
-                    method: 'GET',
-                    headers: {
-                        'accept': "application/json"
-                    }
-                }).then(response => {
-                    return response.json()
-                }).then(response => {
-                    resolve(response);
-                }).catch(error => {
-                    console.log(error);
-                    this.actOnError(error);
-                })
-            })
-        },
-
-        actOnError: function(error) {
-            // If we get an error that means the artist has not been found
-            if (error.toString().includes("SyntaxError")) {
-                this.errorMessage = "Sorry, we couldn't find that artist :(";
-            }
-        }
     }
 }
 </script>

@@ -172,14 +172,16 @@ $orange-yellow: #FF7E4A;
 
 <template>
     <div id="output-container">
+        <span id="search">
+            <autocomplete
+                title=""
+                placeholder="Search another artist"
+                data="http://localhost:8080/static/AllList.json"
+                callback="artistSearch">
+            </autocomplete>
+        </span>
         <div id="output">
             <div id="left-side">
-                <span id="search">
-                    <autocomplete
-                        title=""
-                        placeholder="Search another artist">
-                    </autocomplete>
-                </span>
                 <!--If we get an image from lastFM show it. Otherwise use the one from BIT-->
                 <img :src="imageUrl" alt="" v-if="imageUrl" id="artist-image">
 
@@ -246,7 +248,6 @@ $orange-yellow: #FF7E4A;
 //TODO:
 // - Make landing page prettier
 // - Add "more results"?
-// - Add search to artist-view
 // - Make list of events prettier
 // - Show related artists in artist-view
 // - Save location in localStorage and show that event at the top
@@ -255,6 +256,8 @@ $orange-yellow: #FF7E4A;
 // - Do security checks
 // - Add more artists
 // - Make people be able to report wrong artists
+import store from '@/store/index.js'
+
 export default {
     data: function() {
         this.getAllInformation();
@@ -397,7 +400,6 @@ export default {
 
         // Get information from Last.fm API
         getLastFMInfo: function() {
-
             let getData = () => {
                 // Encode so lastfm doesn't get trouble with names with for example &
                 let artist = encodeURIComponent(this.artist);
@@ -450,6 +452,25 @@ export default {
                 //console.log("Last FM data: ");
                 //console.log(data.artist);
             })
+        },
+
+        callBackForm: function(callback, value) {
+            if (callback == "artistSearch") {
+                let artist = value;
+
+                // Check if we get a response from BIT API before we redirect
+                store.doesArtistExist(artist).then(data => {
+                    // If the response contains an ID redirect to artist-view
+                    if (data.id) {
+                        this.$router.push({ path: "/" + "artists/" + artist })
+                    }
+                }).catch(error => {
+                    // If we get an error that means the artist has not been found
+                    if (error.toString().includes("SyntaxError")) {
+                        this.$children[0].errorMessage = "Sorry, we couldn't find that artist :(";
+                    }
+                })
+            }
         }
     }
 }
