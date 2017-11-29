@@ -97,6 +97,7 @@ export default {
 
             fetchArtistList().then(data => {
                 this.listOfData = data;
+                console.log(data);
             });
         },
 

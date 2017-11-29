@@ -168,6 +168,59 @@ $orange-yellow: #FF7E4A;
         }
     }
 }
+
+#country {
+    #autocomplete-container {
+        h1 {
+            font-size: 20px;
+            font-weight: 300;
+        }
+
+        #errorMessage {
+            color: $orange;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+
+        #input-field {
+            padding: 10px;
+            height: 50px;
+            font-size: 20px;
+            border: 1px solid $orange-yellow;
+            box-sizing: border-box;
+            outline: none;
+            margin-left: 10px;
+            width: 250px;
+        }
+
+        #search-results {
+            border: 1px solid $orange-yellow;
+            position: absolute;
+            top: 49px;
+            right: 0px;
+            list-style: none;
+            background-color: white;
+            box-sizing: border-box;
+            width: 250px;
+
+            li {
+                padding: 4px 20px;
+
+                &:hover {
+                    cursor: pointer;
+                }
+            }
+
+            .selected {
+                background-color: $orange-yellow;
+            }
+        }
+    }
+}
 </style>
 
 <template>
@@ -216,6 +269,15 @@ $orange-yellow: #FF7E4A;
                 </div>
                 <div id="ask-location" v-else>
                     No location set, do you want to set it now so we can show you events in your country?
+
+                    <span id="country">
+                        <autocomplete
+                        title="Select country"
+                        placeholder="Country name"
+                        data="http://localhost:8080/static/countries.json"
+                        callback="countrySearch">
+                        </autocomplete>
+                    </span>
                 </div>
 
                 <div id="event-container">
@@ -470,6 +532,9 @@ export default {
                         this.$children[0].errorMessage = "Sorry, we couldn't find that artist :(";
                     }
                 })
+            } else if (callback == "countrySearch") {
+                let country = value;
+                console.log(country);
             }
         }
     }
