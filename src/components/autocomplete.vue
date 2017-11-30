@@ -37,16 +37,19 @@ export default {
 
     mounted: function() {
         let deselectInput = () => {
-            this.deselectInput();
+            // Get inputfield from current autocomplete
+            let formChildren = Array.prototype.slice.call(this.$el.children[0].children);
+
+            if (!(event.target.localName == "li" || formChildren.indexOf(event.target) == 1)) {
+                this.deselectInput();
+            }
         }
 
         window.addEventListener("mousedown", function(event) {
-            if (!(event.target.localName == "li" || event.target.localName == "input")) {
-                deselectInput();
-            }
+            deselectInput(event);
         })
 
-        let inputField = document.getElementById('input-field');
+        let inputField = this.$el.children[0].children[1];
         // Should happen when search-view is loaded the first time:
 
         // Listen for arrowkey events to select search results
@@ -109,6 +112,7 @@ export default {
             // If we made a selection set artist to that
             if (this.selectedSuggestion != null) {
                 let suggestionContainer = document.getElementById('search-results');
+                console.log(this.$el.children)
                 let searchResults = suggestionContainer.children;
 
                 this.inputValue = searchResults[this.selectedSuggestion].innerText;
