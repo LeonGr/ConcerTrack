@@ -138,8 +138,10 @@ export default {
             if (direction == 'up') {
                 // If it's null or 0 (false values) go to the bottom
                 if (!this.selectedSuggestion) {
-                    suggestions[this.maxResults - 1].classList.add('selected');
-                    this.selectedSuggestion = this.maxResults - 1;
+                    let index = this.showMatching.length;
+
+                    suggestions[index - 1].classList.add('selected');
+                    this.selectedSuggestion = index - 1;
                 } else {
                     this.selectedSuggestion--;
                     suggestions[this.selectedSuggestion].classList.add('selected');
@@ -149,7 +151,7 @@ export default {
                 if (this.selectedSuggestion == null) {
                     this.selectedSuggestion = 0;
                     suggestions[this.selectedSuggestion].classList.add('selected');
-                } else if (this.selectedSuggestion == this.maxResults - 1) {
+                } else if (this.selectedSuggestion == this.showMatching.length - 1) {
                     suggestions[0].classList.add('selected');
                     this.selectedSuggestion = 0;
                 } else {

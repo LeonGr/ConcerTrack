@@ -1,4 +1,9 @@
 <style lang="scss" scoped>
+$purple-red: #530030;
+$red: #7E0030;
+$orange-red: #CA283D;
+$orange: #F0443A;
+$orange-yellow: #FF7E4A;
 #output-container {
     height: calc(100vh - 100px);
     width: 100%;
@@ -79,18 +84,31 @@
                 }
 
                 #local-events {
-                    margin: 20px;
+                    margin-top: 10px;
                     margin-bottom: 0;
+                    overflow: auto;
+
+                    button {
+                        background-color: transparent;
+                        color: $orange-yellow;
+                        text-decoration: underline;
+                        cursor: pointer;
+                        font-size: 15px;
+                    }
 
                     p {
                         font-weight: bold;
+                    }
+
+                    .event-div {
+                        margin-top: 20px;
                     }
                 }
 
                 #ask-location {
                     display: flex;
                     flex-direction: column;
-                    //align-items: center;
+                    margin-top: 10px;
 
                     #country {
                         margin-top: 5px;
@@ -100,6 +118,7 @@
 
 
             #event-container {
+                margin-top: 20px;
                 width: 100%;
                 flex: 0 1 auto;
                 display: flex;
@@ -112,8 +131,9 @@
                 }
 
                 p {
-                    margin-top: 10px;
-                    margin-left: 20px;
+                    padding-top: 10px;
+                    padding-left: 20px;
+                    padding-bottom: 10px;
                     font-weight: bold;
                     flex: 0 1 auto;
                 }
@@ -221,8 +241,9 @@ $orange-yellow: #FF7E4A;
 #country {
     #autocomplete-container {
         h1 {
+            margin-top: 5px;
             font-size: 20px;
-            font-weight: 300;
+            font-weight: bold;
         }
 
         #errorMessage {
@@ -237,6 +258,7 @@ $orange-yellow: #FF7E4A;
 
         #input-field {
             padding: 5px;
+            margin-top: 5px;
             height: 50px;
             font-size: 20px;
             border: 1px solid $orange-yellow;
@@ -248,7 +270,7 @@ $orange-yellow: #FF7E4A;
         #search-results {
             border: 1px solid $orange-yellow;
             position: absolute;
-            top: 160px;
+            top: 180px;
             list-style: none;
             background-color: white;
             box-sizing: border-box;
@@ -332,9 +354,19 @@ $orange-yellow: #FF7E4A;
             <div id="right-side">
                 <div id="local-event-container">
                     <h1>Local events:</h1>
-                    <div id="local-events" v-if="locationSet">
-                        <p v-if="localEvents">Local events:</p>
-                        <p v-else>No local upcoming events :(</p>
+                    <div id="local-events" v-if="countrySet">
+                        <button v-on:click="resetCountry">Change location</button>
+                        <div v-if="localEvents.length">
+                            <div v-for="event in localEvents" :key="event.datetime" class="event-div">
+                                {{ event.datetime }}
+                                {{ event.venue.name }}
+                                {{ event.venue.city }}
+                                {{ event.venue.country }}
+                                <a v-if="event.ticketUrl" :href="event.ticketUrl">Tickets</a>
+                                <a v-else :href="event.searchUrl">Search for tickets online</a>
+                            </div>
+                        </div>
+                        <div v-else style="margin-top: 5px">No local upcoming events :(</div>
                     </div>
                     <div id="ask-location" v-else>
                         <p>
@@ -407,19 +439,27 @@ export default {
             artistBio: '',
             onTour: false,
             imageUrl: '',
-            locationSet: false
+            countrySet: false,
+            localEvents: []
         }
     },
 
     watch: {
         // If the route changes (user types other artist into url) we renew the information
         '$route' () {
+            this.localEvents = [];
+
             this.getAllInformation();
         }
     },
 
     mounted: function() {
         // If the page loads for the first time get all information
+
+        let userCountry = localStorage.getItem('Country');
+        if (userCountry) {
+            this.countrySet = userCountry;
+        }
     },
 
     methods: {
@@ -495,7 +535,7 @@ export default {
             getEvents(this.artist).then(data => {
                 this.events = data;
                 //console.log("BIT event data:")
-                //console.log(this.events)
+                //console.log(data)
 
                 this.events.forEach((event) => {
                     // Change ISO date to readable date format
@@ -508,6 +548,10 @@ export default {
                         event.ticketUrl = event.offers[0].url;
                     } else {
                         event.searchUrl = "https://duckduckgo.com/?q=" + this.artistInfo.name + " " + event.datetime;
+                    }
+
+                    if (event.venue.country == this.countrySet) {
+                        this.localEvents.push(event);
                     }
                 })
             })
@@ -608,8 +652,23 @@ export default {
                 })
             } else if (callback == "countrySearch") {
                 let country = value;
-                console.log(country);
+                localStorage.setItem('Country', country);
+                this.countrySet = country;
+
+                this.localEvents = [];
+
+                for(let i = 0, x = this.events.length; i < x; i++) {
+                    let event = this.events[i];
+                    if (event.venue.country == country) {
+                        this.localEvents.push(event);
+                    }
+                }
             }
+        },
+
+        resetCountry: function() {
+            localStorage.removeItem('Country');
+            this.countrySet = false;
         }
     }
 }
