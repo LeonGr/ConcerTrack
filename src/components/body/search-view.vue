@@ -88,6 +88,25 @@ $orange-yellow: #FF7E4A;
         box-shadow: 0 1px 9px 0 rgba(0,0,0,.3);
     }
 
+    #submitButton {
+        position: absolute;
+        right: 30px;
+        padding: 10px;
+        background-color: $orange-yellow;
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+        box-shadow: 0 1px 9px 0 rgba(0,0,0,.3);
+
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &:hover {
+            background-color: $orange;
+            box-shadow: 0 5px 9px 0 rgba(0,0,0,.3);
+        }
+    }
+
     #search-results {
         border: 1px solid $orange-yellow;
         position: absolute;
@@ -119,7 +138,8 @@ $orange-yellow: #FF7E4A;
             title="Search for events from an artist:"
             placeholder="Artist name"
             data="http://localhost:8080/static/AllList.json"
-            callback="artistSearch">
+            callback="artistSearch"
+            submitText="Search">
         </autocomplete>
 
         <img src="static/map.svg" alt="">

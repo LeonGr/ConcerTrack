@@ -3,6 +3,7 @@
         <form v-on:submit.prevent id="autocomplete-form">
             <h1>{{ title }}</h1>
             <input id="input-field" v-on:input="inputChanged" v-on:focus="selectInput" v-model="inputValue" type="text" :placeholder="placeholder" autocomplete="off">
+            <button id="submitButton" v-on:click="submitForm" v-html="submitText"></button>
             <h1 v-if="errorMessage" id="errorMessage">{{ errorMessage }}</h1>
             <h1 v-else style="color: transparent; user-select: none;">Filler</h1>
         </form>
@@ -32,7 +33,8 @@ export default {
         title: '',
         placeholder: '',
         data: '',
-        callback: ''
+        callback: '',
+        submitText: ''
     },
 
     mounted: function() {
@@ -57,7 +59,7 @@ export default {
 
         // Extra function because we can't use `this` in eventlistener function
         let callSelectFuncion = (key) => {
-            if (key == 'ArrowDown')
+            if (key == 'ArrowDown' || key == 'Tab')
                 this.selectSuggestion('down')
             else if (key == 'ArrowUp')
                 this.selectSuggestion('up')
@@ -71,7 +73,7 @@ export default {
             callSelectFuncion(e.key);
 
             // Stop the cursor from moving around when we select stuff
-            if (e.key.includes("ArrowUp") || e.key.includes("ArrowDown")) e.preventDefault();
+            if (e.key.includes("ArrowUp") || e.key.includes("ArrowDown") || e.key.includes('Tab')) e.preventDefault();
         });
     },
 

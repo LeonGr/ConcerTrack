@@ -90,10 +90,10 @@
                 #ask-location {
                     display: flex;
                     flex-direction: column;
-                    align-items: center;
+                    //align-items: center;
 
                     #country {
-                        margin: 5px;
+                        margin-top: 5px;
                     }
                 }
             }
@@ -101,7 +101,6 @@
 
             #event-container {
                 width: 100%;
-                //height: 50%;
                 flex: 0 1 auto;
                 display: flex;
                 flex-direction: column;
@@ -155,6 +154,7 @@ $orange-yellow: #FF7E4A;
 
         #errorMessage {
             color: $orange;
+            margin-right: 5px;
         }
 
         form {
@@ -171,7 +171,7 @@ $orange-yellow: #FF7E4A;
             border: 1px solid $orange-yellow;
             box-sizing: border-box;
             outline: none;
-            width: 250px;
+            width: 300px;
         }
 
         #search-results {
@@ -182,7 +182,7 @@ $orange-yellow: #FF7E4A;
             list-style: none;
             background-color: white;
             box-sizing: border-box;
-            width: 250px;
+            width: 300px;
 
             li {
                 padding: 4px 20px;
@@ -194,6 +194,25 @@ $orange-yellow: #FF7E4A;
 
             .selected {
                 background-color: $orange-yellow;
+            }
+        }
+
+        #submitButton {
+            position: absolute;
+            right: 10px;
+            background-color: $orange-yellow;
+            padding: 5px 18px;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            box-shadow: 0 1px 9px 0 rgba(0,0,0,.3);
+
+            cursor: pointer;
+            transition: all 0.2s;
+
+            &:hover {
+                background-color: $orange;
+                box-shadow: 0 5px 9px 0 rgba(0,0,0,.3);
             }
         }
     }
@@ -247,6 +266,25 @@ $orange-yellow: #FF7E4A;
                 background-color: $orange-yellow;
             }
         }
+
+        #submitButton {
+            position: absolute;
+            margin-left: 260px;
+            padding: 10px;
+            background-color: $orange-yellow;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            box-shadow: 0 1px 9px 0 rgba(0,0,0,.3);
+
+            cursor: pointer;
+            transition: all 0.2s;
+
+            &:hover {
+                background-color: $orange;
+                box-shadow: 0 5px 9px 0 rgba(0,0,0,.3);
+            }
+        }
     }
 }
 </style>
@@ -258,7 +296,8 @@ $orange-yellow: #FF7E4A;
                 title=""
                 placeholder="Search another artist"
                 data="http://localhost:8080/static/AllList.json"
-                callback="artistSearch">
+                callback="artistSearch"
+                submitText="<i class='fa fa-search' aria-hidden='true'></i>">
             </autocomplete>
         </span>
         <div id="output">
@@ -304,10 +343,11 @@ $orange-yellow: #FF7E4A;
 
                         <div id="country">
                             <autocomplete
-                             title="Select country"
+                             title="Select country:"
                              placeholder="Country name"
                              data="http://localhost:8080/static/countries.json"
-                             callback="countrySearch">
+                             callback="countrySearch"
+                             submitText="Select">
                             </autocomplete>
                         </div>
                     </div>
