@@ -63,34 +63,65 @@
         #right-side {
             height: 100%;
             width: 50%;
+            display: flex;
+            flex-direction: column;
 
-            #local-events {
-                margin: 20px;
-                margin-bottom: 0;
 
-                p {
-                    font-weight: bold;
+            #local-event-container {
+                padding: 20px;
+                box-sizing: border-box;
+                padding-bottom: 0;
+
+                flex: 0 1 auto;
+
+                h1 {
+                    font-size: 22px;
                 }
-            }
 
-            #ask-location {
-                margin: 20px;
-                height: 80px;
+                #local-events {
+                    margin: 20px;
+                    margin-bottom: 0;
+
+                    p {
+                        font-weight: bold;
+                    }
+                }
+
+                #ask-location {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+
+                    #country {
+                        margin: 5px;
+                    }
+                }
             }
 
 
             #event-container {
                 width: 100%;
-                height: calc(100% - 120px);
+                //height: 50%;
+                flex: 0 1 auto;
+                display: flex;
+                flex-direction: column;
+
+                h1 {
+                    flex: 0 1 auto;
+                    margin-left: 20px;
+                    font-size: 22px;
+                }
 
                 p {
+                    margin-top: 10px;
                     margin-left: 20px;
                     font-weight: bold;
+                    flex: 0 1 auto;
                 }
 
                 #event-list {
                     overflow: auto;
-                    height: 100%;
+                    flex: 0 1 auto;
 
                     .event-div {
                         margin: 20px;
@@ -140,7 +171,6 @@ $orange-yellow: #FF7E4A;
             border: 1px solid $orange-yellow;
             box-sizing: border-box;
             outline: none;
-            margin-left: 10px;
             width: 250px;
         }
 
@@ -187,21 +217,19 @@ $orange-yellow: #FF7E4A;
         }
 
         #input-field {
-            padding: 10px;
+            padding: 5px;
             height: 50px;
             font-size: 20px;
             border: 1px solid $orange-yellow;
             box-sizing: border-box;
             outline: none;
-            margin-left: 10px;
             width: 250px;
         }
 
         #search-results {
             border: 1px solid $orange-yellow;
             position: absolute;
-            top: 49px;
-            right: 0px;
+            top: 160px;
             list-style: none;
             background-color: white;
             box-sizing: border-box;
@@ -263,24 +291,30 @@ $orange-yellow: #FF7E4A;
             </div>
 
             <div id="right-side">
-                <div id="local-events" v-if="locationSet">
-                    <p v-if="localEvents">Local events:</p>
-                    <p v-else>No local upcoming events :(</p>
-                </div>
-                <div id="ask-location" v-else>
-                    No location set, do you want to set it now so we can show you events in your country?
+                <div id="local-event-container">
+                    <h1>Local events:</h1>
+                    <div id="local-events" v-if="locationSet">
+                        <p v-if="localEvents">Local events:</p>
+                        <p v-else>No local upcoming events :(</p>
+                    </div>
+                    <div id="ask-location" v-else>
+                        <p>
+                            No location set, do you want to set it now so we can show you events in your country?
+                        </p>
 
-                    <span id="country">
-                        <autocomplete
-                        title="Select country"
-                        placeholder="Country name"
-                        data="http://localhost:8080/static/countries.json"
-                        callback="countrySearch">
-                        </autocomplete>
-                    </span>
+                        <div id="country">
+                            <autocomplete
+                             title="Select country"
+                             placeholder="Country name"
+                             data="http://localhost:8080/static/countries.json"
+                             callback="countrySearch">
+                            </autocomplete>
+                        </div>
+                    </div>
                 </div>
 
                 <div id="event-container">
+                    <h1>All events:</h1>
                     <p v-if="events.length">
                         Currently on tour!
                         <br>

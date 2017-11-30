@@ -100,7 +100,6 @@ export default {
 
             fetchArtistList().then(data => {
                 this.listOfData = data;
-                console.log(data);
             });
         },
 
@@ -112,7 +111,6 @@ export default {
             // If we made a selection set artist to that
             if (this.selectedSuggestion != null) {
                 let suggestionContainer = document.getElementById('search-results');
-                console.log(this.$el.children)
                 let searchResults = suggestionContainer.children;
 
                 this.inputValue = searchResults[this.selectedSuggestion].innerText;
