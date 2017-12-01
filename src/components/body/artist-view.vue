@@ -73,11 +73,11 @@ $orange-yellow: #FF7E4A;
 
 
             #local-event-container {
-                padding: 20px;
                 box-sizing: border-box;
-                padding-bottom: 0;
+                padding: 20px 0 0 20px;
 
                 flex: 0 1 auto;
+                max-height: 50%;
 
                 h1 {
                     font-size: 22px;
@@ -86,7 +86,11 @@ $orange-yellow: #FF7E4A;
                 #local-events {
                     margin-top: 10px;
                     margin-bottom: 0;
-                    overflow: auto;
+
+                    #local-events-list {
+                        overflow: auto;
+                        max-height: calc(50vh - 120px);
+                    }
 
                     button {
                         background-color: transparent;
@@ -118,24 +122,25 @@ $orange-yellow: #FF7E4A;
 
 
             #event-container {
-                margin-top: 20px;
+                box-sizing: border-box;
+                padding: 20px 0 0 20px;
                 width: 100%;
                 flex: 0 1 auto;
+                //max-height: 50%;
                 display: flex;
                 flex-direction: column;
 
                 h1 {
                     flex: 0 1 auto;
-                    margin-left: 20px;
                     font-size: 22px;
                 }
 
                 p {
                     padding-top: 10px;
-                    padding-left: 20px;
                     padding-bottom: 10px;
                     font-weight: bold;
                     flex: 0 1 auto;
+                    color: $orange-yellow;
                 }
 
                 #event-list {
@@ -143,7 +148,7 @@ $orange-yellow: #FF7E4A;
                     flex: 0 1 auto;
 
                     .event-div {
-                        margin: 20px;
+                        margin-top: 20px;
                     }
                 }
             }
@@ -356,7 +361,7 @@ $orange-yellow: #FF7E4A;
                     <h1>Local events:</h1>
                     <div id="local-events" v-if="countrySet">
                         <button v-on:click="resetCountry">Change location</button>
-                        <div v-if="localEvents.length">
+                        <div v-if="localEvents.length" id="local-events-list">
                             <div v-for="event in localEvents" :key="event.datetime" class="event-div">
                                 {{ event.datetime }}
                                 {{ event.venue.name }}
