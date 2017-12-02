@@ -362,6 +362,7 @@ $orange-yellow: #FF7E4A;
                     <div id="local-events" v-if="countrySet">
                         <button v-on:click="resetCountry">Change location</button>
                         <div v-if="localEvents.length" id="local-events-list">
+                            <p>{{ localEvents.length }} upcoming events in your country!</p>
                             <div v-for="event in localEvents" :key="event.datetime" class="event-div">
                                 {{ event.datetime }}
                                 {{ event.venue.name }}
@@ -423,7 +424,6 @@ $orange-yellow: #FF7E4A;
 // - Add "more results"?
 // - Make list of events prettier
 // - Show related artists in artist-view
-// - Save location in localStorage and show that event at the top
 // - Add tracked artists to localStorage and make a page to show those
 // - Make a page that shows all events at your location from your tracked artists
 // - Do security checks
