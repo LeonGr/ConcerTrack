@@ -100,7 +100,7 @@ $orange-yellow: #FF7E4A;
                         font-size: 15px;
                     }
 
-                    p {
+                    .amount-upcoming {
                         font-weight: bold;
                     }
 
@@ -135,7 +135,7 @@ $orange-yellow: #FF7E4A;
                     font-size: 22px;
                 }
 
-                p {
+                .amount-upcoming {
                     padding-top: 10px;
                     padding-bottom: 10px;
                     font-weight: bold;
@@ -154,6 +154,31 @@ $orange-yellow: #FF7E4A;
             }
         }
     }
+}
+
+.event-date {
+    background-color: $orange-yellow;
+    width: 20px;
+    height: 20px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-weight: bold;
+    color: white;
+}
+
+.event-venue {
+
+}
+
+.event-city {
+
+}
+
+.event-country {
+
 }
 </style>
 
@@ -362,12 +387,12 @@ $orange-yellow: #FF7E4A;
                     <div id="local-events" v-if="countrySet">
                         <button v-on:click="resetCountry">Change location</button>
                         <div v-if="localEvents.length" id="local-events-list">
-                            <p>{{ localEvents.length }} upcoming events in your country!</p>
+                            <p class="amount-upcoming">{{ localEvents.length }} upcoming events in your country!</p>
                             <div v-for="event in localEvents" :key="event.datetime" class="event-div">
-                                {{ event.datetime }}
-                                {{ event.venue.name }}
-                                {{ event.venue.city }}
-                                {{ event.venue.country }}
+                                <p class="event-date">{{ event.datetime }}</p>
+                                <p class="event-venue">{{ event.venue.name }}</p>
+                                <p class="event-city">{{ event.venue.city }}</p>
+                                <p class="event-country">{{ event.venue.country }}</p>
                                 <a v-if="event.ticketUrl" :href="event.ticketUrl">Tickets</a>
                                 <a v-else :href="event.searchUrl">Search for tickets online</a>
                             </div>
@@ -393,21 +418,21 @@ $orange-yellow: #FF7E4A;
 
                 <div id="event-container">
                     <h1>All events:</h1>
-                    <p v-if="events.length">
+                    <p v-if="events.length" class="amount-upcoming">
                         Currently on tour!
                         <br>
                         {{ artistInfo.upcoming_event_count }} upcoming events:
                     </p>
-                    <p v-else>
+                    <p v-else class="amount-upcoming">
                         No upcoming events :(
                     </p>
                     <hr>
                     <div id="event-list">
                         <div  v-for="event in events" :key="event.datetime" class="event-div">
-                            {{ event.datetime }}
-                            {{ event.venue.name }}
-                            {{ event.venue.city }}
-                            {{ event.venue.country }}
+                            <p class="event-date">{{ event.datetime }}</p>
+                            <p class="event-venue">{{ event.venue.name }}</p>
+                            <p class="event-city">{{ event.venue.city }}</p>
+                            <p class="event-country">{{ event.venue.country }}</p>
                             <a v-if="event.ticketUrl" :href="event.ticketUrl">Tickets</a>
                             <a v-else :href="event.searchUrl">Search for tickets online</a>
                         </div>
@@ -546,7 +571,8 @@ export default {
                     // Change ISO date to readable date format
                     let date = new Date(event.datetime);
                     let months = ["Jan","Feb","Mar","Apr","May", "June","July","Aug","Sept","Oct","Nov","Dec"];
-                    event.datetime = `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+                    //event.datetime = `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+                    event.datetime = `${date.getDate()} ${months[date.getMonth()]}`;
 
                     // If we have a ticket url show it otherwise redirect to search
                     if(event.offers.length){
