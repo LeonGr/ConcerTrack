@@ -74,7 +74,8 @@ $orange-yellow: #FF7E4A;
 
             #local-event-container {
                 box-sizing: border-box;
-                padding: 20px 0 0 20px;
+                padding-left: 20px;
+                margin-top: 50px;
 
                 flex: 0 1 auto;
                 max-height: 50%;
@@ -94,7 +95,7 @@ $orange-yellow: #FF7E4A;
 
                     button {
                         background-color: transparent;
-                        color: $orange-yellow;
+                        color: $orange-red;
                         text-decoration: underline;
                         cursor: pointer;
                         font-size: 15px;
@@ -140,7 +141,7 @@ $orange-yellow: #FF7E4A;
                     padding-bottom: 10px;
                     font-weight: bold;
                     flex: 0 1 auto;
-                    color: $orange-yellow;
+                    color: black;
                 }
 
                 #event-list {
@@ -170,15 +171,27 @@ $orange-yellow: #FF7E4A;
 }
 
 .event-venue {
-
+    margin-left: 10px;
+    width: 30%;
 }
 
 .event-city {
-
+    width: 20%;
 }
 
 .event-country {
+    width: 20%;
+}
 
+.event-div {
+    display: flex;
+    align-items: center;
+
+    text-align: center;
+
+    a {
+        width: 10%;
+    }
 }
 </style>
 
@@ -300,7 +313,7 @@ $orange-yellow: #FF7E4A;
         #search-results {
             border: 1px solid $orange-yellow;
             position: absolute;
-            top: 180px;
+            top: 210px;
             list-style: none;
             background-color: white;
             box-sizing: border-box;
@@ -386,15 +399,15 @@ $orange-yellow: #FF7E4A;
                     <h1>Local events:</h1>
                     <div id="local-events" v-if="countrySet">
                         <button v-on:click="resetCountry">Change location</button>
-                        <div v-if="localEvents.length" id="local-events-list">
-                            <p class="amount-upcoming">{{ localEvents.length }} upcoming events in your country!</p>
+                        <p class="amount-upcoming">{{ localEvents.length }} upcoming events in {{ countrySet }}</p>
+                        <div v-if="localEvents.length" id="local-events-list" class="event-list">
                             <div v-for="event in localEvents" :key="event.datetime" class="event-div">
                                 <p class="event-date">{{ event.datetime }}</p>
                                 <p class="event-venue">{{ event.venue.name }}</p>
                                 <p class="event-city">{{ event.venue.city }}</p>
                                 <p class="event-country">{{ event.venue.country }}</p>
                                 <a v-if="event.ticketUrl" :href="event.ticketUrl">Tickets</a>
-                                <a v-else :href="event.searchUrl">Search for tickets online</a>
+                                <a v-else :href="event.searchUrl">Search tickets</a>
                             </div>
                         </div>
                         <div v-else style="margin-top: 5px">No local upcoming events :(</div>
@@ -419,22 +432,20 @@ $orange-yellow: #FF7E4A;
                 <div id="event-container">
                     <h1>All events:</h1>
                     <p v-if="events.length" class="amount-upcoming">
-                        Currently on tour!
-                        <br>
-                        {{ artistInfo.upcoming_event_count }} upcoming events:
+                        {{ artistInfo.upcoming_event_count }} upcoming events worldwide:
                     </p>
                     <p v-else class="amount-upcoming">
                         No upcoming events :(
                     </p>
                     <hr>
-                    <div id="event-list">
+                    <div id="event-list" class="event-list">
                         <div  v-for="event in events" :key="event.datetime" class="event-div">
                             <p class="event-date">{{ event.datetime }}</p>
                             <p class="event-venue">{{ event.venue.name }}</p>
                             <p class="event-city">{{ event.venue.city }}</p>
                             <p class="event-country">{{ event.venue.country }}</p>
                             <a v-if="event.ticketUrl" :href="event.ticketUrl">Tickets</a>
-                            <a v-else :href="event.searchUrl">Search for tickets online</a>
+                            <a v-else :href="event.searchUrl">Search tickets</a>
                         </div>
                     </div>
                 </div>

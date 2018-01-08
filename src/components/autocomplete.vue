@@ -38,7 +38,7 @@ export default {
     },
 
     mounted: function() {
-        let deselectInput = () => {
+        let deselectInput = (event) => {
             // Get inputfield from current autocomplete
             let formChildren = Array.prototype.slice.call(this.$el.children[0].children);
 
@@ -75,6 +75,15 @@ export default {
             // Stop the cursor from moving around when we select stuff
             if (e.key.includes("ArrowUp") || e.key.includes("ArrowDown") || e.key.includes('Tab')) e.preventDefault();
         });
+
+//        let pressedEscape = () => {
+//            this.deselectInput();
+//        }
+//
+//        inputField.addEventListener("focusout", function(e) {
+//            console.log('focusout')
+//            pressedEscape();
+//        });
     },
 
     methods: {

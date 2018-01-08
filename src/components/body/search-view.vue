@@ -125,7 +125,7 @@ $orange-yellow: #FF7E4A;
         }
 
         .selected {
-            background-color: $orange;
+            background-color: $orange-yellow;
         }
     }
 }
