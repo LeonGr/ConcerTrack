@@ -90,7 +90,7 @@ $orange-yellow: #FF7E4A;
 
                     #local-events-list {
                         overflow: auto;
-                        max-height: calc(50vh - 120px);
+                        max-height: calc(50vh - 160px);
                     }
 
                     button {
@@ -103,10 +103,15 @@ $orange-yellow: #FF7E4A;
 
                     .amount-upcoming {
                         font-weight: bold;
+                        padding-top: 10px;
                     }
 
                     .event-div {
                         margin-top: 20px;
+
+                        &:first-child {
+                            margin-top: 0;
+                        }
                     }
                 }
 
@@ -138,7 +143,6 @@ $orange-yellow: #FF7E4A;
 
                 .amount-upcoming {
                     padding-top: 10px;
-                    padding-bottom: 10px;
                     font-weight: bold;
                     flex: 0 1 auto;
                     color: black;
@@ -150,10 +154,30 @@ $orange-yellow: #FF7E4A;
 
                     .event-div {
                         margin-top: 20px;
+
+                        &:first-child {
+                            margin-top: 0;
+                        }
                     }
                 }
             }
         }
+    }
+}
+
+.list-header {
+    width: 100%;
+    display: block;
+    padding: 10px 0;
+    margin-top: 5px;
+    //box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 6px -6px rgba(0, 0, 0, 0.3);
+    //border-bottom: 1px solid #333;
+    border-top: 1px solid #333;
+
+    p {
+        display: inline;
+        font-weight: bold;
     }
 }
 
@@ -171,23 +195,20 @@ $orange-yellow: #FF7E4A;
 }
 
 .event-venue {
-    margin-left: 10px;
+    margin-left: 20px;
     width: 30%;
 }
 
 .event-city {
-    width: 20%;
-}
-
-.event-country {
-    width: 20%;
+    width: 40%;
+    margin-left: 20px;
 }
 
 .event-div {
     display: flex;
     align-items: center;
 
-    text-align: center;
+    //text-align: center;
 
     a {
         width: 10%;
@@ -400,12 +421,16 @@ $orange-yellow: #FF7E4A;
                     <div id="local-events" v-if="countrySet">
                         <button v-on:click="resetCountry">Change location</button>
                         <p class="amount-upcoming">{{ localEvents.length }} upcoming events in {{ countrySet }}</p>
+                        <div class="list-header">
+                            <p>Date</p>
+                            <p>Venue</p>
+                            <p>Location</p>
+                        </div>
                         <div v-if="localEvents.length" id="local-events-list" class="event-list">
                             <div v-for="event in localEvents" :key="event.datetime" class="event-div">
                                 <p class="event-date">{{ event.datetime }}</p>
                                 <p class="event-venue">{{ event.venue.name }}</p>
-                                <p class="event-city">{{ event.venue.city }}</p>
-                                <p class="event-country">{{ event.venue.country }}</p>
+                                <p class="event-city">{{ event.venue.city }}, {{ event.venue.country }}</p>
                                 <a v-if="event.ticketUrl" :href="event.ticketUrl">Tickets</a>
                                 <a v-else :href="event.searchUrl">Search tickets</a>
                             </div>
@@ -437,13 +462,17 @@ $orange-yellow: #FF7E4A;
                     <p v-else class="amount-upcoming">
                         No upcoming events :(
                     </p>
+                    <div class="list-header">
+                        <p>Date</p>
+                        <p>Venue</p>
+                        <p>Location</p>
+                    </div>
                     <hr>
                     <div id="event-list" class="event-list">
                         <div  v-for="event in events" :key="event.datetime" class="event-div">
                             <p class="event-date">{{ event.datetime }}</p>
                             <p class="event-venue">{{ event.venue.name }}</p>
-                            <p class="event-city">{{ event.venue.city }}</p>
-                            <p class="event-country">{{ event.venue.country }}</p>
+                            <p class="event-city">{{ event.venue.city }}, {{ event.venue.country }}</p>
                             <a v-if="event.ticketUrl" :href="event.ticketUrl">Tickets</a>
                             <a v-else :href="event.searchUrl">Search tickets</a>
                         </div>
