@@ -91,6 +91,7 @@ $orange-yellow: #FF7E4A;
                     #local-events-list {
                         overflow: auto;
                         max-height: calc(50vh - 160px);
+                        width: calc(100% - 14px);
                     }
 
                     button {
@@ -166,18 +167,36 @@ $orange-yellow: #FF7E4A;
 }
 
 .list-header {
-    width: 100%;
+    width: calc(100% - 14px);
     display: block;
     padding: 10px 0;
+    padding-right: 14px;
     margin-top: 5px;
     //box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.3);
     box-shadow: 0 8px 6px -6px rgba(0, 0, 0, 0.3);
     //border-bottom: 1px solid #333;
     border-top: 1px solid #333;
+    font-size: 0;
 
     p {
-        display: inline;
+        display: inline-block;
         font-weight: bold;
+        font-size: 18px;
+
+
+
+        &:nth-of-type(1) {
+            width: 60px;
+        }
+
+        &:nth-of-type(2) {
+            width: 30%;
+            margin-left: 20px;
+        }
+
+        &:nth-of-type(3) {
+            margin-left: 20px;
+        }
     }
 }
 
@@ -421,11 +440,7 @@ $orange-yellow: #FF7E4A;
                     <div id="local-events" v-if="countrySet">
                         <button v-on:click="resetCountry">Change location</button>
                         <p class="amount-upcoming">{{ localEvents.length }} upcoming events in {{ countrySet }}</p>
-                        <div class="list-header">
-                            <p>Date</p>
-                            <p>Venue</p>
-                            <p>Location</p>
-                        </div>
+                        <div class="list-header"><p>Date</p><p>Venue</p><p>Location</p></div>
                         <div v-if="localEvents.length" id="local-events-list" class="event-list">
                             <div v-for="event in localEvents" :key="event.datetime" class="event-div">
                                 <p class="event-date">{{ event.datetime }}</p>
