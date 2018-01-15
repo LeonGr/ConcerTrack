@@ -90,8 +90,8 @@ $orange-yellow: #FF7E4A;
 
                     #local-events-list {
                         overflow: auto;
-                        max-height: calc(50vh - 160px);
-                        width: calc(100% - 14px);
+                        max-height: calc(50vh - 200px);
+                        width: 100%;
                     }
 
                     button {
@@ -121,6 +121,10 @@ $orange-yellow: #FF7E4A;
                     flex-direction: column;
                     margin-top: 10px;
 
+                    p {
+                        height: 40px;
+                    }
+
                     #country {
                         margin-top: 5px;
                     }
@@ -130,7 +134,7 @@ $orange-yellow: #FF7E4A;
 
             #event-container {
                 box-sizing: border-box;
-                padding: 20px 0 0 20px;
+                padding: 50px 0 0 20px;
                 width: 100%;
                 flex: 0 1 auto;
                 //max-height: 50%;
@@ -439,7 +443,7 @@ $orange-yellow: #FF7E4A;
                     <h1>Local events:</h1>
                     <div id="local-events" v-if="countrySet">
                         <button v-on:click="resetCountry">Change location</button>
-                        <p class="amount-upcoming">{{ localEvents.length }} upcoming events in {{ countrySet }}</p>
+                        <p class="amount-upcoming">{{ localEvents.length }} upcoming events in country '{{ countrySet }}':</p>
                         <div class="list-header"><p>Date</p><p>Venue</p><p>Location</p></div>
                         <div v-if="localEvents.length" id="local-events-list" class="event-list">
                             <div v-for="event in localEvents" :key="event.datetime" class="event-div">
@@ -502,7 +506,6 @@ $orange-yellow: #FF7E4A;
 //TODO:
 // - Make landing page prettier
 // - Add "more results"?
-// - Make list of events prettier
 // - Show related artists in artist-view
 // - Add tracked artists to localStorage and make a page to show those
 // - Make a page that shows all events at your location from your tracked artists
