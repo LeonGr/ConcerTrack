@@ -32,13 +32,65 @@ $orange-yellow: #FF7E4A;
 
             img {
                 width: 50%;
-                //margin: 30px;
                 padding: 0 30px 0 30px;
                 box-sizing: border-box;
                 margin-top: 50px;
-                //position: absolute;
-                left: 50px;
-                top: 50px;
+                //left: 50px;
+                //top: 50px;
+            }
+
+            #track-button-tracked {
+                width: calc(50% - 60px);
+                margin: 0 30px 0 30px;
+                height: 50px;
+                margin-top: 20px;
+                box-shadow: 0 1px 9px 0 rgba(0,0,0,.3);
+                background-color: $orange-yellow;
+                color: white;
+                font-size: 20px;
+                font-weight: bold;
+                cursor: pointer;
+                outline: none;
+
+
+                transition: all 0.2s;
+
+                &:hover {
+                    background-color: $orange;
+                    box-shadow: 0 5px 9px 0 rgba(0,0,0,.3);
+                }
+
+                &:active {
+                    box-shadow: none;
+                    background-color: $orange-yellow;
+                }
+            }
+
+            #track-button {
+                width: calc(50% - 60px);
+                margin: 0 30px 0 30px;
+                height: 50px;
+                margin-top: 20px;
+                box-shadow: 0 1px 9px 0 rgba(0,0,0,.3);
+                background-color: #1D9C73;
+                color: white;
+                font-size: 20px;
+                font-weight: bold;
+                cursor: pointer;
+                outline: none;
+
+
+                transition: all 0.2s;
+
+                &:hover {
+                    background-color: #157757;
+                    box-shadow: 0 5px 9px 0 rgba(0,0,0,.3);
+                }
+
+                &:active {
+                    box-shadow: none;
+                    background-color: #1D9C73;
+                }
             }
 
             p {
@@ -316,10 +368,16 @@ $orange-yellow: #FF7E4A;
 
             cursor: pointer;
             transition: all 0.2s;
+            outline: none;
 
             &:hover {
                 background-color: $orange;
                 box-shadow: 0 5px 9px 0 rgba(0,0,0,.3);
+            }
+
+            &:active {
+                background-color: $orange-yellow;
+                box-shadow: none;
             }
         }
     }
@@ -415,7 +473,7 @@ $orange-yellow: #FF7E4A;
                 <img :src="imageUrl" alt="" v-if="imageUrl" id="artist-image">
 
                 <div id="info-container">
-                    <h1>{{ artistInfo.name }}</h1>
+                    <h1>{{ lastFMData.name }}</h1>
 
 
                     <a :href="artistInfo.facebook_page_url" v-if="artistInfo.facebook_page_url" class="link-icon">
@@ -436,6 +494,9 @@ $orange-yellow: #FF7E4A;
                     </p>
 
                 </div>
+
+                <button id="track-button-tracked" v-if="tracking" v-on:click="trackArtist">Stop Tracking</button>
+                <button id="track-button" v-else v-on:click="trackArtist">Track Artist</button>
             </div>
 
             <div id="right-side">
@@ -517,6 +578,7 @@ import store from '@/store/index.js'
 export default {
     data: function() {
         this.getAllInformation();
+        console.log('data')
         return {
             // Init local variables
             artist: '',
@@ -528,7 +590,9 @@ export default {
             onTour: false,
             imageUrl: '',
             countrySet: false,
-            localEvents: []
+            localEvents: [],
+            tracking: false,
+            trackedArtists: {"list": []}
         }
     },
 
@@ -538,6 +602,19 @@ export default {
             this.localEvents = [];
 
             this.getAllInformation();
+
+            console.log('route')
+            let trackedInfo =  JSON.parse(localStorage.getItem('Tracked'))
+            if (trackedInfo)
+                this.trackedArtists = trackedInfo;
+
+            console.log(this.trackedArtists)
+            if (this.trackedArtists.list.includes(this.$route.params.artist.toLowerCase())) {
+                this.tracking = true;
+            } else {
+                this.tracking = false;
+            }
+
         }
     },
 
@@ -548,6 +625,16 @@ export default {
         if (userCountry) {
             this.countrySet = userCountry;
         }
+
+        console.log('mounted')
+        let trackedInfo =  JSON.parse(localStorage.getItem('Tracked'))
+        if (trackedInfo)
+            this.trackedArtists = trackedInfo;
+
+        console.log(this.trackedArtists)
+        if (this.trackedArtists.list.includes(this.$route.params.artist.toLowerCase())) {
+            this.tracking = true;
+        }
     },
 
     methods: {
@@ -555,6 +642,7 @@ export default {
             this.getArtistEvents();
             this.checkBandcampAccount();
             this.getLastFMInfo();
+            console.log('getAllInformation')
         },
 
         getArtistEvents: function() {
@@ -636,7 +724,7 @@ export default {
                     if(event.offers.length){
                         event.ticketUrl = event.offers[0].url;
                     } else {
-                        event.searchUrl = "https://duckduckgo.com/?q=" + this.artistInfo.name + " " + event.datetime;
+                        event.searchUrl = "https://duckduckgo.com/?q=" + this.lastFMData.name + " " + event.datetime;
                     }
 
                     if (event.venue.country == this.countrySet) {
@@ -657,6 +745,7 @@ export default {
             */
             getArtistInfo(this.artist).then(data => {
                 this.artistInfo = data;
+
                 //console.log("BIT data: ")
                 //console.log(this.artistInfo);
             })
@@ -758,6 +847,23 @@ export default {
         resetCountry: function() {
             localStorage.removeItem('Country');
             this.countrySet = false;
+        },
+
+        trackArtist: function() {
+            if (!this.tracking) {
+                this.tracking = true;
+                if (!this.trackedArtists.list.includes(this.lastFMData.name.toLowerCase())) {
+                    this.trackedArtists.list.push(this.lastFMData.name.toLowerCase())
+                }
+            } else {
+                this.tracking = false;
+                let index = this.trackedArtists.list.indexOf(this.lastFMData.name)
+                if (index != -1) {
+                    this.trackedArtists.list.splice(index, 1);
+                }
+            }
+
+            localStorage.setItem('Tracked', JSON.stringify(this.trackedArtists));
         }
     }
 }
