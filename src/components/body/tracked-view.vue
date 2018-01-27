@@ -17,7 +17,8 @@ $orange-yellow: #FF7E4A;
         width: 100%;
         height: 100%;
 
-        padding: 50px 30px;
+        padding-top: 50px;
+        padding-left: 30px;
         box-sizing: border-box;
 
         display: flex;
@@ -25,6 +26,19 @@ $orange-yellow: #FF7E4A;
         .artist-image {
             width: 80px;
             border-radius: 50px;
+        }
+
+        #tracked-artist-list {
+            overflow-y: scroll;
+
+            p {
+                padding: 5px;
+            }
+        }
+
+        #tracked-artist-events-list {
+            margin-left: 30px;
+            overflow-y: scroll;
         }
     }
 }
@@ -228,11 +242,11 @@ $orange-yellow: #FF7E4A;
                 </div>
             </div>
 
-            <div>
+            <div id="tracked-artist-list">
                 <p v-for="artist in trackedArtists.list">{{ artist }}</p>
             </div>
 
-            <div>
+            <div id="tracked-artist-events-list">
                 <p v-for="event in allLocalEvents" v-if="showEvents && !showAllEvents">
                     <img :src="event.imageUrl" :alt="event.lineup[0]" class="artist-image">
                     {{ event.lineup[0] }} {{ event.datetime }} {{ event.venue.country }} {{ event.venue.city }} {{ event.venue.name }}
