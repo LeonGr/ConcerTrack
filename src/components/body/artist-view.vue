@@ -807,6 +807,7 @@ export default {
                     return;
                 }
 
+                console.log(data)
                 this.lastFMData = data.artist;
                 this.artistBio = data.artist.bio.summary;
                 this.imageUrl = data.artist.image[data.artist.image.length - 1]["#text"] || this.artistInfo.image_url;

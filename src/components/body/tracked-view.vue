@@ -19,6 +19,13 @@ $orange-yellow: #FF7E4A;
 
         padding: 50px 30px;
         box-sizing: border-box;
+
+        display: flex;
+
+        .artist-image {
+            width: 80px;
+            border-radius: 50px;
+        }
     }
 }
 </style>
@@ -221,9 +228,24 @@ $orange-yellow: #FF7E4A;
                 </div>
             </div>
 
-            <code>
+            <div>
                 <p v-for="artist in trackedArtists.list">{{ artist }}</p>
-            </code>
+            </div>
+
+            <div>
+                <p v-for="event in allLocalEvents" v-if="showEvents && !showAllEvents">
+                    <img :src="event.imageUrl" :alt="event.lineup[0]" class="artist-image">
+                    {{ event.lineup[0] }} {{ event.datetime }} {{ event.venue.country }} {{ event.venue.city }} {{ event.venue.name }}
+                </p>
+
+                <!--<p v-for="event in allEvents" v-if="showEvents && showAllEvents">-->
+                    <!--{{ event.lineup[0] }} {{ event.datetime }} {{ event.venue.country }} {{ event.venue.city }} {{ event.venue.name }}-->
+                <!--</p>-->
+            </div>
+
+            <!--<div>-->
+                <!--<img v-for="image in artistImages" :src="image.url" class="artist-image" :alt="image.artist">-->
+            <!--</div>-->
         </div>
     </div>
 </template>
@@ -237,8 +259,13 @@ export default {
         return {
             // Init local variables
             events: {},
+            allEvents: [],
+            allLocalEvents: [],
             countrySet: false,
             localEvents: [],
+            showEvents: false,
+            showAllEvents: false,
+            artistImages: [],
             trackedArtists: {"list": []}
         }
     },
@@ -271,21 +298,20 @@ export default {
             this.trackedArtists = trackedInfo;
 
         console.log(this.trackedArtists)
+
+        console.time("All")
+        for(let i = 0, x = this.trackedArtists.list.length; i < x; i++) {
+            let artist = this.trackedArtists.list[i];
+            this.getLastFMInfo(artist);
+            this.getArtistEvents(artist);
+        }
+
+        console.log(this.allEvents);
     },
 
     methods: {
-        getAllInformation: function() {
-            this.getArtistEvents();
-            this.checkBandcampAccount();
-            this.getLastFMInfo();
-            console.log('getAllInformation')
-        },
-
-        getArtistEvents: function() {
-            console.time("BIT")
+        getArtistEvents: function(artist) {
             // Store artist from url in local variable
-            this.artist = this.$route.params.artist
-
             const apiURL = "https://rest.bandsintown.com/"
             const apiExtension = "?app_id='ConcerTrack v0.0.1'"
 
@@ -345,7 +371,7 @@ export default {
                     name: name of the venue
                     region: state or province (or some random number)
             */
-            getEvents(this.artist).then(data => {
+            getEvents(artist).then(data => {
                 this.events = data;
                 //console.log("BIT event data:")
                 //console.log(data)
@@ -355,19 +381,53 @@ export default {
                     let date = new Date(event.datetime);
                     let months = ["Jan","Feb","Mar","Apr","May", "June","July","Aug","Sept","Oct","Nov","Dec"];
                     //event.datetime = `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
-                    event.datetime = `${date.getDate()} ${months[date.getMonth()]}`;
+                    event.datetime = `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
 
                     // If we have a ticket url show it otherwise redirect to search
                     if(event.offers.length){
                         event.ticketUrl = event.offers[0].url;
                     } else {
-                        event.searchUrl = "https://duckduckgo.com/?q=" + this.lastFMData.name + " " + event.datetime;
+                        event.searchUrl = "https://duckduckgo.com/?q=" + artist + " " + event.datetime;
                     }
 
                     if (event.venue.country == this.countrySet) {
                         this.localEvents.push(event);
+                        this.allLocalEvents.push(event);
                     }
+
+                    this.allEvents.push(event);
                 })
+
+                if (artist == this.trackedArtists.list[this.trackedArtists.list.length - 1]) {
+                    console.log('Last')
+                    setTimeout(() => {
+                        this.allEvents.sort(function(a,b) {
+                            return new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
+                        });
+
+                        this.allLocalEvents.sort(function(a,b) {
+                            return new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
+                        });
+                        this.showEvents = true;
+
+
+                        for(let i = 0, x = this.allLocalEvents.length; i < x; i++) {
+                            let localEvent = this.allLocalEvents[i];
+
+                            for(let j = 0, y = this.artistImages.length; j < y; j++) {
+                                let artistImage = this.artistImages[j];
+
+                                if (artistImage.artist.toLowerCase() == localEvent.lineup[0].toLowerCase()) {
+                                    this.allLocalEvents[i].imageUrl = artistImage.url;
+                                }
+                            }
+                        }
+
+                        console.log(this.allLocalEvents)
+                    }, 500)
+
+                    console.timeEnd("All")
+                }
             })
 
             /* Data:
@@ -380,32 +440,25 @@ export default {
             upcoming_event_count: number of upcoming events
             url: link to BIT page of artist
             */
-            getArtistInfo(this.artist).then(data => {
-                this.artistInfo = data;
-
-                //console.log("BIT data: ")
-                //console.log(this.artistInfo);
-                console.timeEnd("BIT")
-            })
-        },
-
-        checkBandcampAccount: function() {
-            // Cant get results from bandcamp yet so we just redirect to the search page
-            this.bandcampUrl = "https://bandcamp.com/search?q=" + this.artist.toLowerCase();
+//            getArtistInfo(artist).then(data => {
+//                this.artistInfo = data;
+//
+//                //console.log("BIT data: ")
+//                //console.log(this.artistInfo);
+//            })
         },
 
         // Get information from Last.fm API
-        getLastFMInfo: function() {
-            console.time("Lastfm")
-            let getData = () => {
+        getLastFMInfo: function(artist) {
+            let getData = (artist) => {
                 // Encode so lastfm doesn't get trouble with names with for example &
-                let artist = encodeURIComponent(this.artist);
+                let artistName = encodeURIComponent(artist);
 
 				let apiUrl = "https://ws.audioscrobbler.com/2.0/"
 				let apiParams = "?method=artist.getinfo&api_key=a4629fdacfd93267704f599b874a59bf&format=json&artist="
 
                 return new Promise((resolve, reject) => {
-                    fetch(apiUrl + apiParams + artist, {
+                    fetch(apiUrl + apiParams + artistName, {
                         method: 'GET',
                         headers: {
                             'accept': "application/json"
@@ -437,18 +490,17 @@ export default {
                 tags: object with array of tags
                     tags: array of tags
             */
-            getData().then(data => {
+            getData(artist).then(data => {
                 if (data.error){
                     throw data.message;
                     return;
                 }
 
-                this.lastFMData = data.artist;
-                this.artistBio = data.artist.bio.summary;
-                this.imageUrl = data.artist.image[data.artist.image.length - 1]["#text"] || this.artistInfo.image_url;
-                //console.log("Last FM data: ");
-                //console.log(data.artist);
-                console.timeEnd("Lastfm")
+                let imageUrl = data.artist.image[data.artist.image.length - 1]["#text"];
+                this.artistImages.push({
+                    "artist": artist,
+                    "url": imageUrl
+                });
             })
         },
 
@@ -480,6 +532,15 @@ export default {
                     if (event.venue.country == country) {
                         this.localEvents.push(event);
                     }
+                }
+
+                this.allLocalEvents = [];
+                this.allEvents = [];
+
+                for(let i = 0, x = this.trackedArtists.list.length; i < x; i++) {
+                    let artist = this.trackedArtists.list[i];
+                    this.getLastFMInfo(artist);
+                    this.getArtistEvents(artist);
                 }
             }
         },
