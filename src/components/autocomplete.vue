@@ -285,6 +285,7 @@ export default {
             this.showMatching = this.allMatching = this.startMatching = [];
             this.$parent.callBackForm(this.callback, this.inputValue);
             this.inputValue = "";
+            this.errorMessage = "";
         },
     }
 }

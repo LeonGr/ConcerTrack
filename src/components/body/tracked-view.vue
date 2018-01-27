@@ -13,280 +13,12 @@ $orange-yellow: #FF7E4A;
     position: absolute;
     top: 50px;
 
-    #output {
-        //width: 700px;
+    #main-content {
         width: 100%;
         height: 100%;
-        display: flex;
 
-        #left-side {
-            height: 100%;
-            width: 50%;
-
-
-
-            h1 {
-                margin-top: 50px;
-                //line-height: 0.7
-            }
-
-            img {
-                width: 50%;
-                padding: 0 30px 0 30px;
-                box-sizing: border-box;
-                margin-top: 50px;
-                //left: 50px;
-                //top: 50px;
-            }
-
-            #track-button-tracked {
-                width: calc(50% - 60px);
-                margin: 0 30px 0 30px;
-                height: 50px;
-                margin-top: 20px;
-                box-shadow: 0 1px 9px 0 rgba(0,0,0,.3);
-                background-color: $orange-yellow;
-                color: white;
-                font-size: 20px;
-                font-weight: bold;
-                cursor: pointer;
-                outline: none;
-
-
-                transition: all 0.2s;
-
-                &:hover {
-                    background-color: $orange;
-                    box-shadow: 0 5px 9px 0 rgba(0,0,0,.3);
-                }
-
-                &:active {
-                    box-shadow: none;
-                    background-color: $orange-yellow;
-                }
-            }
-
-            #track-button {
-                width: calc(50% - 60px);
-                margin: 0 30px 0 30px;
-                height: 50px;
-                margin-top: 20px;
-                box-shadow: 0 1px 9px 0 rgba(0,0,0,.3);
-                background-color: #1D9C73;
-                color: white;
-                font-size: 20px;
-                font-weight: bold;
-                cursor: pointer;
-                outline: none;
-
-
-                transition: all 0.2s;
-
-                &:hover {
-                    background-color: #157757;
-                    box-shadow: 0 5px 9px 0 rgba(0,0,0,.3);
-                }
-
-                &:active {
-                    box-shadow: none;
-                    background-color: #1D9C73;
-                }
-            }
-
-            p {
-                margin-top: 20px;
-
-            }
-
-            a {
-                color: #17A1FF;
-            }
-
-            #info-container {
-                float: right;
-                width: 50%;
-
-                .link-icon {
-                    color: inherit;
-
-                    i {
-                        margin: 20px 3px 0 0;
-                        font-size: 25px;
-                    }
-                }
-            }
-        }
-
-        #right-side {
-            height: 100%;
-            width: 50%;
-            display: flex;
-            flex-direction: column;
-
-
-            #local-event-container {
-                box-sizing: border-box;
-                padding-left: 20px;
-                margin-top: 50px;
-
-                flex: 0 1 auto;
-                max-height: 50%;
-
-                h1 {
-                    font-size: 22px;
-                }
-
-                #local-events {
-                    margin-top: 10px;
-                    margin-bottom: 0;
-
-                    #local-events-list {
-                        overflow: auto;
-                        max-height: calc(50vh - 200px);
-                        width: 100%;
-                    }
-
-                    button {
-                        background-color: transparent;
-                        color: $orange-red;
-                        text-decoration: underline;
-                        cursor: pointer;
-                        font-size: 15px;
-                    }
-
-                    .amount-upcoming {
-                        font-weight: bold;
-                        padding-top: 10px;
-                    }
-
-                    .event-div {
-                        margin-top: 20px;
-
-                        &:first-child {
-                            margin-top: 0;
-                        }
-                    }
-                }
-
-                #ask-location {
-                    display: flex;
-                    flex-direction: column;
-                    margin-top: 10px;
-
-                    p {
-                        height: 40px;
-                    }
-
-                    #country {
-                        margin-top: 5px;
-                    }
-                }
-            }
-
-
-            #event-container {
-                box-sizing: border-box;
-                padding: 50px 0 0 20px;
-                width: 100%;
-                flex: 0 1 auto;
-                //max-height: 50%;
-                display: flex;
-                flex-direction: column;
-
-                h1 {
-                    flex: 0 1 auto;
-                    font-size: 22px;
-                }
-
-                .amount-upcoming {
-                    padding-top: 10px;
-                    font-weight: bold;
-                    flex: 0 1 auto;
-                    color: black;
-                }
-
-                #event-list {
-                    overflow: auto;
-                    flex: 0 1 auto;
-
-                    .event-div {
-                        margin-top: 20px;
-
-                        &:first-child {
-                            margin-top: 0;
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-.list-header {
-    width: calc(100% - 14px);
-    display: block;
-    padding: 10px 0;
-    padding-right: 14px;
-    margin-top: 5px;
-    //box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.3);
-    box-shadow: 0 8px 6px -6px rgba(0, 0, 0, 0.3);
-    //border-bottom: 1px solid #333;
-    border-top: 1px solid #333;
-    font-size: 0;
-
-    p {
-        display: inline-block;
-        font-weight: bold;
-        font-size: 18px;
-
-
-
-        &:nth-of-type(1) {
-            width: 60px;
-        }
-
-        &:nth-of-type(2) {
-            width: 30%;
-            margin-left: 20px;
-        }
-
-        &:nth-of-type(3) {
-            margin-left: 20px;
-        }
-    }
-}
-
-.event-date {
-    background-color: $orange-yellow;
-    width: 20px;
-    height: 20px;
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    font-weight: bold;
-    color: white;
-}
-
-.event-venue {
-    margin-left: 20px;
-    width: 30%;
-}
-
-.event-city {
-    width: 40%;
-    margin-left: 20px;
-}
-
-.event-div {
-    display: flex;
-    align-items: center;
-
-    //text-align: center;
-
-    a {
-        width: 10%;
+        padding: 50px 30px;
+        box-sizing: border-box;
     }
 }
 </style>
@@ -467,131 +199,46 @@ $orange-yellow: #FF7E4A;
                 submitText="<i class='fa fa-search' aria-hidden='true'></i>">
             </autocomplete>
         </span>
-        <div id="output">
-            <div id="left-side">
-                <!--If we get an image from lastFM show it. Otherwise use the one from BIT-->
-                <img :src="imageUrl" alt="" v-if="imageUrl" id="artist-image">
+        <div id="main-content">
+            <h1>Tracked Artists:</h1>
+            <div id="local-events" v-if="countrySet">
+                {{ countrySet }}
+                <button v-on:click="resetCountry">Change location</button>
+            </div>
+            <div id="ask-location" v-else>
+                <p>
+                    No location set, do you want to set it now so we can show you events in your country?
+                </p>
 
-                <div id="info-container">
-                    <h1>{{ lastFMData.name }}</h1>
-
-
-                    <a :href="artistInfo.facebook_page_url" v-if="artistInfo.facebook_page_url" class="link-icon">
-                        <i class="fa fa-facebook-official" aria-hidden="true"></i>
-                    </a>
-
-                    <a :href="bandcampUrl" v-if="bandcampUrl" class="link-icon">
-                        <i class="fa fa-bandcamp" aria-hidden="true"></i>
-                    </a>
-
-
-                    <a :href="lastFMData.url" v-if="lastFMData.url" class="link-icon">
-                        <i class="fa fa-lastfm-square" aria-hidden="true"></i>
-                    </a>
-
-                    <p v-if="lastFMData" v-html="artistBio">
-                        {{ artistBio }}
-                    </p>
-
+                <div id="country">
+                    <autocomplete
+                     title="Select country:"
+                     placeholder="Country name"
+                     data="http://localhost:8080/static/countries.json"
+                     callback="countrySearch"
+                     submitText="Select">
+                    </autocomplete>
                 </div>
-
-                <button id="track-button-tracked" v-if="tracking" v-on:click="trackArtist">Stop Tracking</button>
-                <button id="track-button" v-else v-on:click="trackArtist">Track Artist</button>
             </div>
 
-            <div id="right-side">
-                <div id="local-event-container">
-                    <h1>Local events:</h1>
-                    <div id="local-events" v-if="countrySet">
-                        <button v-on:click="resetCountry">Change location</button>
-                        <p class="amount-upcoming">{{ localEvents.length }} upcoming events in country '{{ countrySet }}':</p>
-                        <div class="list-header"><p>Date</p><p>Venue</p><p>Location</p></div>
-                        <div v-if="localEvents.length" id="local-events-list" class="event-list">
-                            <div v-for="event in localEvents" :key="event.datetime" class="event-div">
-                                <p class="event-date">{{ event.datetime }}</p>
-                                <p class="event-venue">{{ event.venue.name }}</p>
-                                <p class="event-city">{{ event.venue.city }}, {{ event.venue.country }}</p>
-                                <a v-if="event.ticketUrl" :href="event.ticketUrl">Tickets</a>
-                                <a v-else :href="event.searchUrl">Search tickets</a>
-                            </div>
-                        </div>
-                        <div v-else style="margin-top: 5px">No local upcoming events :(</div>
-                    </div>
-                    <div id="ask-location" v-else>
-                        <p>
-                            No location set, do you want to set it now so we can show you events in your country?
-                        </p>
-
-                        <div id="country">
-                            <autocomplete
-                             title="Select country:"
-                             placeholder="Country name"
-                             data="http://localhost:8080/static/countries.json"
-                             callback="countrySearch"
-                             submitText="Select">
-                            </autocomplete>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="event-container">
-                    <h1>All events:</h1>
-                    <p v-if="events.length" class="amount-upcoming">
-                        {{ artistInfo.upcoming_event_count }} upcoming events worldwide:
-                    </p>
-                    <p v-else class="amount-upcoming">
-                        No upcoming events :(
-                    </p>
-                    <div class="list-header">
-                        <p>Date</p>
-                        <p>Venue</p>
-                        <p>Location</p>
-                    </div>
-                    <hr>
-                    <div id="event-list" class="event-list">
-                        <div  v-for="event in events" :key="event.datetime" class="event-div">
-                            <p class="event-date">{{ event.datetime }}</p>
-                            <p class="event-venue">{{ event.venue.name }}</p>
-                            <p class="event-city">{{ event.venue.city }}, {{ event.venue.country }}</p>
-                            <a v-if="event.ticketUrl" :href="event.ticketUrl">Tickets</a>
-                            <a v-else :href="event.searchUrl">Search tickets</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <code>
+                <p v-for="artist in trackedArtists.list">{{ artist }}</p>
+            </code>
         </div>
     </div>
 </template>
 
 <script>
-//TODO:
-// - Make landing page prettier
-// - Add "more results"?
-// - Show related artists in artist-view
-// - Add tracked artists to localStorage and make a page to show those
-// - Make a page that shows all events at your location from your tracked artists
-// - Do security checks
-// - Add more artists
-// - Make people be able to report wrong artists
 import store from '@/store/index.js'
 
 export default {
     data: function() {
-        this.getAllInformation();
         console.log('data')
         return {
             // Init local variables
-            artist: '',
-            artistInfo: {},
-            bandcampUrl: '',
             events: {},
-            lastFMData: {},
-            artistBio: '',
-            onTour: false,
-            imageUrl: '',
             countrySet: false,
             localEvents: [],
-            tracking: false,
             trackedArtists: {"list": []}
         }
     },
@@ -601,20 +248,12 @@ export default {
         '$route' () {
             this.localEvents = [];
 
-            this.getAllInformation();
-
             console.log('route')
             let trackedInfo =  JSON.parse(localStorage.getItem('Tracked'))
             if (trackedInfo)
                 this.trackedArtists = trackedInfo;
 
             console.log(this.trackedArtists)
-            if (this.trackedArtists.list.includes(this.$route.params.artist.toLowerCase())) {
-                this.tracking = true;
-            } else {
-                this.tracking = false;
-            }
-
         }
     },
 
@@ -632,9 +271,6 @@ export default {
             this.trackedArtists = trackedInfo;
 
         console.log(this.trackedArtists)
-        if (this.trackedArtists.list.includes(this.$route.params.artist.toLowerCase())) {
-            this.tracking = true;
-        }
     },
 
     methods: {
