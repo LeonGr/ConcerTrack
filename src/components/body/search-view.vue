@@ -137,7 +137,7 @@ $orange-yellow: #FF7E4A;
         <autocomplete
             title="Search for events from an artist:"
             placeholder="Artist name"
-            data="http://localhost:8080/static/AllList.json"
+            data="static/AllList.json"
             callback="artistSearch"
             submitText="Search">
         </autocomplete>

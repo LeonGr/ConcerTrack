@@ -462,7 +462,7 @@ $orange-yellow: #FF7E4A;
             <autocomplete
                 title=""
                 placeholder="Search another artist"
-                data="http://localhost:8080/static/AllList.json"
+                data="static/AllList.json"
                 callback="artistSearch"
                 submitText="<i class='fa fa-search' aria-hidden='true'></i>">
             </autocomplete>
@@ -526,7 +526,7 @@ $orange-yellow: #FF7E4A;
                             <autocomplete
                              title="Select country:"
                              placeholder="Country name"
-                             data="http://localhost:8080/static/countries.json"
+                             data="static/countries.json"
                              callback="countrySearch"
                              submitText="Select">
                             </autocomplete>

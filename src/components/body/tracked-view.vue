@@ -17,28 +17,113 @@ $orange-yellow: #FF7E4A;
         width: 100%;
         height: 100%;
 
-        padding-top: 50px;
         padding-left: 30px;
         box-sizing: border-box;
 
         display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        align-items: flex-end;
+
+        h1 {
+            font-size: 32px;
+            align-self: flex-start;
+            margin-top: 50px;
+        }
+
+        #local-events {
+            margin-top: 20px;
+            align-self: flex-start;
+            width: 300px;
+
+            button {
+                margin-top: 20px;
+                background: none;
+                text-decoration: underline;
+                color: $orange-yellow;
+                cursor: pointer;
+            }
+        }
+
+        #ask-location {
+            margin-top: 20px;
+            width: 300px;
+            align-self: flex-start;
+        }
 
         .artist-image {
             width: 80px;
+            height: 80px;
             border-radius: 50px;
         }
 
         #tracked-artist-list {
             overflow-y: scroll;
+            height: 100%;
 
-            p {
+            a {
                 padding: 5px;
+                display: block;
+                color: $orange;
             }
         }
 
+        #event-list-loading {
+            width: 50%;
+            height: 90%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         #tracked-artist-events-list {
-            margin-left: 30px;
             overflow-y: scroll;
+            width: 50%;
+            height: 100%;
+
+            .tracked-artist-event {
+                height: 120px;
+                display: flex;
+                align-items: center;
+                border-bottom: 1px solid #ccc;
+
+                .artist-image {
+                    margin-right: 20px;
+                }
+
+                .artist-name {
+                }
+
+                .event-info-wrapper {
+                    height: 80px;
+                    display: flex;
+                    flex-wrap: wrap;
+                    width: calc(100% - 100px);
+
+                    .event-date {
+                        width: 100%;
+                        font-weight: bold;
+                        color: $orange-yellow;
+                    }
+
+                    .event-city {
+                        width: 40%;
+                        padding-right: 10px;
+                        box-sizing: border-box;
+                    }
+
+                    .event-venue {
+                        width: 40%;
+                        padding-right: 10px;
+                        box-sizing: border-box;
+                    }
+
+                    .event-tickets {
+                        width: 20%;
+                    }
+                }
+
+            }
         }
     }
 }
@@ -162,17 +247,17 @@ $orange-yellow: #FF7E4A;
             border: 1px solid $orange-yellow;
             box-sizing: border-box;
             outline: none;
-            width: 250px;
+            width: 300px;
         }
 
         #search-results {
             border: 1px solid $orange-yellow;
             position: absolute;
-            top: 210px;
+            top: 243px;
             list-style: none;
             background-color: white;
             box-sizing: border-box;
-            width: 250px;
+            width: 300px;
 
             li {
                 padding: 4px 20px;
@@ -189,7 +274,8 @@ $orange-yellow: #FF7E4A;
 
         #submitButton {
             position: absolute;
-            margin-left: 260px;
+            margin-left: 216px;
+            margin-top: 2px;
             padding: 10px;
             background-color: $orange-yellow;
             color: white;
@@ -215,7 +301,7 @@ $orange-yellow: #FF7E4A;
             <autocomplete
                 title=""
                 placeholder="Search another artist"
-                data="http://localhost:8080/static/AllList.json"
+                data="static/AllList.json"
                 callback="artistSearch"
                 submitText="<i class='fa fa-search' aria-hidden='true'></i>">
             </autocomplete>
@@ -223,7 +309,8 @@ $orange-yellow: #FF7E4A;
         <div id="main-content">
             <h1>Tracked Artists:</h1>
             <div id="local-events" v-if="countrySet">
-                {{ countrySet }}
+                <b>Showing events in: '{{ countrySet }}'</b>
+                <br>
                 <button v-on:click="resetCountry">Change location</button>
             </div>
             <div id="ask-location" v-else>
@@ -235,7 +322,7 @@ $orange-yellow: #FF7E4A;
                     <autocomplete
                      title="Select country:"
                      placeholder="Country name"
-                     data="http://localhost:8080/static/countries.json"
+                     data="static/countries.json"
                      callback="countrySearch"
                      submitText="Select">
                     </autocomplete>
@@ -243,18 +330,30 @@ $orange-yellow: #FF7E4A;
             </div>
 
             <div id="tracked-artist-list">
-                <p v-for="artist in trackedArtists.list">{{ artist }}</p>
+                <a v-bind:href="'#/artists/' + artist" v-for="artist in trackedArtists.list">{{ artist }}</a>
             </div>
 
-            <div id="tracked-artist-events-list">
-                <p v-for="event in allLocalEvents" v-if="showEvents && !showAllEvents">
+            <div id="tracked-artist-events-list" v-if="showEvents">
+                <div v-for="event in allLocalEvents" v-if="showEvents && !showAllEvents" class="tracked-artist-event">
                     <img :src="event.imageUrl" :alt="event.lineup[0]" class="artist-image">
-                    {{ event.lineup[0] }} {{ event.datetime }} {{ event.venue.country }} {{ event.venue.city }} {{ event.venue.name }}
-                </p>
+                    <div class="event-info-wrapper">
+                        <h2 class="artist-name">{{ event.lineup[0] }}</h2>
+                        <p class="event-date">{{ event.datetime }}</p>
+                        <p class="event-city">{{ event.venue.city }}, {{ event.venue.country }}</p>
+                        <p class="event-venue">{{ event.venue.name }}</p>
+                        <a class="event-tickets" :href="event.ticketUrl" v-if="event.ticketUrl">Tickets</a>
+                        <a class="event-tickets" :href="event.searchUrl" v-else>Search for tickets</a>
+                    </div>
+                </div>
 
                 <!--<p v-for="event in allEvents" v-if="showEvents && showAllEvents">-->
                     <!--{{ event.lineup[0] }} {{ event.datetime }} {{ event.venue.country }} {{ event.venue.city }} {{ event.venue.name }}-->
                 <!--</p>-->
+            </div>
+
+            <div id="event-list-loading" v-else>
+                <p v-if="countrySet">Loading events...</p>
+                <p v-else>Choose country to see local events.</p>
             </div>
 
             <!--<div>-->
@@ -269,6 +368,7 @@ import store from '@/store/index.js'
 
 export default {
     data: function() {
+        console.log(this.allLocalEvents)
         console.log('data')
         return {
             // Init local variables
@@ -287,14 +387,14 @@ export default {
     watch: {
         // If the route changes (user types other artist into url) we renew the information
         '$route' () {
-            this.localEvents = [];
-
+//            this.localEvents = [];
+//
             console.log('route')
-            let trackedInfo =  JSON.parse(localStorage.getItem('Tracked'))
-            if (trackedInfo)
-                this.trackedArtists = trackedInfo;
-
-            console.log(this.trackedArtists)
+//            let trackedInfo =  JSON.parse(localStorage.getItem('Tracked'))
+//            if (trackedInfo)
+//                this.trackedArtists = trackedInfo;
+//
+//            console.log(this.trackedArtists)
         }
     },
 
@@ -424,7 +524,6 @@ export default {
                         });
                         this.showEvents = true;
 
-
                         for(let i = 0, x = this.allLocalEvents.length; i < x; i++) {
                             let localEvent = this.allLocalEvents[i];
 
@@ -438,7 +537,7 @@ export default {
                         }
 
                         console.log(this.allLocalEvents)
-                    }, 500)
+                    }, 1000)
 
                     console.timeEnd("All")
                 }
@@ -510,7 +609,7 @@ export default {
                     return;
                 }
 
-                let imageUrl = data.artist.image[data.artist.image.length - 1]["#text"];
+                let imageUrl = data.artist.image[data.artist.image.length - 4]["#text"];
                 this.artistImages.push({
                     "artist": artist,
                     "url": imageUrl
@@ -562,6 +661,7 @@ export default {
         resetCountry: function() {
             localStorage.removeItem('Country');
             this.countrySet = false;
+            this.showEvents = false;
         },
 
         trackArtist: function() {

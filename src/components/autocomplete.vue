@@ -94,7 +94,7 @@ export default {
 
             let fetchArtistList = () => {
                 return new Promise((resolve, reject) => {
-                    fetch(this.data, {
+                    fetch(window.location.origin + "/" + this.data, {
                         method: 'GET',
                         headers: {
                             'accept': "application/json"
