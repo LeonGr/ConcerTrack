@@ -1,0 +1,685 @@
+<style lang="scss" scoped>
+$purple-red: #530030;
+$red: #7E0030;
+$orange-red: #CA283D;
+$orange: #F0443A;
+$orange-yellow: #FF7E4A;
+#output-container {
+    height: calc(100vh - 100px);
+    width: 100%;
+    //display: flex;
+    justify-content: center;
+    color: #222;
+    position: absolute;
+    top: 50px;
+
+    #main-content {
+        width: 100%;
+        height: 100%;
+
+        padding-left: 30px;
+        box-sizing: border-box;
+
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        align-items: flex-end;
+
+        h1 {
+            font-size: 32px;
+            align-self: flex-start;
+            margin-top: 50px;
+        }
+
+        #local-events {
+            margin-top: 20px;
+            align-self: flex-start;
+            width: 300px;
+
+            button {
+                margin-top: 20px;
+                background: none;
+                text-decoration: underline;
+                color: $orange-yellow;
+                cursor: pointer;
+            }
+        }
+
+        #ask-location {
+            margin-top: 20px;
+            width: 300px;
+            align-self: flex-start;
+        }
+
+        .artist-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 50px;
+        }
+
+        #tracked-artist-list {
+            overflow-y: scroll;
+            height: 100%;
+
+            a {
+                padding: 5px;
+                display: block;
+                color: $orange;
+            }
+        }
+
+        #event-list-loading {
+            width: 50%;
+            height: 90%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #tracked-artist-events-list {
+            overflow-y: scroll;
+            width: 50%;
+            height: 100%;
+
+            .tracked-artist-event {
+                height: 120px;
+                display: flex;
+                align-items: center;
+                border-bottom: 1px solid #ccc;
+
+                .artist-image {
+                    margin-right: 20px;
+                }
+
+                .artist-name {
+                }
+
+                .event-info-wrapper {
+                    height: 80px;
+                    display: flex;
+                    flex-wrap: wrap;
+                    width: calc(100% - 100px);
+
+                    .event-date {
+                        width: 100%;
+                        font-weight: bold;
+                        color: $orange-yellow;
+                    }
+
+                    .event-city {
+                        width: 40%;
+                        padding-right: 10px;
+                        box-sizing: border-box;
+                    }
+
+                    .event-venue {
+                        width: 40%;
+                        padding-right: 10px;
+                        box-sizing: border-box;
+                    }
+
+                    .event-tickets {
+                        width: 20%;
+                    }
+                }
+
+            }
+        }
+    }
+}
+</style>
+
+<style lang="scss">
+$purple-red: #530030;
+$red: #7E0030;
+$orange-red: #CA283D;
+$orange: #F0443A;
+$orange-yellow: #FF7E4A;
+#search {
+    position: absolute;
+    top: -50px;
+    right: 250px;
+    height: 50px;
+    z-index: 5;
+
+    #autocomplete-container {
+
+        h1 {
+            font-size: 20px;
+            font-weight: 300;
+        }
+
+        #errorMessage {
+            color: $orange;
+            margin-right: 5px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #input-field {
+            padding: 10px;
+            height: 50px;
+            font-size: 20px;
+            border: 1px solid $orange-yellow;
+            box-sizing: border-box;
+            outline: none;
+            width: 300px;
+        }
+
+        #search-results {
+            border: 1px solid $orange-yellow;
+            position: absolute;
+            top: 49px;
+            right: 0px;
+            list-style: none;
+            background-color: white;
+            box-sizing: border-box;
+            width: 300px;
+
+            li {
+                padding: 4px 20px;
+
+                &:hover {
+                    cursor: pointer;
+                }
+            }
+
+            .selected {
+                background-color: $orange-yellow;
+            }
+        }
+
+        #submitButton {
+            position: absolute;
+            right: 10px;
+            background-color: $orange-yellow;
+            padding: 5px 18px;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            box-shadow: 0 1px 9px 0 rgba(0,0,0,.3);
+
+            cursor: pointer;
+            transition: all 0.2s;
+            outline: none;
+
+            &:hover {
+                background-color: $orange;
+                box-shadow: 0 5px 9px 0 rgba(0,0,0,.3);
+            }
+
+            &:active {
+                background-color: $orange-yellow;
+                box-shadow: none;
+            }
+        }
+    }
+}
+
+#country {
+    #autocomplete-container {
+        h1 {
+            margin-top: 5px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        #errorMessage {
+            color: $orange;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+
+        #input-field {
+            padding: 5px;
+            margin-top: 5px;
+            height: 50px;
+            font-size: 20px;
+            border: 1px solid $orange-yellow;
+            box-sizing: border-box;
+            outline: none;
+            width: 300px;
+        }
+
+        #search-results {
+            border: 1px solid $orange-yellow;
+            position: absolute;
+            top: 243px;
+            list-style: none;
+            background-color: white;
+            box-sizing: border-box;
+            width: 300px;
+
+            li {
+                padding: 4px 20px;
+
+                &:hover {
+                    cursor: pointer;
+                }
+            }
+
+            .selected {
+                background-color: $orange-yellow;
+            }
+        }
+
+        #submitButton {
+            position: absolute;
+            margin-left: 216px;
+            margin-top: 2px;
+            padding: 10px;
+            background-color: $orange-yellow;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            box-shadow: 0 1px 9px 0 rgba(0,0,0,.3);
+
+            cursor: pointer;
+            transition: all 0.2s;
+
+            &:hover {
+                background-color: $orange;
+                box-shadow: 0 5px 9px 0 rgba(0,0,0,.3);
+            }
+        }
+    }
+}
+</style>
+
+<template>
+    <div id="output-container">
+        <span id="search">
+            <autocomplete
+                title=""
+                placeholder="Search another artist"
+                data="static/AllList.json"
+                callback="artistSearch"
+                submitText="<i class='fa fa-search' aria-hidden='true'></i>">
+            </autocomplete>
+        </span>
+        <div id="main-content">
+            <h1>Tracked Artists:</h1>
+            <div id="local-events" v-if="countrySet">
+                <b>Showing events in: '{{ countrySet }}'</b>
+                <br>
+                <button v-on:click="resetCountry">Change location</button>
+            </div>
+            <div id="ask-location" v-else>
+                <p>
+                    No location set, do you want to set it now so we can show you events in your country?
+                </p>
+
+                <div id="country">
+                    <autocomplete
+                     title="Select country:"
+                     placeholder="Country name"
+                     data="static/countries.json"
+                     callback="countrySearch"
+                     submitText="Select">
+                    </autocomplete>
+                </div>
+            </div>
+
+            <div id="tracked-artist-list">
+                <a v-bind:href="'#/artists/' + artist" v-for="artist in trackedArtists.list">{{ artist }}</a>
+            </div>
+
+            <div id="tracked-artist-events-list" v-if="showEvents">
+                <div v-for="event in allLocalEvents" v-if="showEvents && !showAllEvents" class="tracked-artist-event">
+                    <img :src="event.imageUrl" :alt="event.lineup[0]" class="artist-image">
+                    <div class="event-info-wrapper">
+                        <h2 class="artist-name">{{ event.lineup[0] }}</h2>
+                        <p class="event-date">{{ event.datetime }}</p>
+                        <p class="event-city">{{ event.venue.city }}, {{ event.venue.country }}</p>
+                        <p class="event-venue">{{ event.venue.name }}</p>
+                        <a class="event-tickets" :href="event.ticketUrl" v-if="event.ticketUrl">Tickets</a>
+                        <a class="event-tickets" :href="event.searchUrl" v-else>Search for tickets</a>
+                    </div>
+                </div>
+
+                <!--<p v-for="event in allEvents" v-if="showEvents && showAllEvents">-->
+                    <!--{{ event.lineup[0] }} {{ event.datetime }} {{ event.venue.country }} {{ event.venue.city }} {{ event.venue.name }}-->
+                <!--</p>-->
+            </div>
+
+            <div id="event-list-loading" v-else>
+                <p v-if="countrySet">Loading events...</p>
+                <p v-else>Choose country to see local events.</p>
+            </div>
+
+            <!--<div>-->
+                <!--<img v-for="image in artistImages" :src="image.url" class="artist-image" :alt="image.artist">-->
+            <!--</div>-->
+        </div>
+    </div>
+</template>
+
+<script>
+import store from '@/store/index.js'
+
+export default {
+    data: function() {
+        console.log(this.allLocalEvents)
+        console.log('data')
+        return {
+            // Init local variables
+            events: {},
+            allEvents: [],
+            allLocalEvents: [],
+            countrySet: false,
+            localEvents: [],
+            showEvents: false,
+            showAllEvents: false,
+            artistImages: [],
+            trackedArtists: {"list": []}
+        }
+    },
+
+    watch: {
+        // If the route changes (user types other artist into url) we renew the information
+        '$route' () {
+//            this.localEvents = [];
+//
+            console.log('route')
+//            let trackedInfo =  JSON.parse(localStorage.getItem('Tracked'))
+//            if (trackedInfo)
+//                this.trackedArtists = trackedInfo;
+//
+//            console.log(this.trackedArtists)
+        }
+    },
+
+    mounted: function() {
+        // If the page loads for the first time get all information
+
+        let userCountry = localStorage.getItem('Country');
+        if (userCountry) {
+            this.countrySet = userCountry;
+        }
+
+        console.log('mounted')
+        let trackedInfo =  JSON.parse(localStorage.getItem('Tracked'))
+        if (trackedInfo)
+            this.trackedArtists = trackedInfo;
+
+        console.log(this.trackedArtists)
+
+        console.time("All")
+        for(let i = 0, x = this.trackedArtists.list.length; i < x; i++) {
+            let artist = this.trackedArtists.list[i];
+            this.getLastFMInfo(artist);
+            this.getArtistEvents(artist);
+        }
+
+        console.log(this.allEvents);
+    },
+
+    methods: {
+        getArtistEvents: function(artist) {
+            // Store artist from url in local variable
+            const apiURL = "https://rest.bandsintown.com/"
+            const apiExtension = "?app_id='ConcerTrack v0.0.1'"
+
+            // Get artist information from API
+            let getArtistInfo = (artist) => {
+                return new Promise((resolve, reject) => {
+                    fetch(apiURL + "artists/" + artist + apiExtension, {
+                        method: 'GET',
+                        headers: {
+                            'accept': "application/json"
+                        }
+                    }).then(response => {
+                        return response.json()
+                    }).then(response => {
+                        resolve(response);
+                    }).catch(error => {
+                        console.log(error);
+                    })
+                })
+            }
+
+            // Get artist's events from API
+            let getEvents = (artist) => {
+                return new Promise((resolve, reject) => {
+                    fetch(apiURL + "artists/" + artist + "/events" + apiExtension, {
+                        method: 'GET',
+                        headers: {
+                            'accept': "application/json"
+                        }
+                    }).then(response => {
+                        return response.json()
+                    }).then(response => {
+                        resolve(response);
+                    }).catch(error => {
+                        console.log(error);
+                    })
+                })
+            }
+
+            /* Data:
+            Array containing all events:
+                artist_id: artist ID
+                datetime: ISO format date of event
+                id: event ID
+                lineup: Artists present at event
+                offers: array of ticket info
+                    status: if tickets are available
+                    type: what type of offer (seems to be tickets always)
+                    url: link to tickets redirect through BIT
+                on_sale_datetime: when tickets go on sale
+                ticketUrl: another url to tickets
+                venue: object with information about venue
+                    city: the city
+                    country: the country
+                    latitude: the latitude
+                    longitude: the longitude
+                    name: name of the venue
+                    region: state or province (or some random number)
+            */
+            getEvents(artist).then(data => {
+                this.events = data;
+                //console.log("BIT event data:")
+                //console.log(data)
+
+                this.events.forEach((event) => {
+                    // Change ISO date to readable date format
+                    let date = new Date(event.datetime);
+                    let months = ["Jan","Feb","Mar","Apr","May", "June","July","Aug","Sept","Oct","Nov","Dec"];
+                    //event.datetime = `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+                    event.datetime = `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+
+                    // If we have a ticket url show it otherwise redirect to search
+                    if(event.offers.length){
+                        event.ticketUrl = event.offers[0].url;
+                    } else {
+                        event.searchUrl = "https://duckduckgo.com/?q=" + artist + " " + event.datetime;
+                    }
+
+                    if (event.venue.country == this.countrySet) {
+                        this.localEvents.push(event);
+                        this.allLocalEvents.push(event);
+                    }
+
+                    this.allEvents.push(event);
+                })
+
+                if (artist == this.trackedArtists.list[this.trackedArtists.list.length - 1]) {
+                    console.log('Last')
+                    setTimeout(() => {
+                        this.allEvents.sort(function(a,b) {
+                            return new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
+                        });
+
+                        this.allLocalEvents.sort(function(a,b) {
+                            return new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
+                        });
+                        this.showEvents = true;
+
+                        for(let i = 0, x = this.allLocalEvents.length; i < x; i++) {
+                            let localEvent = this.allLocalEvents[i];
+
+                            for(let j = 0, y = this.artistImages.length; j < y; j++) {
+                                let artistImage = this.artistImages[j];
+
+                                if (artistImage.artist.toLowerCase() == localEvent.lineup[0].toLowerCase()) {
+                                    this.allLocalEvents[i].imageUrl = artistImage.url;
+                                }
+                            }
+                        }
+
+                        console.log(this.allLocalEvents)
+                    }, 1000)
+
+                    console.timeEnd("All")
+                }
+            })
+
+            /* Data:
+            facebook_page_url: url to facebook page
+            id: artist ID
+            image_url: url to image of artist
+            name: artist name
+            thumb_url: url to thumbnail image
+            tracker_count: number of BIT trackers
+            upcoming_event_count: number of upcoming events
+            url: link to BIT page of artist
+            */
+//            getArtistInfo(artist).then(data => {
+//                this.artistInfo = data;
+//
+//                //console.log("BIT data: ")
+//                //console.log(this.artistInfo);
+//            })
+        },
+
+        // Get information from Last.fm API
+        getLastFMInfo: function(artist) {
+            let getData = (artist) => {
+                // Encode so lastfm doesn't get trouble with names with for example &
+                let artistName = encodeURIComponent(artist);
+
+				let apiUrl = "https://ws.audioscrobbler.com/2.0/"
+				let apiParams = "?method=artist.getinfo&api_key=a4629fdacfd93267704f599b874a59bf&format=json&artist="
+
+                return new Promise((resolve, reject) => {
+                    fetch(apiUrl + apiParams + artistName, {
+                        method: 'GET',
+                        headers: {
+                            'accept': "application/json"
+                        }
+                    }).then(response => {
+                        return response.json()
+                    }).then(response => {
+                        resolve(response);
+                    }).catch(error => {
+                        console.log(error);
+                    })
+                })
+            }
+
+            /* Data:
+            bio: short description of artist
+            image: url to artist image
+            name: artist name
+            ontour: 1 if artist is on tour otherwise 0
+            similar: object with similar artists
+                artists: array of artists
+                    image: image of similar artist
+                    name: name of similar artist
+                    url: url to last fm page of similar artist
+            stats: object with lastfm stats
+                listeners: number of listeners
+                playcount: number of plays from listeners
+                streamable: 1 if you can stream from lastfm 0 otherwise
+                tags: object with array of tags
+                    tags: array of tags
+            */
+            getData(artist).then(data => {
+                if (data.error){
+                    throw data.message;
+                    return;
+                }
+
+                let imageUrl = data.artist.image[data.artist.image.length - 4]["#text"];
+                this.artistImages.push({
+                    "artist": artist,
+                    "url": imageUrl
+                });
+            })
+        },
+
+        callBackForm: function(callback, value) {
+            if (callback == "artistSearch") {
+                let artist = value;
+
+                // Check if we get a response from BIT API before we redirect
+                store.doesArtistExist(artist).then(data => {
+                    // If the response contains an ID redirect to artist-view
+                    if (data.id) {
+                        this.$router.push({ path: "/" + "artists/" + artist })
+                    }
+                }).catch(error => {
+                    // If we get an error that means the artist has not been found
+                    if (error.toString().includes("SyntaxError")) {
+                        this.$children[0].errorMessage = "Sorry, we couldn't find that artist :(";
+                    }
+                })
+            } else if (callback == "countrySearch") {
+                let country = value;
+                localStorage.setItem('Country', country);
+                this.countrySet = country;
+
+                this.localEvents = [];
+
+                for(let i = 0, x = this.events.length; i < x; i++) {
+                    let event = this.events[i];
+                    if (event.venue.country == country) {
+                        this.localEvents.push(event);
+                    }
+                }
+
+                this.allLocalEvents = [];
+                this.allEvents = [];
+
+                for(let i = 0, x = this.trackedArtists.list.length; i < x; i++) {
+                    let artist = this.trackedArtists.list[i];
+                    this.getLastFMInfo(artist);
+                    this.getArtistEvents(artist);
+                }
+            }
+        },
+
+        resetCountry: function() {
+            localStorage.removeItem('Country');
+            this.countrySet = false;
+            this.showEvents = false;
+        },
+
+        trackArtist: function() {
+            if (!this.tracking) {
+                this.tracking = true;
+                if (!this.trackedArtists.list.includes(this.lastFMData.name.toLowerCase())) {
+                    this.trackedArtists.list.push(this.lastFMData.name.toLowerCase())
+                }
+            } else {
+                this.tracking = false;
+                let index = this.trackedArtists.list.indexOf(this.lastFMData.name)
+                if (index != -1) {
+                    this.trackedArtists.list.splice(index, 1);
+                }
+            }
+
+            localStorage.setItem('Tracked', JSON.stringify(this.trackedArtists));
+        }
+    }
+}
+</script>

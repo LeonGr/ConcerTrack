@@ -1,24 +1,9 @@
-html, body, * {
-    margin: 0px;
-    padding: 0px;
-    border: 0px;
-}
-
-html {
-    width: 100%;
-    height: 100%;
-}
-
-// Colours:
+<style lang="scss">
 $purple-red: #530030;
 $red: #7E0030;
 $orange-red: #CA283D;
 $orange: #F0443A;
 $orange-yellow: #FF7E4A;
-
-body {
-    font-family: Montserrat, Verdana, Helvetica, Arial;
-}
 
 header {
     height: 50px;
@@ -27,12 +12,19 @@ header {
     align-items: center;
     justify-content: flex-end;
     box-shadow: 0 0 9px 0 rgba(0,0,0,.3);
+    background-color: white;
+    position: absolute;
+    z-index: 2;
 
-    h2 {
+    #header-title-link {
         position: absolute;
         left: 20px;
-        font-size: 30px;
+        text-decoration: none;
         color: #333;
+
+        h2 {
+            font-size: 30px;
+        }
     }
 
     span {
@@ -62,7 +54,19 @@ header {
         background-color: $purple-red;
     }
 }
+</style>
 
-#main-content {
-}
-
+<template>
+    <header>
+        <!--link back to search-view-->
+        <router-link :to="'/'" id="header-title-link">
+            <h2>ConcerTrack</h2>
+        </router-link>
+        <!--spans for coloured squares-->
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </header>
+</template>
