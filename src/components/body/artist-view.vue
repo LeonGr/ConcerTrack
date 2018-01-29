@@ -141,7 +141,7 @@ $orange-yellow: #FF7E4A;
                     margin-bottom: 0;
 
                     #local-events-list {
-                        overflow: auto;
+                        overflow-y: scroll;
                         max-height: calc(50vh - 200px);
                         width: 100%;
                     }
@@ -188,26 +188,28 @@ $orange-yellow: #FF7E4A;
                 box-sizing: border-box;
                 padding: 50px 0 0 20px;
                 width: 100%;
-                flex: 0 1 auto;
+                flex: 1 1 auto;
                 //max-height: 50%;
                 display: flex;
                 flex-direction: column;
 
+                overflow-y: hidden;
+
                 h1 {
-                    flex: 0 1 auto;
+                    //flex: 0 1 auto;
                     font-size: 22px;
                 }
 
                 .amount-upcoming {
                     padding-top: 10px;
                     font-weight: bold;
-                    flex: 0 1 auto;
+                    //flex: 0 1 auto;
                     color: black;
                 }
 
                 #event-list {
-                    overflow: auto;
-                    flex: 0 1 auto;
+                    overflow-y: scroll;
+                    //flex: 0 1 auto;
 
                     .event-div {
                         margin-top: 20px;
@@ -535,6 +537,11 @@ $orange-yellow: #FF7E4A;
                 </div>
 
                 <div id="event-container">
+                    <!--CContent<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>ontent<br>-->
+                    <!--CContent<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>ontent<br>-->
+                    <!--CContent<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>ontent<br>-->
+                    <!--CContent<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>ontent<br>-->
+
                     <h1>All events:</h1>
                     <p v-if="events.length" class="amount-upcoming">
                         {{ artistInfo.upcoming_event_count }} upcoming events worldwide:
