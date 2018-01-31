@@ -51,6 +51,22 @@ $orange-yellow: #FF7E4A;
             align-self: flex-start;
         }
 
+        #export-button-container {
+            align-self: flex-start;
+            width: 300px;
+
+            button {
+                background: none;
+                text-decoration: underline;
+                color: $orange-yellow;
+                cursor: pointer;
+            }
+
+            textarea {
+                border: 1px solid #ccc;
+            }
+        }
+
         .artist-image {
             width: 80px;
             height: 80px;
@@ -328,6 +344,13 @@ $orange-yellow: #FF7E4A;
                     </autocomplete>
                 </div>
             </div>
+            <div id="export-button-container">
+                <button v-on:click="getExportLink">Get link to export tracked artists:</button>
+                <br>
+                <textarea id="" name="" cols="30" rows="10" v-if="encodedLink">{{ encodedLink }}</textarea>
+                <br>
+                <p v-if="encodedLink">Open this URL in your browser to share tracked artists.</p>
+            </div>
 
             <div id="tracked-artist-list">
                 <a v-bind:href="'#/artists/' + artist" v-for="artist in trackedArtists.list">{{ artist }}</a>
@@ -380,6 +403,7 @@ export default {
             showEvents: false,
             showAllEvents: false,
             artistImages: [],
+            encodedLink: '',
             trackedArtists: {"list": []}
         }
     },
@@ -679,6 +703,12 @@ export default {
             }
 
             localStorage.setItem('Tracked', JSON.stringify(this.trackedArtists));
+        },
+
+        getExportLink: function() {
+            let encodedArtists = btoa(JSON.stringify({ list: this.trackedArtists.list }));
+            encodedArtists = encodedArtists.split("=").shift();
+            this.encodedLink = "http://localhost:8080/#/import/" + encodedArtists;
         }
     }
 }
