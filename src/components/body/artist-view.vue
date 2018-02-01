@@ -537,17 +537,9 @@ $orange-yellow: #FF7E4A;
                 </div>
 
                 <div id="event-container">
-                    <!--CContent<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>ontent<br>-->
-                    <!--CContent<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>ontent<br>-->
-                    <!--CContent<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>ontent<br>-->
-                    <!--CContent<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>Content<br>ontent<br>-->
-
-                    <h1>All events:</h1>
+                    <h1>Global events:</h1>
                     <p v-if="events.length" class="amount-upcoming">
                         {{ artistInfo.upcoming_event_count }} upcoming events worldwide:
-                    </p>
-                    <p v-else class="amount-upcoming">
-                        No upcoming events :(
                     </p>
                     <div class="list-header">
                         <p>Date</p>
@@ -555,7 +547,7 @@ $orange-yellow: #FF7E4A;
                         <p>Location</p>
                     </div>
                     <hr>
-                    <div id="event-list" class="event-list">
+                    <div id="event-list" class="event-list" v-if="events.length">
                         <div  v-for="event in events" :key="event.datetime" class="event-div">
                             <p class="event-date">{{ event.datetime }}</p>
                             <p class="event-venue">{{ event.venue.name }}</p>
@@ -564,6 +556,8 @@ $orange-yellow: #FF7E4A;
                             <a v-else :href="event.searchUrl">Search tickets</a>
                         </div>
                     </div>
+
+                    <div v-else style="margin-top: 5px">No global upcoming events :(</div>
                 </div>
             </div>
         </div>
@@ -575,8 +569,6 @@ $orange-yellow: #FF7E4A;
 // - Make landing page prettier
 // - Add "more results"?
 // - Show related artists in artist-view
-// - Add tracked artists to localStorage and make a page to show those
-// - Make a page that shows all events at your location from your tracked artists
 // - Do security checks
 // - Add more artists
 // - Make people be able to report wrong artists
@@ -591,7 +583,7 @@ export default {
             artist: '',
             artistInfo: {},
             bandcampUrl: '',
-            events: {},
+            events: [],
             lastFMData: {},
             artistBio: '',
             onTour: false,

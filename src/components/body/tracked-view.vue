@@ -108,6 +108,10 @@ $orange-yellow: #FF7E4A;
                 }
 
                 .artist-name {
+                    a {
+                        color: $orange-red;
+                        text-decoration: none;
+                    }
                 }
 
                 .event-info-wrapper {
@@ -360,7 +364,7 @@ $orange-yellow: #FF7E4A;
                 <div v-for="event in allLocalEvents" v-if="showEvents && !showAllEvents" class="tracked-artist-event">
                     <img :src="event.imageUrl" :alt="event.lineup[0]" class="artist-image">
                     <div class="event-info-wrapper">
-                        <h2 class="artist-name">{{ event.lineup[0] }}</h2>
+                        <h2 class="artist-name"><a v-bind:href="'#/artists/' + event.lineup[0]">{{ event.lineup[0] }}</a></h2>
                         <p class="event-date">{{ event.datetime }}</p>
                         <p class="event-city">{{ event.venue.city }}, {{ event.venue.country }}</p>
                         <p class="event-venue">{{ event.venue.name }}</p>
