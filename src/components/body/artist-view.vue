@@ -178,10 +178,13 @@ $orange-yellow: #FF7E4A;
                     .event-div {
                         margin-top: 5px;
                         padding-bottom: 5px;
-                        border-bottom: 1px solid #ccc;
 
                         &:first-child {
                             margin-top: 0;
+                        }
+
+                        &:not(:last-child) {
+                            border-bottom: 1px solid #ccc;
                         }
                     }
                 }
@@ -227,15 +230,17 @@ $orange-yellow: #FF7E4A;
 
                 #event-list {
                     overflow-y: scroll;
-                    //flex: 0 1 auto;
 
                     .event-div {
                         margin-top: 5px;
                         padding-bottom: 5px;
-                        border-bottom: 1px solid #ccc;
 
                         &:first-child {
                             margin-top: 0;
+                        }
+
+                        &:not(:last-child) {
+                            border-bottom: 1px solid #ccc;
                         }
                     }
                 }

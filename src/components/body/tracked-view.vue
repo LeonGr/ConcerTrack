@@ -13,6 +13,34 @@ $orange-yellow: #FF7E4A;
     position: absolute;
     top: 50px;
 
+    #undo-notification {
+        border: 1px solid $orange-red;
+        padding: 15px 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        font-weight: bold;
+        width: 300px;
+        box-shadow: 0 0 9px 0 rgba(0,0,0,.3);
+
+        position: absolute;
+
+        background-color: white;
+        bottom: 20px;
+        left: 20px;
+
+        p {
+            margin-left: 10px;
+        }
+
+        a {
+            color: $orange-red;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    }
+
     #main-content {
         width: 100%;
         height: 100%;
@@ -78,11 +106,21 @@ $orange-yellow: #FF7E4A;
             height: 100%;
             width: calc(50% - 350px);
 
-            a {
-                padding: 5px;
+            span {
                 display: block;
-                color: $orange;
+                padding: 5px;
+
+                i {
+                    color: $orange-red;
+                    margin-right: 10px;
+                    cursor: pointer;
+                }
+
+                a {
+                    color: $orange;
+                }
             }
+
         }
 
         #event-list-loading, #no-events, #no-artists, #no-country {
@@ -328,6 +366,12 @@ $orange-yellow: #FF7E4A;
             </autocomplete>
         </span>
 
+        <span id="undo-notification" v-if="removedArtist">
+            <p>
+            {{ removedArtist }} removed from tracked artists, <a v-on:click="undoRemove">undo?</a>
+            </p>
+        </span>
+
         <div id="main-content">
             <h1>Tracked Artists:</h1>
             <div id="local-events" v-if="countrySet">
@@ -361,7 +405,9 @@ $orange-yellow: #FF7E4A;
 
             <!--Show list of all tracked artists if there's any.-->
             <div id="tracked-artist-list" v-if="trackedArtists.list.length">
-                <a v-bind:href="'#/artists/' + artist" v-for="artist in trackedArtists.list">{{ artist }}</a>
+                <span v-for="artist in trackedArtists.list">
+                    <i class="fa fa-times" v-on:click="removeFromTracked(artist)"></i><a v-bind:href="'#/artists/' + artist" > {{ artist }} </a>
+                </span>
             </div>
 
             <div id="no-artists" v-else>No tracked artists.</div>
@@ -419,7 +465,8 @@ export default {
             lastFMlast: false,
             BITlast: false,
             startTime: 0,
-            trackedArtists: {"list": []}
+            trackedArtists: {"list": []},
+            removedArtist: ''
         }
     },
 
@@ -442,21 +489,9 @@ export default {
         if (trackedInfo)
             this.trackedArtists = trackedInfo;
 
-            // Sort list of artists alphabetically exluding "the"
-            this.trackedArtists.list.sort(function(a, b) {
-                a = a.replace("The ","").toLowerCase();
-                b = b.replace("The ","").toLowerCase();
 
-                if (a < b) {
-                    return -1;
-                }
 
-                if (a > b) {
-                    return 1;
-                }
-
-                return 0;
-            });
+        this.sortTrackedArtists();
 
         // Get events for each artists
         for(let i = 0, x = this.trackedArtists.list.length; i < x; i++) {
@@ -555,41 +590,9 @@ export default {
                     this.allEvents.push(event);
                 })
 
-                // If the information we're getting is the last artist from the list start a timeout
 
-                if (artist == this.trackedArtists.list[this.trackedArtists.list.length - 1]) {
-
-                    // Timeout is here because it takes some time to retrieve the last information
-                    // Should maybe change this.
-//                    setTimeout(() => {
-//                        this.allEvents.sort(function(a,b) {
-//                            return new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
-//                        });
-//
-//                        this.allLocalEvents.sort(function(a,b) {
-//                            return new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
-//                        });
-//                        this.showEvents = true;
-//
-//                        for(let i = 0, x = this.allLocalEvents.length; i < x; i++) {
-//                            let localEvent = this.allLocalEvents[i];
-//
-//                            for(let j = 0, y = this.artistImages.length; j < y; j++) {
-//                                let artistImage = this.artistImages[j];
-//
-//                                if (artistImage.artist.toLowerCase() == localEvent.lineup[0].toLowerCase()) {
-//                                    this.allLocalEvents[i].imageUrl = artistImage.url;
-//                                }
-//                            }
-//                        }
-//
-//                        this.loading = false;
-//                        console.log(this.allLocalEvents)
-//                    }, 1000)
-
-                    console.timeEnd("All")
-                }
             }).then(() => {
+                // If the information we're getting is the last artist from the list start a timeout
                 if (artist == this.trackedArtists.list[this.trackedArtists.list.length - 1]) {
                     this.BITlast = true;
 
@@ -597,53 +600,9 @@ export default {
 
                     console.log('BITlast')
 
-                    this.allEvents.sort(function(a,b) {
-                        return new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
-                    });
-
-                    this.allLocalEvents.sort(function(a,b) {
-                        return new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
-                    });
-                    this.showEvents = true;
-
-                    let endTime = new Date();
-
-                    let timeTaken = endTime.getTime() - this.startTime.getTime();
-
-                    setTimeout(() => {
-                        for(let i = 0, x = this.allLocalEvents.length; i < x; i++) {
-                            let localEvent = this.allLocalEvents[i];
-
-                            for(let j = 0, y = this.artistImages.length; j < y; j++) {
-                                let artistImage = this.artistImages[j];
-
-                                if (artistImage.artist.toLowerCase() == localEvent.lineup[0].toLowerCase()) {
-                                    this.allLocalEvents[i].imageUrl = artistImage.url;
-                                }
-                            }
-                        }
-
-                        this.loading = false;
-                    }, timeTaken / 10)
+                    this.showLocalEvents();
                 }
             })
-
-            /* Data:
-            facebook_page_url: url to facebook page
-            id: artist ID
-            image_url: url to image of artist
-            name: artist name
-            thumb_url: url to thumbnail image
-            tracker_count: number of BIT trackers
-            upcoming_event_count: number of upcoming events
-            url: link to BIT page of artist
-            */
-//            getArtistInfo(artist).then(data => {
-//                this.artistInfo = data;
-//
-//                //console.log("BIT data: ")
-//                //console.log(this.artistInfo);
-//            })
         },
 
         // Get information from Last.fm API
@@ -707,34 +666,7 @@ export default {
 
                     console.log('lastFMlast')
 
-                    this.allEvents.sort(function(a,b) {
-                        return new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
-                    });
-
-                    this.allLocalEvents.sort(function(a,b) {
-                        return new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
-                    });
-                    this.showEvents = true;
-
-                    let endTime = new Date();
-
-                    let timeTaken = endTime.getTime() - this.startTime.getTime();
-
-                    setTimeout(() => {
-                        for(let i = 0, x = this.allLocalEvents.length; i < x; i++) {
-                            let localEvent = this.allLocalEvents[i];
-
-                            for(let j = 0, y = this.artistImages.length; j < y; j++) {
-                                let artistImage = this.artistImages[j];
-
-                                if (artistImage.artist.toLowerCase() == localEvent.lineup[0].toLowerCase()) {
-                                    this.allLocalEvents[i].imageUrl = artistImage.url;
-                                }
-                            }
-                        }
-
-                        this.loading = false;
-                    }, timeTaken / 10)
+                    this.showLocalEvents();
                 }
             })
         },
@@ -808,6 +740,88 @@ export default {
             let encodedArtists = btoa(JSON.stringify({ list: this.trackedArtists.list }));
             encodedArtists = encodedArtists.split("=").shift();
             this.encodedLink = "http://localhost:8080/#/import/" + encodedArtists;
+        },
+
+        showLocalEvents: function() {
+            this.allEvents.sort(function(a,b) {
+                return new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
+            });
+
+            this.allLocalEvents.sort(function(a,b) {
+                return new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
+            });
+
+            this.showEvents = true;
+
+            let endTime = new Date();
+
+            let timeTaken = endTime.getTime() - this.startTime.getTime();
+
+            setTimeout(() => {
+                for(let i = 0, x = this.allLocalEvents.length; i < x; i++) {
+                    let localEvent = this.allLocalEvents[i];
+
+                    for(let j = 0, y = this.artistImages.length; j < y; j++) {
+                        let artistImage = this.artistImages[j];
+
+                        if (artistImage.artist.toLowerCase() == localEvent.lineup[0].toLowerCase()) {
+                            this.allLocalEvents[i].imageUrl = artistImage.url;
+                        }
+                    }
+                }
+
+                this.loading = false;
+            }, timeTaken / 10)
+        },
+
+        removeFromTracked: function(artist) {
+            let index = this.trackedArtists.list.indexOf(artist)
+            if (index != -1) {
+                this.trackedArtists.list.splice(index, 1);
+            }
+
+            localStorage.setItem('Tracked', JSON.stringify(this.trackedArtists));
+
+            this.removedArtist = artist;
+        },
+
+        undoRemove: function() {
+            let inList = false;
+
+            for(let i = 0, x = this.trackedArtists.list.length; i < x; i++) {
+                let artist = this.trackedArtists.list[i]
+                if (artist.toLowerCase() == this.removedArtist.toLowerCase()) {
+                    inList = true;
+                }
+            }
+
+            if (!inList) {
+                this.trackedArtists.list.push(this.removedArtist);
+            }
+
+            localStorage.setItem('Tracked', JSON.stringify(this.trackedArtists));
+
+            this.removedArtist = '';
+
+            this.sortTrackedArtists();
+        },
+
+        sortTrackedArtists: function() {
+            // Sort list of artists alphabetically exluding "The"
+            this.trackedArtists.list.sort(function(a, b) {
+                a = a.replace("The ","").toLowerCase();
+                b = b.replace("The ","").toLowerCase();
+
+                if (a < b) {
+                    return -1;
+                }
+
+                if (a > b) {
+                    return 1;
+                }
+
+                return 0;
+            });
         }
     }
 }
