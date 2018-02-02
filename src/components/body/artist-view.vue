@@ -13,8 +13,29 @@ $orange-yellow: #FF7E4A;
     position: absolute;
     top: 50px;
 
+    #tracked-link {
+        position: absolute;
+        top: -50px;
+        z-index: 3;
+        display: flex;
+        align-items: center;
+        height: 50px;
+        right: 570px;
+        text-decoration: none;
+
+        p {
+            font-weight: bold;
+            color: $orange-yellow;
+
+            transition: 0.2s all;
+
+            &:hover {
+                color: #F0443A;
+            }
+        }
+    }
+
     #output {
-        //width: 700px;
         width: 100%;
         height: 100%;
         display: flex;
@@ -23,20 +44,15 @@ $orange-yellow: #FF7E4A;
             height: 100%;
             width: 50%;
 
-
-
             h1 {
                 margin-top: 50px;
-                //line-height: 0.7
             }
 
-            img {
+            #artist-image {
                 width: 50%;
                 padding: 0 30px 0 30px;
                 box-sizing: border-box;
                 margin-top: 50px;
-                //left: 50px;
-                //top: 50px;
             }
 
             #track-button-tracked {
@@ -160,7 +176,9 @@ $orange-yellow: #FF7E4A;
                     }
 
                     .event-div {
-                        margin-top: 20px;
+                        margin-top: 5px;
+                        padding-bottom: 5px;
+                        border-bottom: 1px solid #ccc;
 
                         &:first-child {
                             margin-top: 0;
@@ -212,7 +230,9 @@ $orange-yellow: #FF7E4A;
                     //flex: 0 1 auto;
 
                     .event-div {
-                        margin-top: 20px;
+                        margin-top: 5px;
+                        padding-bottom: 5px;
+                        border-bottom: 1px solid #ccc;
 
                         &:first-child {
                             margin-top: 0;
@@ -314,8 +334,17 @@ $orange-yellow: #FF7E4A;
         }
 
         #errorMessage {
-            color: $orange;
+            color: $orange-red;
             margin-right: 5px;
+            position: absolute;
+            background: white;
+            border: 1px solid $orange-red;
+            font-weight: bold;
+            width: 250px;
+            box-sizing: border-box;
+            margin-left: 275px;
+            padding: 0 5px;
+            cursor: pointer;
         }
 
         form {
@@ -460,6 +489,9 @@ $orange-yellow: #FF7E4A;
 
 <template>
     <div id="output-container">
+        <router-link :to="'/tracked'" id="tracked-link">
+            <p>Tracked Artists</p>
+        </router-link>
         <span id="search">
             <autocomplete
                 title=""
@@ -577,7 +609,6 @@ import store from '@/store/index.js'
 export default {
     data: function() {
         this.getAllInformation();
-        console.log('data')
         return {
             // Init local variables
             artist: '',
@@ -602,18 +633,8 @@ export default {
 
             this.getAllInformation();
 
-            console.log('route')
-            let trackedInfo =  JSON.parse(localStorage.getItem('Tracked'))
-            if (trackedInfo)
-                this.trackedArtists = trackedInfo;
 
-            console.log(this.trackedArtists)
-            if (this.trackedArtists.list.includes(this.$route.params.artist.toLowerCase())) {
-                this.tracking = true;
-            } else {
-                this.tracking = false;
-            }
-
+            this.getTrackedArtists();
         }
     },
 
@@ -625,27 +646,33 @@ export default {
             this.countrySet = userCountry;
         }
 
-        console.log('mounted')
-        let trackedInfo =  JSON.parse(localStorage.getItem('Tracked'))
-        if (trackedInfo)
-            this.trackedArtists = trackedInfo;
-
-        console.log(this.trackedArtists)
-        if (this.trackedArtists.list.includes(this.$route.params.artist.toLowerCase())) {
-            this.tracking = true;
-        }
+        this.getTrackedArtists();
     },
 
     methods: {
+        getTrackedArtists: function() {
+            let trackedInfo =  JSON.parse(localStorage.getItem('Tracked'))
+            if (trackedInfo)
+                this.trackedArtists = trackedInfo;
+
+
+            this.tracking = false;
+
+            for(let i = 0, x = this.trackedArtists.list.length; i < x; i++) {
+                let artist = this.trackedArtists.list[i]
+                if (artist.toLowerCase() == this.$route.params.artist.toLowerCase()) {
+                    this.tracking = true;
+                }
+            }
+        },
+
         getAllInformation: function() {
             this.getArtistEvents();
             this.checkBandcampAccount();
             this.getLastFMInfo();
-            console.log('getAllInformation')
         },
 
         getArtistEvents: function() {
-            console.time("BIT")
             // Store artist from url in local variable
             this.artist = this.$route.params.artist
 
@@ -748,7 +775,6 @@ export default {
 
                 //console.log("BIT data: ")
                 //console.log(this.artistInfo);
-                console.timeEnd("BIT")
             })
         },
 
@@ -759,7 +785,6 @@ export default {
 
         // Get information from Last.fm API
         getLastFMInfo: function() {
-            console.time("Lastfm")
             let getData = () => {
                 // Encode so lastfm doesn't get trouble with names with for example &
                 let artist = encodeURIComponent(this.artist);
@@ -806,13 +831,12 @@ export default {
                     return;
                 }
 
-                console.log(data)
                 this.lastFMData = data.artist;
+                this.artist = this.lastFMData.name;
                 this.artistBio = data.artist.bio.summary;
                 this.imageUrl = data.artist.image[data.artist.image.length - 1]["#text"] || this.artistInfo.image_url;
                 //console.log("Last FM data: ");
                 //console.log(data.artist);
-                console.timeEnd("Lastfm")
             })
         },
 
@@ -829,7 +853,8 @@ export default {
                 }).catch(error => {
                     // If we get an error that means the artist has not been found
                     if (error.toString().includes("SyntaxError")) {
-                        this.$children[0].errorMessage = "Sorry, we couldn't find that artist :(";
+                        console.log(this.$children)
+                        this.$children[1].errorMessage = "Sorry, we couldn't find that artist :(";
                     }
                 })
             } else if (callback == "countrySearch") {
@@ -856,8 +881,18 @@ export default {
         trackArtist: function() {
             if (!this.tracking) {
                 this.tracking = true;
-                if (!this.trackedArtists.list.includes(this.lastFMData.name.toLowerCase())) {
-                    this.trackedArtists.list.push(this.lastFMData.name.toLowerCase())
+
+                let inList = false;
+
+                for(let i = 0, x = this.trackedArtists.list.length; i < x; i++) {
+                    let artist = this.trackedArtists.list[i]
+                    if (artist.toLowerCase() == this.lastFMData.name.toLowerCase()) {
+                        inList = true;
+                    }
+                }
+
+                if (!inList) {
+                    this.trackedArtists.list.push(this.lastFMData.name)
                 }
             } else {
                 this.tracking = false;

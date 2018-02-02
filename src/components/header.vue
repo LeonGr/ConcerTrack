@@ -27,6 +27,8 @@ header {
         }
     }
 
+
+
     span {
         float: right;
         width: 50px;
@@ -62,6 +64,7 @@ header {
         <router-link :to="'/'" id="header-title-link">
             <h2>ConcerTrack</h2>
         </router-link>
+
         <!--spans for coloured squares-->
         <span></span>
         <span></span>

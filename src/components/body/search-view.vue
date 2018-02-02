@@ -22,6 +22,28 @@ $orange-yellow: #FF7E4A;
     color: #ccc;
 }
 
+#tracked-link {
+    position: absolute;
+    top: -50px;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    height: 50px;
+    right: 270px;
+    text-decoration: none;
+
+    p {
+        font-weight: bold;
+        color: $orange-yellow;
+
+        transition: 0.2s all;
+
+        &:hover {
+            color: #F0443A;
+        }
+    }
+}
+
 #search-body {
     position: absolute;
     top: 50px;
@@ -61,13 +83,29 @@ $orange-yellow: #FF7E4A;
     color: #333;
     width: 440px;
 
-    h1 {
-        font-weight: 300;
-        font-size: 24px;
+    #title {
+        font-weight: bold;
+        font-size: 23px;
     }
 
     #errorMessage {
+        width: 440px;
         color: $orange;
+        font-size: 20px;
+        font-weight: bold;
+        background: white;
+        border: 1px solid $orange;
+        padding: 10px 5px;
+        box-sizing: border-box;
+        text-align: center;
+        position: absolute;
+        top: 115px;
+        box-shadow: 0 0 9px 0 rgba(0,0,0,.3);
+        cursor: pointer;
+    }
+
+    #filler {
+        display: none;
     }
 
     form {
@@ -75,6 +113,7 @@ $orange-yellow: #FF7E4A;
         display: flex;
         flex-direction: column;
         justify-content: space-around;
+        position: relative;
     }
 
     #input-field {
@@ -84,13 +123,20 @@ $orange-yellow: #FF7E4A;
         border: 1px solid $orange-yellow;
         outline: none;
         margin: 10px 0 10px 0;
+        box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
 
-        box-shadow: 0 1px 9px 0 rgba(0,0,0,.3);
+        transition: box-shadow 200ms cubic-bezier(0.4, 0.0, 0.2, 1);
+
+        &:focus, &:hover {
+            //box-shadow: 0 1px 9px 0 rgba(0,0,0,.3);
+            box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
+        }
     }
 
     #submitButton {
         position: absolute;
-        right: 30px;
+        right: 8px;
+        margin-top: 12px;
         padding: 10px;
         background-color: $orange-yellow;
         color: white;
@@ -142,6 +188,10 @@ $orange-yellow: #FF7E4A;
             submitText="Search">
         </autocomplete>
 
+        <router-link :to="'/tracked'" id="tracked-link">
+            <p>Tracked Artists</p>
+        </router-link>
+
         <img src="static/map.svg" alt="">
     </div>
 </template>
@@ -160,6 +210,7 @@ export default {
     },
 
     mounted: function() {
+        document.getElementById('input-field').focus();
     },
 
     methods: {
