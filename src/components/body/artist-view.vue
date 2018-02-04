@@ -604,11 +604,21 @@ $orange-yellow: #FF7E4A;
 <script>
 //TODO:
 // - Make landing page prettier
+//   * Add, what we do and why we're good
 // - Add "more results"?
 // - Show related artists in artist-view
+//   * Do we need this?
 // - Do security checks
+//   * Probably already pretty secure?
 // - Add more artists
-// - Make people be able to report wrong artists
+//   * Let users submit missing artists
+
+// - Add headings to tracked page
+// - Add dark mode
+// - Add contact page
+// - See if I can get paid for the site
+// - Add loading transition
+// -
 import store from '@/store/index.js'
 
 export default {

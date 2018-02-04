@@ -312,7 +312,7 @@ $orange-yellow: #FF7E4A;
         #search-results {
             border: 1px solid $orange-yellow;
             position: absolute;
-            top: 243px;
+            top: 248px;
             list-style: none;
             background-color: white;
             box-sizing: border-box;
@@ -333,7 +333,7 @@ $orange-yellow: #FF7E4A;
 
         #submitButton {
             position: absolute;
-            margin-left: 216px;
+            margin-left: 207px;
             margin-top: 2px;
             padding: 10px;
             background-color: $orange-yellow;
@@ -418,7 +418,7 @@ $orange-yellow: #FF7E4A;
                     <div class="event-info-wrapper">
                         <h2 class="artist-name"><a v-bind:href="'#/artists/' + event.lineup[0]">{{ event.lineup[0] }}</a></h2>
                         <p class="event-date">{{ event.datetime }}</p>
-                        <p class="event-city">{{ event.venue.city }}, {{ event.venue.country }}</p>
+                        <p class="event-city">{{ event.venue.city }}</p>
                         <p class="event-venue">{{ event.venue.name }}</p>
                         <a class="event-tickets" :href="event.ticketUrl" v-if="event.ticketUrl">Tickets</a>
                         <a class="event-tickets" :href="event.searchUrl" v-else>Search for tickets</a>
@@ -496,7 +496,7 @@ export default {
         // Get events for each artists
         for(let i = 0, x = this.trackedArtists.list.length; i < x; i++) {
             let artist = this.trackedArtists.list[i];
-            this.getLastFMInfo(artist); // Use this to get artist picture
+            this.getLastFMInfo(artist);
             this.getArtistEvents(artist);
         }
     },
@@ -743,21 +743,20 @@ export default {
         },
 
         showLocalEvents: function() {
-            this.allEvents.sort(function(a,b) {
-                return new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
-            });
-
-            this.allLocalEvents.sort(function(a,b) {
-                return new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
-            });
-
-            this.showEvents = true;
-
             let endTime = new Date();
 
             let timeTaken = endTime.getTime() - this.startTime.getTime();
+            console.log(timeTaken)
 
             setTimeout(() => {
+                this.allEvents.sort(function(a,b) {
+                    return new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
+                });
+
+                this.allLocalEvents.sort(function(a,b) {
+                    return new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
+                });
+
                 for(let i = 0, x = this.allLocalEvents.length; i < x; i++) {
                     let localEvent = this.allLocalEvents[i];
 
@@ -770,8 +769,11 @@ export default {
                     }
                 }
 
+                this.showEvents = true;
                 this.loading = false;
             }, timeTaken / 10)
+
+            console.log(this.artistImages)
         },
 
         removeFromTracked: function(artist) {
