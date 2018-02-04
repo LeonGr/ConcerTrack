@@ -413,7 +413,7 @@ $orange-yellow: #FF7E4A;
             <div id="no-artists" v-else>No tracked artists.</div>
 
             <div id="tracked-artist-events-list" v-if="showEvents && allLocalEvents.length">
-                <div v-for="event in allLocalEvents" v-if="showEvents && !showAllEvents" class="tracked-artist-event">
+                <div v-for="event in orderedEvents" v-if="showEvents && !showAllEvents" class="tracked-artist-event">
                     <img :src="event.imageUrl" :alt="event.lineup[0]" class="artist-image">
                     <div class="event-info-wrapper">
                         <h2 class="artist-name"><a v-bind:href="'#/artists/' + event.lineup[0]">{{ event.lineup[0] }}</a></h2>
@@ -446,6 +446,7 @@ $orange-yellow: #FF7E4A;
 </template>
 
 <script>
+import _ from 'lodash'
 import store from '@/store/index.js'
 
 export default {
@@ -473,6 +474,14 @@ export default {
     watch: {
         // If the route changes (user types other artist into url) we renew the information
         '$route' () {
+        }
+    },
+
+    computed: {
+        orderedEvents: function() {
+            return _.orderBy(this.allLocalEvents, function(event) {
+                return new Date(event.datetime);
+            })
         }
     },
 
@@ -671,6 +680,7 @@ export default {
             })
         },
 
+        // Function that determines what happens with output from autocomplete inputs
         callBackForm: function(callback, value) {
             if (callback == "artistSearch") {
                 let artist = value;
@@ -737,6 +747,7 @@ export default {
         },
 
         getExportLink: function() {
+            // Convert list of artists to base64 because it looks better I guess
             let encodedArtists = btoa(JSON.stringify({ list: this.trackedArtists.list }));
             encodedArtists = encodedArtists.split("=").shift();
             this.encodedLink = "http://localhost:8080/#/import/" + encodedArtists;
@@ -746,17 +757,9 @@ export default {
             let endTime = new Date();
 
             let timeTaken = endTime.getTime() - this.startTime.getTime();
-            console.log(timeTaken)
 
+            // Timeout because apis take some time to load
             setTimeout(() => {
-                this.allEvents.sort(function(a,b) {
-                    return new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
-                });
-
-                this.allLocalEvents.sort(function(a,b) {
-                    return new Date(a.datetime).getTime() - new Date(b.datetime).getTime()
-                });
-
                 for(let i = 0, x = this.allLocalEvents.length; i < x; i++) {
                     let localEvent = this.allLocalEvents[i];
 
@@ -772,8 +775,6 @@ export default {
                 this.showEvents = true;
                 this.loading = false;
             }, timeTaken / 10)
-
-            console.log(this.artistImages)
         },
 
         removeFromTracked: function(artist) {
