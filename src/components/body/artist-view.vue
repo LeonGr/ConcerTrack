@@ -55,19 +55,22 @@ $orange-yellow: #FF7E4A;
                 margin-top: 50px;
             }
 
-            #track-button-tracked {
+            #track-button-tracked, #track-button {
                 width: calc(50% - 60px);
                 margin: 0 30px 0 30px;
                 height: 50px;
                 margin-top: 20px;
                 box-shadow: 0 1px 9px 0 rgba(0,0,0,.3);
-                background-color: $orange-yellow;
                 color: white;
                 font-size: 20px;
                 font-weight: bold;
                 cursor: pointer;
                 outline: none;
+                border-radius: 3px;
+            }
 
+            #track-button-tracked {
+                background-color: $orange-yellow;
 
                 transition: all 0.2s;
 
@@ -83,18 +86,7 @@ $orange-yellow: #FF7E4A;
             }
 
             #track-button {
-                width: calc(50% - 60px);
-                margin: 0 30px 0 30px;
-                height: 50px;
-                margin-top: 20px;
-                box-shadow: 0 1px 9px 0 rgba(0,0,0,.3);
                 background-color: #1D9C73;
-                color: white;
-                font-size: 20px;
-                font-weight: bold;
-                cursor: pointer;
-                outline: none;
-
 
                 transition: all 0.2s;
 
@@ -360,20 +352,23 @@ $orange-yellow: #FF7E4A;
         }
 
         #input-field {
+            margin-top: 5px;
+            margin-right: 5px;
             padding: 10px;
-            height: 50px;
+            height: 40px;
             font-size: 20px;
             border: 1px solid $orange-yellow;
             box-sizing: border-box;
             outline: none;
             width: 300px;
+            border-radius: 3px;
         }
 
         #search-results {
             border: 1px solid $orange-yellow;
             position: absolute;
-            top: 49px;
-            right: 0px;
+            top: 42px;
+            right: 5px;
             list-style: none;
             background-color: white;
             box-sizing: border-box;
@@ -395,12 +390,15 @@ $orange-yellow: #FF7E4A;
         #submitButton {
             position: absolute;
             right: 10px;
+            margin-top: 2px;
             background-color: $orange-yellow;
             padding: 5px 18px;
             color: white;
             font-size: 20px;
             font-weight: bold;
             box-shadow: 0 1px 9px 0 rgba(0,0,0,.3);
+
+            border-radius: 3px;
 
             cursor: pointer;
             transition: all 0.2s;

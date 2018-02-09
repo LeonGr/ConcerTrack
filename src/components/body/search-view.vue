@@ -124,6 +124,7 @@ $orange-yellow: #FF7E4A;
         outline: none;
         margin: 10px 0 10px 0;
         box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
+        border-radius: 3px;
 
         transition: box-shadow 200ms cubic-bezier(0.4, 0.0, 0.2, 1);
 
@@ -143,6 +144,7 @@ $orange-yellow: #FF7E4A;
         font-size: 20px;
         font-weight: bold;
         box-shadow: 0 1px 9px 0 rgba(0,0,0,.3);
+        border-radius: 3px;
 
         cursor: pointer;
         transition: all 0.2s;

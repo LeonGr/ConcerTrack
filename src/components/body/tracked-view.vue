@@ -51,7 +51,7 @@ $orange-yellow: #FF7E4A;
         display: flex;
         flex-direction: column;
         flex-wrap: wrap;
-        align-items: flex-end;
+        align-items: center;
 
         h1 {
             font-size: 32px;
@@ -70,6 +70,7 @@ $orange-yellow: #FF7E4A;
                 text-decoration: underline;
                 color: $orange-yellow;
                 cursor: pointer;
+                font-size: 18px;
             }
         }
 
@@ -84,13 +85,17 @@ $orange-yellow: #FF7E4A;
             width: 300px;
 
             button {
+                margin-top: 20px;
                 background: none;
                 text-decoration: underline;
                 color: $orange-yellow;
                 cursor: pointer;
+                font-size: 18px;
             }
 
             textarea {
+                width: 260px;
+                margin-top: 20px;
                 border: 1px solid #ccc;
             }
         }
@@ -101,30 +106,47 @@ $orange-yellow: #FF7E4A;
             border-radius: 50px;
         }
 
-        #tracked-artist-list {
-            overflow-y: scroll;
+        #tracked-artist-list-container {
             height: 100%;
-            width: calc(50% - 350px);
+            //width: calc(50% - 350px);
+            width: 350px;
+            align-self: flex-end;
 
-            span {
-                display: block;
-                padding: 5px;
-
-                i {
-                    color: $orange-red;
-                    margin-right: 10px;
-                    cursor: pointer;
-                }
-
-                a {
-                    color: $orange;
-                }
+            #artist-list-header {
+                height: 50px;
+                display: flex;
+                align-items: center;
+                font-weight: bold;
+                font-size: 18px;
+                box-shadow: 0 8px 6px -6px rgba(0, 0, 0, 0.3);
             }
 
+            #tracked-artist-list {
+                height: calc(100% - 50px);
+                overflow-y: scroll;
+
+                span {
+                    display: block;
+                    padding: 5px;
+
+                    i {
+                        color: $orange-red;
+                        margin-right: 10px;
+                        cursor: pointer;
+                    }
+
+                    a {
+                        color: $orange;
+                    }
+
+                    &:nth-of-type(even) {
+                        background-color: #EEE;
+                    }
+                }
+            }
         }
 
-        #event-list-loading, #no-events, #no-artists, #no-country {
-            width: 50%;
+        .message-div {
             height: 90%;
             display: flex;
             align-items: center;
@@ -133,7 +155,7 @@ $orange-yellow: #FF7E4A;
 
         #tracked-artist-events-list {
             overflow-y: scroll;
-            width: 50%;
+            width: calc(100% - 650px);
             height: 100%;
 
             .tracked-artist-event {
@@ -222,7 +244,10 @@ $orange-yellow: #FF7E4A;
 
         #input-field {
             padding: 10px;
-            height: 50px;
+            height: 40px;
+            margin-top: 5px;
+            margin-right: 5px;
+            border-radius: 3px;
             font-size: 20px;
             border: 1px solid $orange-yellow;
             box-sizing: border-box;
@@ -233,8 +258,8 @@ $orange-yellow: #FF7E4A;
         #search-results {
             border: 1px solid $orange-yellow;
             position: absolute;
-            top: 49px;
-            right: 0px;
+            top: 42px;
+            right: 5px;
             list-style: none;
             background-color: white;
             box-sizing: border-box;
@@ -256,6 +281,8 @@ $orange-yellow: #FF7E4A;
         #submitButton {
             position: absolute;
             right: 10px;
+            margin-top: 2px;
+            border-radius: 3px;
             background-color: $orange-yellow;
             padding: 5px 18px;
             color: white;
@@ -307,12 +334,13 @@ $orange-yellow: #FF7E4A;
             box-sizing: border-box;
             outline: none;
             width: 300px;
+            border-radius: 3px;
         }
 
         #search-results {
             border: 1px solid $orange-yellow;
             position: absolute;
-            top: 248px;
+            top: 243px;
             list-style: none;
             background-color: white;
             box-sizing: border-box;
@@ -333,10 +361,11 @@ $orange-yellow: #FF7E4A;
 
         #submitButton {
             position: absolute;
-            margin-left: 207px;
+            margin-left: 217px;
             margin-top: 2px;
             padding: 10px;
             background-color: $orange-yellow;
+            border-radius: 3px;
             color: white;
             font-size: 20px;
             font-weight: bold;
@@ -403,16 +432,12 @@ $orange-yellow: #FF7E4A;
                 <p v-if="encodedLink">Open this URL in your browser to share tracked artists.</p>
             </div>
 
-            <!--Show list of all tracked artists if there's any.-->
-            <div id="tracked-artist-list" v-if="trackedArtists.list.length">
-                <span v-for="artist in trackedArtists.list">
-                    <i class="fa fa-times" v-on:click="removeFromTracked(artist)"></i><a v-bind:href="'#/artists/' + artist" > {{ artist }} </a>
-                </span>
-            </div>
 
-            <div id="no-artists" v-else>No tracked artists.</div>
+            <div id="tracked-artist-events-list">
+                <div class="message-div" v-if="loading && countrySet">
+                    Loading events...
+                </div>
 
-            <div id="tracked-artist-events-list" v-if="showEvents && allLocalEvents.length">
                 <div v-for="event in orderedEvents" v-if="showEvents && !showAllEvents" class="tracked-artist-event">
                     <img :src="event.imageUrl" :alt="event.lineup[0]" class="artist-image">
                     <div class="event-info-wrapper">
@@ -425,18 +450,33 @@ $orange-yellow: #FF7E4A;
                     </div>
                 </div>
 
+                <div class="message-div" v-if="showEvents && !orderedEvents.length && countrySet">
+                    No local events :(
+                </div>
+
+                <div class="message-div" v-if="!countrySet">
+                    Choose a location to see local events.
+                </div>
+
+                <div class="message-div" v-if="countrySet && !trackedArtists.list.length">
+                    No tracked artists.
+                </div>
+
                 <!--<p v-for="event in allEvents" v-if="showEvents && showAllEvents">-->
                     <!--{{ event.lineup[0] }} {{ event.datetime }} {{ event.venue.country }} {{ event.venue.city }} {{ event.venue.name }}-->
                 <!--</p>-->
             </div>
 
+            <!--Show list of all tracked artists if there's any.-->
+            <div id="tracked-artist-list-container">
+                <div id="artist-list-header">All tracked artists:</div>
 
-            <div id="event-list-loading" v-if="countrySet && loading"> Loading events...  </div>
-
-            <div id="no-country" v-if="!countrySet">Choose country to see local events.</div>
-
-            <div id="no-events" v-if="!allLocalEvents.length && !loading && countrySet"> No local events.</div>
-
+                <div id="tracked-artist-list">
+                    <span v-for="artist in trackedArtists.list">
+                        <i class="fa fa-times" v-on:click="removeFromTracked(artist)"></i><a v-bind:href="'#/artists/' + artist" > {{ artist }} </a>
+                    </span>
+                </div>
+            </div>
 
             <!--<div>-->
                 <!--<img v-for="image in artistImages" :src="image.url" class="artist-image" :alt="image.artist">-->
@@ -494,11 +534,11 @@ export default {
             this.countrySet = userCountry;
         }
 
-        let trackedInfo =  JSON.parse(localStorage.getItem('Tracked'))
+        let trackedInfo = localStorage.getItem('Tracked')
         if (trackedInfo)
-            this.trackedArtists = trackedInfo;
-
-
+            this.trackedArtists = JSON.parse(trackedInfo);
+        else
+            this.loading = false;
 
         this.sortTrackedArtists();
 
