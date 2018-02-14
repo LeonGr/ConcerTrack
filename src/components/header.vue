@@ -27,7 +27,9 @@ header {
         }
     }
 
-
+//    #header-title-link.dark {
+//        color: #EEE;
+//    }
 
     span {
         float: right;
@@ -56,6 +58,10 @@ header {
         background-color: $purple-red;
     }
 }
+
+//header.dark {
+//    background-color: #333;
+//}
 </style>
 
 <template>

@@ -62,6 +62,37 @@ export default {
         SiteHeader,
         SiteBody,
         SiteFooter
-        }
-    }
+    },
+
+//    watch: {
+//        // If the route changes (user types other artist into url) we renew the information
+//        '$route' () {
+//            function allDescendants (node) {
+//                for (var i = 0; i < node.childNodes.length; i++) {
+//                    var child = node.childNodes[i];
+//                    allDescendants(child);
+//                    if (child.classList) {
+//                        child.classList.add('dark')
+//                    }
+//                }
+//            }
+//
+//            allDescendants(document.getElementById('app'))
+//        }
+//    },
+//
+//    mounted: function() {
+//        function allDescendants (node) {
+//            for (var i = 0; i < node.childNodes.length; i++) {
+//                var child = node.childNodes[i];
+//                allDescendants(child);
+//                if (child.classList) {
+//                    child.classList.add('dark')
+//                }
+//            }
+//        }
+//
+//        allDescendants(document.getElementById('app'))
+//    }
+}
 </script>

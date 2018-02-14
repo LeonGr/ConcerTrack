@@ -280,8 +280,8 @@ $orange-yellow: #FF7E4A;
 
         #submitButton {
             position: absolute;
-            right: 10px;
-            margin-top: 2px;
+            right: 8px;
+            margin-top: 3px;
             border-radius: 3px;
             background-color: $orange-yellow;
             padding: 5px 18px;
@@ -526,18 +526,32 @@ export default {
     },
 
     mounted: function() {
+        console.log(store.saved);
+        if (store.saved.loaded) {
+            this.allLocalEvents = store.saved.allLocalEvents;
+            this.trackedArtists = store.saved.trackedArtists;
+            this.countrySet = store.saved.countrySet;
+            this.artistImages = store.saved.artistImages;
+            this.loading = false;
+            this.showEvents = true;
+            console.log(this.orderedEvents)
+            return;
+        }
+
         this.startTime = new Date();
         // If the page loads for the first time get all information
 
         let userCountry = localStorage.getItem('Country');
         if (userCountry) {
             this.countrySet = userCountry;
+            store.saved.countrySet = this.countrySet;
         }
 
         let trackedInfo = localStorage.getItem('Tracked')
-        if (trackedInfo)
+        if (trackedInfo) {
             this.trackedArtists = JSON.parse(trackedInfo);
-        else
+            store.saved.trackedArtists = this.trackedArtists;
+        } else
             this.loading = false;
 
         this.sortTrackedArtists();
@@ -548,6 +562,8 @@ export default {
             this.getLastFMInfo(artist);
             this.getArtistEvents(artist);
         }
+
+        store.saved.loaded = true;
     },
 
     methods: {
@@ -815,6 +831,9 @@ export default {
                 this.showEvents = true;
                 this.loading = false;
             }, timeTaken / 10)
+
+            store.saved.allLocalEvents = this.allLocalEvents;
+            store.saved.artistImages = this.artistImages;
         },
 
         removeFromTracked: function(artist) {

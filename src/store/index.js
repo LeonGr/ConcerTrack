@@ -28,3 +28,11 @@ store.doesArtistExist = function(artist) {
         })
     })
 }
+
+store.saved = {
+    loaded: false,
+    allLocalEvents: [],
+    trackedArtists: {"list": []},
+    countrySet: false,
+    artistImages: []
+}

@@ -389,8 +389,8 @@ $orange-yellow: #FF7E4A;
 
         #submitButton {
             position: absolute;
-            right: 10px;
-            margin-top: 2px;
+            right: 8px;
+            margin-top: 3px;
             background-color: $orange-yellow;
             padding: 5px 18px;
             color: white;
@@ -611,12 +611,10 @@ $orange-yellow: #FF7E4A;
 // - Add more artists
 //   * Let users submit missing artists
 
-// - Add headings to tracked page
 // - Add dark mode
 // - Add contact page
 // - See if I can get paid for the site
 // - Add loading transition
-// -
 import store from '@/store/index.js'
 
 export default {
