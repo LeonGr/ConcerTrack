@@ -190,7 +190,7 @@ $orange-yellow: #FF7E4A;
                         height: 40px;
                     }
 
-                    #country {
+                    #country-artist-view {
                         margin-top: 5px;
                     }
                 }
@@ -316,7 +316,7 @@ $red: #7E0030;
 $orange-red: #CA283D;
 $orange: #F0443A;
 $orange-yellow: #FF7E4A;
-#search {
+#search-artist-view {
     position: absolute;
     top: -50px;
     right: 250px;
@@ -390,7 +390,7 @@ $orange-yellow: #FF7E4A;
         #submitButton {
             position: absolute;
             right: 8px;
-            margin-top: 3px;
+            margin-top: 2px;
             background-color: $orange-yellow;
             padding: 5px 18px;
             color: white;
@@ -417,7 +417,7 @@ $orange-yellow: #FF7E4A;
     }
 }
 
-#country {
+#country-artist-view {
     #autocomplete-container {
         h1 {
             margin-top: 5px;
@@ -444,6 +444,7 @@ $orange-yellow: #FF7E4A;
             box-sizing: border-box;
             outline: none;
             width: 250px;
+            border-radius: 3px;
         }
 
         #search-results {
@@ -477,6 +478,7 @@ $orange-yellow: #FF7E4A;
             font-size: 20px;
             font-weight: bold;
             box-shadow: 0 1px 9px 0 rgba(0,0,0,.3);
+            border-radius: 3px;
 
             cursor: pointer;
             transition: all 0.2s;
@@ -495,7 +497,7 @@ $orange-yellow: #FF7E4A;
         <router-link :to="'/tracked'" id="tracked-link">
             <p>Tracked Artists</p>
         </router-link>
-        <span id="search">
+        <span id="search-artist-view">
             <autocomplete
                 title=""
                 placeholder="Search another artist"
@@ -559,7 +561,7 @@ $orange-yellow: #FF7E4A;
                             No location set, do you want to set it now so we can show you events in your country?
                         </p>
 
-                        <div id="country">
+                        <div id="country-artist-view">
                             <autocomplete
                              title="Select country:"
                              placeholder="Country name"

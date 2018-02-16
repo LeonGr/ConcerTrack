@@ -217,7 +217,7 @@ $red: #7E0030;
 $orange-red: #CA283D;
 $orange: #F0443A;
 $orange-yellow: #FF7E4A;
-#search {
+#search-tracked-view {
     position: absolute;
     top: -50px;
     right: 250px;
@@ -232,9 +232,18 @@ $orange-yellow: #FF7E4A;
         }
 
         #errorMessage {
-            color: $orange;
+            color: $orange-red;
             margin-right: 5px;
-        }
+            position: absolute;
+            background: white;
+            border: 1px solid $orange-red;
+            font-weight: bold;
+            width: 250px;
+            box-sizing: border-box;
+            margin-left: 275px;
+            padding: 0 5px;
+            cursor: pointer;
+         }
 
         form {
             display: flex;
@@ -308,7 +317,7 @@ $orange-yellow: #FF7E4A;
     }
 }
 
-#country {
+#country-tracked-view {
     #autocomplete-container {
         h1 {
             margin-top: 5px;
@@ -386,7 +395,7 @@ $orange-yellow: #FF7E4A;
 
 <template>
     <div id="output-container">
-        <span id="search">
+        <span id="search-tracked-view">
             <autocomplete
                 title=""
                 placeholder="Search another artist"
@@ -414,7 +423,7 @@ $orange-yellow: #FF7E4A;
                     No location set, do you want to set it now so we can show you events in your country?
                 </p>
 
-                <div id="country">
+                <div id="country-tracked-view">
                     <autocomplete
                      title="Select country:"
                      placeholder="Country name"
