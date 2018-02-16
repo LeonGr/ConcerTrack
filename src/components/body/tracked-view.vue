@@ -155,8 +155,9 @@ $orange-yellow: #FF7E4A;
 
         #tracked-artist-events-list {
             overflow-y: scroll;
-            width: calc(100% - 650px);
+            width: calc(100% - 700px);
             height: 100%;
+            padding-left: 50px;
 
             .tracked-artist-event {
                 height: 120px;
@@ -281,7 +282,7 @@ $orange-yellow: #FF7E4A;
         #submitButton {
             position: absolute;
             right: 8px;
-            margin-top: 3px;
+            margin-top: 2px;
             border-radius: 3px;
             background-color: $orange-yellow;
             padding: 5px 18px;
@@ -340,7 +341,7 @@ $orange-yellow: #FF7E4A;
         #search-results {
             border: 1px solid $orange-yellow;
             position: absolute;
-            top: 243px;
+            top: 247px;
             list-style: none;
             background-color: white;
             box-sizing: border-box;
@@ -361,7 +362,7 @@ $orange-yellow: #FF7E4A;
 
         #submitButton {
             position: absolute;
-            margin-left: 217px;
+            margin-left: 206px;
             margin-top: 2px;
             padding: 10px;
             background-color: $orange-yellow;
@@ -530,7 +531,7 @@ export default {
         if (store.saved.loaded) {
             this.allLocalEvents = store.saved.allLocalEvents;
             this.trackedArtists = store.saved.trackedArtists;
-            this.countrySet = store.saved.countrySet;
+            this.countrySet = store.saved.countrySet || localStorage.getItem('Country') || false;
             this.artistImages = store.saved.artistImages;
             this.loading = false;
             this.showEvents = true;
@@ -541,12 +542,6 @@ export default {
         this.startTime = new Date();
         // If the page loads for the first time get all information
 
-        let userCountry = localStorage.getItem('Country');
-        if (userCountry) {
-            this.countrySet = userCountry;
-            store.saved.countrySet = this.countrySet;
-        }
-
         let trackedInfo = localStorage.getItem('Tracked')
         if (trackedInfo) {
             this.trackedArtists = JSON.parse(trackedInfo);
@@ -555,6 +550,14 @@ export default {
             this.loading = false;
 
         this.sortTrackedArtists();
+
+        let userCountry = localStorage.getItem('Country');
+        if (userCountry) {
+            this.countrySet = userCountry;
+            store.saved.countrySet = this.countrySet;
+        } else {
+            return;
+        }
 
         // Get events for each artists
         for(let i = 0, x = this.trackedArtists.list.length; i < x; i++) {
@@ -769,6 +772,8 @@ export default {
 
                 this.allLocalEvents = [];
                 this.allEvents = [];
+
+                this.startTime = new Date();
 
                 for(let i = 0, x = this.trackedArtists.list.length; i < x; i++) {
                     let artist = this.trackedArtists.list[i];
