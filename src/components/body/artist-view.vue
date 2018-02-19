@@ -650,7 +650,6 @@ export default {
 
             this.getAllInformation();
 
-
             this.getTrackedArtists();
         }
     },
@@ -725,6 +724,7 @@ export default {
                     }).then(response => {
                         return response.json()
                     }).then(response => {
+                        response.artist = artist;
                         resolve(response);
                     }).catch(error => {
                         console.log(error);
@@ -768,7 +768,7 @@ export default {
                     if(event.offers.length){
                         event.ticketUrl = event.offers[0].url;
                     } else {
-                        event.searchUrl = "https://duckduckgo.com/?q=" + this.lastFMData.name + " " + event.datetime;
+                        event.searchUrl = "https://duckduckgo.com/?q=" + data.artist + " " + event.datetime;
                     }
 
                     if (event.venue.country == this.countrySet) {
