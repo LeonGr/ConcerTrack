@@ -35,6 +35,7 @@ $orange-yellow: #FF7E4A;
     p {
         font-weight: bold;
         color: $orange-yellow;
+        font-size: 16px;
 
         transition: 0.2s all;
 
@@ -49,15 +50,39 @@ $orange-yellow: #FF7E4A;
     top: 50px;
     width: 100%;
     min-height: calc(100% - 100px);
+    height: calc(100% - 100px);
     display: flex;
     align-items: center;
     justify-content: space-around;
-    flex-direction: row;
+    flex-direction: column;
 
     background-color: #F54;
 
+    #website-description {
+        width: 100%;
+        height: 50%;
+        color: white;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        h2 {
+            width: 600px;
+        }
+    }
+
+    #not-description {
+        width: 100%;
+        height: 50%;
+        display: flex;
+        justify-content: space-around;
+    }
+
     img {
         width: 400px;
+        height: 300px;
+        margin-top: -100px;
     }
 
 
@@ -82,6 +107,7 @@ $orange-yellow: #FF7E4A;
 
     color: #333;
     width: 440px;
+    height: 110px;
 
     #title {
         font-weight: bold;
@@ -102,6 +128,7 @@ $orange-yellow: #FF7E4A;
         top: 115px;
         box-shadow: 0 0 9px 0 rgba(0,0,0,.3);
         cursor: pointer;
+        border-radius: 3px;
     }
 
     #filler {
@@ -125,6 +152,7 @@ $orange-yellow: #FF7E4A;
         margin: 10px 0 10px 0;
         box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
         border-radius: 3px;
+        background: white;
 
         transition: box-shadow 200ms cubic-bezier(0.4, 0.0, 0.2, 1);
 
@@ -137,7 +165,8 @@ $orange-yellow: #FF7E4A;
     #submitButton {
         position: absolute;
         right: 8px;
-        margin-top: 12px;
+        //margin-top: 12px;
+        top: 45px;
         padding: 10px;
         background-color: $orange-yellow;
         color: white;
@@ -182,19 +211,25 @@ $orange-yellow: #FF7E4A;
 
 <template>
     <div id="search-body">
-        <autocomplete
-            title="Search for events from an artist:"
-            placeholder="Artist name"
-            data="static/AllList.json"
-            callback="artistSearch"
-            submitText="Search">
-        </autocomplete>
+        <div id="website-description">
+            <h2>The easiest way to find upcoming concerts and to keep an eye on your favourite artists</h2>
+        </div>
+
+        <div id="not-description">
+            <autocomplete
+                title="Search for events from an artist:"
+                placeholder="Artist name"
+                data="static/AllList.json"
+                callback="artistSearch"
+                submitText="Search">
+            </autocomplete>
+
+            <img src="static/map.svg" alt="">
+        </div>
 
         <router-link :to="'/tracked'" id="tracked-link">
             <p>Tracked Artists</p>
         </router-link>
-
-        <img src="static/map.svg" alt="">
     </div>
 </template>
 

@@ -74,7 +74,7 @@ export default {
             try {
                 JSON.parse(plain);
             } catch (e) {
-                this.errorMessage = "Invalid import code. Are you sure you copied the correct URL? <br> It should look something like this: http://localhost:8080/#/import/eyJsaXN0IjpbInJpY2sgYXN0bGV5Il19"
+                this.errorMessage = "Invalid import code. Are you sure you copied the correct URL? <br> It should look something like this: " + window.location.origin + "/#/import/eyJsaXN0IjpbInJpY2sgYXN0bGV5Il19"
                 return;
             }
 

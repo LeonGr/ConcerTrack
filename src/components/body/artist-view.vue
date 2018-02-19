@@ -26,6 +26,7 @@ $orange-yellow: #FF7E4A;
         p {
             font-weight: bold;
             color: $orange-yellow;
+            font-size: 16px;
 
             transition: 0.2s all;
 
@@ -113,6 +114,7 @@ $orange-yellow: #FF7E4A;
             #info-container {
                 float: right;
                 width: 50%;
+                font-size: 16px;
 
                 .link-icon {
                     color: inherit;
@@ -130,7 +132,7 @@ $orange-yellow: #FF7E4A;
             width: 50%;
             display: flex;
             flex-direction: column;
-
+            font-size: 16px;
 
             #local-event-container {
                 box-sizing: border-box;
@@ -362,6 +364,7 @@ $orange-yellow: #FF7E4A;
             outline: none;
             width: 300px;
             border-radius: 3px;
+            background: white;
         }
 
         #search-results {
@@ -436,6 +439,7 @@ $orange-yellow: #FF7E4A;
         }
 
         #input-field {
+            background: white;
             padding: 5px;
             margin-top: 5px;
             height: 50px;

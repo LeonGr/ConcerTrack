@@ -10,7 +10,7 @@ html, body, * {
     margin: 0px;
     padding: 0px;
     border: 0px;
-    font-family: Montserrat, Verdana, Helvetica, Arial;
+    font-family: Montserrat, sans-serif, Verdana, Helvetica, Arial;
 }
 
 html {

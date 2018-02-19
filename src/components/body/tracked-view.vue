@@ -23,6 +23,7 @@ $orange-yellow: #FF7E4A;
         font-weight: bold;
         width: 300px;
         box-shadow: 0 0 9px 0 rgba(0,0,0,.3);
+        border-radius: 3px;
 
         position: absolute;
 
@@ -63,6 +64,7 @@ $orange-yellow: #FF7E4A;
             margin-top: 20px;
             align-self: flex-start;
             width: 300px;
+            font-size: 16px;
 
             button {
                 margin-top: 20px;
@@ -78,6 +80,7 @@ $orange-yellow: #FF7E4A;
             margin-top: 20px;
             width: 300px;
             align-self: flex-start;
+            font-size: 16px;
         }
 
         #export-button-container {
@@ -119,6 +122,8 @@ $orange-yellow: #FF7E4A;
                 font-weight: bold;
                 font-size: 18px;
                 box-shadow: 0 8px 6px -6px rgba(0, 0, 0, 0.3);
+                box-sizing: border-box;
+                padding-left: 5px;
             }
 
             #tracked-artist-list {
@@ -128,6 +133,7 @@ $orange-yellow: #FF7E4A;
                 span {
                     display: block;
                     padding: 5px;
+                    font-size: 16px;
 
                     i {
                         color: $orange-red;
@@ -181,6 +187,7 @@ $orange-yellow: #FF7E4A;
                     display: flex;
                     flex-wrap: wrap;
                     width: calc(100% - 100px);
+                    font-size: 16px;
 
                     .event-date {
                         width: 100%;
@@ -253,6 +260,7 @@ $orange-yellow: #FF7E4A;
         }
 
         #input-field {
+            background: white;
             padding: 10px;
             height: 40px;
             margin-top: 5px;
@@ -336,6 +344,7 @@ $orange-yellow: #FF7E4A;
         }
 
         #input-field {
+            background: white;
             padding: 5px;
             margin-top: 5px;
             height: 50px;
@@ -820,7 +829,7 @@ export default {
             // Convert list of artists to base64 because it looks better I guess
             let encodedArtists = btoa(JSON.stringify({ list: this.trackedArtists.list }));
             encodedArtists = encodedArtists.split("=").shift();
-            this.encodedLink = "http://localhost:8080/#/import/" + encodedArtists;
+            this.encodedLink = window.location.origin + "/#/import/" + encodedArtists;
         },
 
         showLocalEvents: function() {
