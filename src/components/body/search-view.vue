@@ -59,22 +59,27 @@ $orange-yellow: #FF7E4A;
     background-color: #F54;
 
     #website-description {
-        width: 100%;
+        position: absolute;
+        top: 0px;
         height: 50%;
         color: white;
-        font-weight: bold;
         display: flex;
         align-items: center;
         justify-content: center;
 
+        h1 {
+
+        }
+
         h2 {
-            width: 600px;
+            font-size: 50px;
+            font-family: sans-serif;
+            text-align: center;
         }
     }
 
     #not-description {
         width: 100%;
-        height: 50%;
         display: flex;
         justify-content: space-around;
     }
@@ -212,7 +217,13 @@ $orange-yellow: #FF7E4A;
 <template>
     <div id="search-body">
         <div id="website-description">
-            <h2>The easiest way to find upcoming concerts and to keep an eye on your favourite artists</h2>
+            <h2>
+                Find concerts
+                <br>
+                Track artists
+                <br>
+                No hassle
+            </h2>
         </div>
 
         <div id="not-description">
