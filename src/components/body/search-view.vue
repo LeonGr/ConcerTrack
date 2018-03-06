@@ -92,6 +92,12 @@ $orange-yellow: #FF7E4A;
 
 
 }
+
+@media (min-width: 1300px) {
+    body {
+        width: 100%;
+    }
+}
 </style>
 
 <style lang="scss">
@@ -104,10 +110,9 @@ $orange-yellow: #FF7E4A;
 #search-body {
 #autocomplete-container {
     background-color: white;
-    border: 1px solid #ccc;
+    //border: 1px solid #ccc;
     box-shadow: 0 0 9px 0 rgba(0,0,0,.3);
     border-radius: 5px;
-    position: relative;
     padding: 20px;
 
     color: #333;
@@ -120,20 +125,37 @@ $orange-yellow: #FF7E4A;
     }
 
     #errorMessage {
-        width: 440px;
-        color: $orange;
-        font-size: 20px;
-        font-weight: bold;
-        background: white;
-        border: 1px solid $orange;
-        padding: 10px 5px;
-        box-sizing: border-box;
-        text-align: center;
-        position: absolute;
-        top: 115px;
-        box-shadow: 0 0 9px 0 rgba(0,0,0,.3);
-        cursor: pointer;
-        border-radius: 3px;
+            color: $orange-red;
+            margin-right: 5px;
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: white;
+            border-left: 5px solid $orange-red;
+            border-radius: 3px;
+            font-weight: bold;
+            width: 250px;
+            box-sizing: border-box;
+            padding: 5px 5px;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: 400;
+            box-shadow: 0 0 9px 0 rgba(0,0,0,.3);
+
+//        width: 440px;
+//        color: $orange;
+//        font-size: 20px;
+//        font-weight: bold;
+//        background: white;
+//        border: 1px solid $orange;
+//        padding: 10px 5px;
+//        box-sizing: border-box;
+//        text-align: center;
+//        position: absolute;
+//        top: 115px;
+//        box-shadow: 0 0 9px 0 rgba(0,0,0,.3);
+//        cursor: pointer;
+//        border-radius: 3px;
     }
 
     #filler {
@@ -152,12 +174,12 @@ $orange-yellow: #FF7E4A;
         box-sizing: border-box;
         padding: 20px;
         font-size: 18px;
-        border: 1px solid $orange-yellow;
+        //border: 1px solid $orange-yellow;
         outline: none;
         margin: 10px 0 10px 0;
         box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
         border-radius: 3px;
-        background: white;
+        background: #eee;
 
         transition: box-shadow 200ms cubic-bezier(0.4, 0.0, 0.2, 1);
 
@@ -168,6 +190,7 @@ $orange-yellow: #FF7E4A;
     }
 
     #submitButton {
+        display: none;
         position: absolute;
         right: 8px;
         //margin-top: 12px;
@@ -190,16 +213,18 @@ $orange-yellow: #FF7E4A;
     }
 
     #search-results {
-        border: 1px solid $orange-yellow;
+        //border: 1px solid $orange-yellow;
+        box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
         position: absolute;
-        top: 112px;
+        top: 100px;
         list-style: none;
-        background-color: white;
+        background-color: #eee;
         box-sizing: border-box;
-        width: inherit;
+        width: 440px;
+        border-bottom: 5px solid $orange-yellow;
 
         li {
-            padding: 4px 20px;
+            padding: 6px 20px;
 
             &:hover {
                 cursor: pointer;

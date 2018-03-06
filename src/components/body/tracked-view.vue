@@ -14,7 +14,7 @@ $orange-yellow: #FF7E4A;
     top: 50px;
 
     #undo-notification {
-        border: 1px solid $orange-red;
+        border-left: 5px solid $orange-red;
         padding: 15px 5px;
         display: flex;
         align-items: center;
@@ -260,26 +260,28 @@ $orange-yellow: #FF7E4A;
         }
 
         #input-field {
-            background: white;
+            background: #eee;
             padding: 10px;
             height: 40px;
             margin-top: 5px;
             margin-right: 5px;
             border-radius: 3px;
-            font-size: 20px;
-            border: 1px solid $orange-yellow;
+            font-size: 16px;
+            //border: 1px solid $orange-yellow;
             box-sizing: border-box;
             outline: none;
             width: 300px;
         }
 
         #search-results {
-            border: 1px solid $orange-yellow;
+            border-bottom: 5px solid $orange-yellow;
+            box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
+            //border: 1px solid $orange-yellow;
             position: absolute;
-            top: 42px;
+            top: 40px;
             right: 5px;
             list-style: none;
-            background-color: white;
+            background-color: #eee;
             box-sizing: border-box;
             width: 300px;
 
@@ -297,6 +299,7 @@ $orange-yellow: #FF7E4A;
         }
 
         #submitButton {
+            display: none;
             position: absolute;
             right: 8px;
             margin-top: 2px;
@@ -344,12 +347,13 @@ $orange-yellow: #FF7E4A;
         }
 
         #input-field {
-            background: white;
+            background: #eee;
             padding: 5px;
+            padding-left: 10px;
             margin-top: 5px;
             height: 50px;
-            font-size: 20px;
-            border: 1px solid $orange-yellow;
+            font-size: 16px;
+            //border: 1px solid $orange-yellow;
             box-sizing: border-box;
             outline: none;
             width: 300px;
@@ -357,11 +361,13 @@ $orange-yellow: #FF7E4A;
         }
 
         #search-results {
-            border: 1px solid $orange-yellow;
+            border-bottom: 5px solid $orange-yellow;
+            box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
+            //border: 1px solid $orange-yellow;
             position: absolute;
-            top: 247px;
+            top: 245px;
             list-style: none;
-            background-color: white;
+            background-color: #eee;
             box-sizing: border-box;
             width: 300px;
 
@@ -379,6 +385,7 @@ $orange-yellow: #FF7E4A;
         }
 
         #submitButton {
+            display: none;
             position: absolute;
             margin-left: 206px;
             margin-top: 2px;

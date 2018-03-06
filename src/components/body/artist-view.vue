@@ -358,24 +358,26 @@ $orange-yellow: #FF7E4A;
             margin-right: 5px;
             padding: 10px;
             height: 40px;
-            font-size: 20px;
-            border: 1px solid $orange-yellow;
+            font-size: 16px;
+            //border: 1px solid $orange-yellow;
             box-sizing: border-box;
             outline: none;
             width: 300px;
             border-radius: 3px;
-            background: white;
+            background: #eee;
         }
 
         #search-results {
-            border: 1px solid $orange-yellow;
+            border-bottom: 5px solid $orange-yellow;
+            //border: 1px solid $orange-yellow;
             position: absolute;
             top: 42px;
             right: 5px;
             list-style: none;
-            background-color: white;
+            background-color: #eee;
             box-sizing: border-box;
             width: 300px;
+            box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
 
             li {
                 padding: 4px 20px;
@@ -391,6 +393,7 @@ $orange-yellow: #FF7E4A;
         }
 
         #submitButton {
+            display: none;
             position: absolute;
             right: 8px;
             margin-top: 2px;
@@ -439,12 +442,13 @@ $orange-yellow: #FF7E4A;
         }
 
         #input-field {
-            background: white;
+            background: #eee;
             padding: 5px;
+            padding-left: 10px;
             margin-top: 5px;
             height: 50px;
-            font-size: 20px;
-            border: 1px solid $orange-yellow;
+            font-size: 16px;
+         //   border: 1px solid $orange-yellow;
             box-sizing: border-box;
             outline: none;
             width: 250px;
@@ -452,11 +456,13 @@ $orange-yellow: #FF7E4A;
         }
 
         #search-results {
-            border: 1px solid $orange-yellow;
+            border-bottom: 5px solid $orange-yellow;
+            //border: 1px solid $orange-yellow;
             position: absolute;
+            box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
             top: 210px;
             list-style: none;
-            background-color: white;
+            background-color: #eee;
             box-sizing: border-box;
             width: 250px;
 
@@ -474,6 +480,7 @@ $orange-yellow: #FF7E4A;
         }
 
         #submitButton {
+            display: none;
             position: absolute;
             margin-left: 260px;
             padding: 10px;
