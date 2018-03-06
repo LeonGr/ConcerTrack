@@ -76,14 +76,6 @@ export default {
             if (e.key.includes("ArrowUp") || e.key.includes("ArrowDown") || e.key.includes('Tab')) e.preventDefault();
         });
 
-//        let pressedEscape = () => {
-//            this.deselectInput();
-//        }
-//
-//        inputField.addEventListener("focusout", function(e) {
-//            console.log('focusout')
-//            pressedEscape();
-//        });
     },
 
     methods: {

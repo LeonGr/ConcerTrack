@@ -14,7 +14,7 @@ $orange-yellow: #FF7E4A;
     top: 50px;
 
     #undo-notification {
-        border-left: 5px solid $orange-red;
+        border-left: 5px solid $orange-yellow;
         padding: 15px 5px;
         display: flex;
         align-items: center;
@@ -224,108 +224,9 @@ $red: #7E0030;
 $orange-red: #CA283D;
 $orange: #F0443A;
 $orange-yellow: #FF7E4A;
+
 #search-tracked-view {
-    position: absolute;
-    top: -50px;
-    right: 250px;
-    height: 50px;
-    z-index: 5;
-
-    #autocomplete-container {
-
-        h1 {
-            font-size: 20px;
-            font-weight: 300;
-        }
-
-        #errorMessage {
-            color: $orange-red;
-            margin-right: 5px;
-            position: absolute;
-            background: white;
-            border: 1px solid $orange-red;
-            font-weight: bold;
-            width: 250px;
-            box-sizing: border-box;
-            margin-left: 275px;
-            padding: 0 5px;
-            cursor: pointer;
-         }
-
-        form {
-            display: flex;
-            flex-direction: row-reverse;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #input-field {
-            background: #eee;
-            padding: 10px;
-            height: 40px;
-            margin-top: 5px;
-            margin-right: 5px;
-            border-radius: 3px;
-            font-size: 16px;
-            //border: 1px solid $orange-yellow;
-            box-sizing: border-box;
-            outline: none;
-            width: 300px;
-        }
-
-        #search-results {
-            border-bottom: 5px solid $orange-yellow;
-            box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
-            //border: 1px solid $orange-yellow;
-            position: absolute;
-            top: 40px;
-            right: 5px;
-            list-style: none;
-            background-color: #eee;
-            box-sizing: border-box;
-            width: 300px;
-
-            li {
-                padding: 4px 20px;
-
-                &:hover {
-                    cursor: pointer;
-                }
-            }
-
-            .selected {
-                background-color: $orange-yellow;
-            }
-        }
-
-        #submitButton {
-            display: none;
-            position: absolute;
-            right: 8px;
-            margin-top: 2px;
-            border-radius: 3px;
-            background-color: $orange-yellow;
-            padding: 5px 18px;
-            color: white;
-            font-size: 20px;
-            font-weight: bold;
-            box-shadow: 0 1px 9px 0 rgba(0,0,0,.3);
-
-            cursor: pointer;
-            transition: all 0.2s;
-            outline: none;
-
-            &:hover {
-                background-color: $orange;
-                box-shadow: 0 5px 9px 0 rgba(0,0,0,.3);
-            }
-
-            &:active {
-                background-color: $orange-yellow;
-                box-shadow: none;
-            }
-        }
-    }
+    display: block;
 }
 
 #country-tracked-view {
@@ -411,16 +312,6 @@ $orange-yellow: #FF7E4A;
 
 <template>
     <div id="output-container">
-        <span id="search-tracked-view">
-            <autocomplete
-                title=""
-                placeholder="Search another artist"
-                data="static/AllList.json"
-                callback="artistSearch"
-                submitText="<i class='fa fa-search' aria-hidden='true'></i>">
-            </autocomplete>
-        </span>
-
         <span id="undo-notification" v-if="removedArtist">
             <p>
             {{ removedArtist }} removed from tracked artists, <a v-on:click="undoRemove">undo?</a>

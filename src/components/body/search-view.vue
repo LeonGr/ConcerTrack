@@ -106,6 +106,9 @@ $red: #7E0030;
 $orange-red: #CA283D;
 $orange: #F0443A;
 $orange-yellow: #FF7E4A;
+#search-tracked-view {
+    display: none;
+}
 
 #search-body {
 #autocomplete-container {
@@ -125,37 +128,24 @@ $orange-yellow: #FF7E4A;
     }
 
     #errorMessage {
-            color: $orange-red;
-            margin-right: 5px;
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            background: white;
-            border-left: 5px solid $orange-red;
-            border-radius: 3px;
-            font-weight: bold;
-            width: 250px;
-            box-sizing: border-box;
-            padding: 5px 5px;
-            cursor: pointer;
-            font-size: 20px;
-            font-weight: 400;
-            box-shadow: 0 0 9px 0 rgba(0,0,0,.3);
+        border-left: 5px solid $orange-red;
+        padding: 15px 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        font-weight: bold;
+        width: 250px;
+        box-shadow: 0 0 9px 0 rgba(0,0,0,.3);
+        border-radius: 3px;
 
-//        width: 440px;
-//        color: $orange;
-//        font-size: 20px;
-//        font-weight: bold;
-//        background: white;
-//        border: 1px solid $orange;
-//        padding: 10px 5px;
-//        box-sizing: border-box;
-//        text-align: center;
-//        position: absolute;
-//        top: 115px;
-//        box-shadow: 0 0 9px 0 rgba(0,0,0,.3);
-//        cursor: pointer;
-//        border-radius: 3px;
+        position: absolute;
+
+        background-color: white;
+        bottom: 20px;
+        left: 20px;
+
+        cursor: pointer;
     }
 
     #filler {
