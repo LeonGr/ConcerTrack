@@ -75,6 +75,7 @@ $orange-yellow: #FF7E4A;
             font-size: 50px;
             font-family: sans-serif;
             text-align: center;
+            font-weight: 200;
         }
     }
 
@@ -118,13 +119,13 @@ $orange-yellow: #FF7E4A;
     border-radius: 5px;
     padding: 20px;
 
-    color: #333;
     width: 440px;
     height: 110px;
 
     #title {
         font-weight: bold;
         font-size: 23px;
+        color: #333;
     }
 
     #errorMessage {
@@ -233,11 +234,7 @@ $orange-yellow: #FF7E4A;
     <div id="search-body">
         <div id="website-description">
             <h2>
-                Find concerts
-                <br>
-                Track artists
-                <br>
-                No hassle
+                Find concerts, track artists. No hassle.
             </h2>
         </div>
 

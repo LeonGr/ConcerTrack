@@ -252,7 +252,7 @@ $orange-yellow: #FF7E4A;
     //box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.3);
     box-shadow: 0 8px 6px -6px rgba(0, 0, 0, 0.3);
     //border-bottom: 1px solid #333;
-    border-top: 1px solid #333;
+    border-top: 5px solid $orange-yellow;
     font-size: 0;
 
     p {
@@ -407,15 +407,6 @@ $orange-yellow: #FF7E4A;
         <router-link :to="'/tracked'" id="tracked-link">
             <p>Tracked Artists</p>
         </router-link>
-        <!--<span id="search-artist-view">-->
-            <!--<autocomplete-->
-                <!--title=""-->
-                <!--placeholder="Search another artist"-->
-                <!--data="static/AllList.json"-->
-                <!--callback="artistSearch"-->
-                <!--submitText="<i class='fa fa-search' aria-hidden='true'></i>">-->
-            <!--</autocomplete>-->
-        <!--</span>-->
         <div id="output">
             <div id="left-side">
                 <!--If we get an image from lastFM show it. Otherwise use the one from BIT-->

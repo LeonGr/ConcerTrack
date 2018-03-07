@@ -23,6 +23,7 @@ header {
         color: #333;
 
         h2 {
+            color: #333;
             font-size: 30px;
         }
     }
@@ -190,7 +191,7 @@ $orange-yellow: #FF7E4A;
         <div id="search-tracked-view">
             <autocomplete
                 title=""
-                placeholder="Search another artist"
+                placeholder="Search for another artist"
                 data="static/AllList.json"
                 callback="artistSearch"
                 submitText="<i class='fa fa-search' aria-hidden='true'></i>">
