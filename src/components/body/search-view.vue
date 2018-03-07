@@ -56,7 +56,10 @@ $orange-yellow: #FF7E4A;
     justify-content: space-around;
     flex-direction: column;
 
-    background-color: #F54;
+    //background-color: #F54;
+    background:linear-gradient(0deg,rgba(240, 68, 58, 0.7),rgba(240, 68, 58, 0.7)), url("/static/musician.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
 
     #website-description {
         position: absolute;
@@ -107,15 +110,12 @@ $red: #7E0030;
 $orange-red: #CA283D;
 $orange: #F0443A;
 $orange-yellow: #FF7E4A;
-#search-tracked-view {
-    display: none;
-}
-
 #search-body {
 #autocomplete-container {
     background-color: white;
     //border: 1px solid #ccc;
-    box-shadow: 0 0 9px 0 rgba(0,0,0,.3);
+    border-left: 5px solid $orange-yellow;
+    box-shadow: 0 4px 9px 0 rgba(0,0,0,.3);
     border-radius: 5px;
     padding: 20px;
 
@@ -271,6 +271,8 @@ export default {
 
     mounted: function() {
         document.getElementById('input-field').focus();
+
+        document.getElementById('search-tracked-view').style.display = 'none';
     },
 
     methods: {

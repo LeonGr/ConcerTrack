@@ -50,10 +50,13 @@ $orange-yellow: #FF7E4A;
             }
 
             #artist-image {
-                width: 50%;
-                padding: 0 30px 0 30px;
-                box-sizing: border-box;
-                margin-top: 50px;
+                //width: 50%;
+                width: calc(50% - 60px);
+                box-shadow: 0 4px 9px 0 rgba(0, 0, 0, 0.3);
+                //padding: 0 30px 0 30px;
+                //box-sizing: border-box;
+                //margin-top: 50px;
+                margin: 50px 30px 0 30px;
             }
 
             #track-button-tracked, #track-button {
@@ -552,6 +555,8 @@ export default {
     },
 
     mounted: function() {
+        document.getElementById('search-tracked-view').style.display = 'block';
+
         // If the page loads for the first time get all information
 
         let userCountry = localStorage.getItem('Country');
@@ -817,6 +822,8 @@ export default {
             }
 
             localStorage.setItem('Tracked', JSON.stringify(this.trackedArtists));
+
+            store.resetSaved();
         }
     }
 }

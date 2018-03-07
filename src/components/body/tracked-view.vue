@@ -443,7 +443,10 @@ export default {
     },
 
     mounted: function() {
+        document.getElementById('search-tracked-view').style.display = 'block';
+
         console.log(store.saved);
+
         if (store.saved.loaded) {
             this.allLocalEvents = store.saved.allLocalEvents;
             this.trackedArtists = store.saved.trackedArtists;
