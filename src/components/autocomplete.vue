@@ -197,6 +197,9 @@ export default {
                 // Show matching artists from current matching list
                 if (input.length > this.lastInputLength && this.allMatching.length > 0) {
 
+                    // Go back to first result in search results
+                    this.selectSuggestion('down')
+
                     // Create temporary arrays to store new results
                     let newMatching = [];
                     let newStartMatching = [];
