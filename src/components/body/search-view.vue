@@ -31,7 +31,6 @@ $orange-yellow: #FF7E4A;
     //height: calc(100% - 100px);
 
     min-height: calc(100vh - 100px);
-    height: calc(100vh - 100px);
 
     display: flex;
     align-items: center;
@@ -85,8 +84,6 @@ $orange-yellow: #FF7E4A;
 
 @media (max-width: 1000px) {
     #search-body {
-        justify-content: flex-end;
-
         #website-description {
             height: 150px;
 
@@ -114,7 +111,7 @@ $orange-yellow: #FF7E4A;
                 width: 80%;
                 max-width: 400px;
                 height: auto;
-                margin-top: 1px;
+                //margin-top: 50px;
             }
         }
     }
@@ -125,9 +122,8 @@ $orange-yellow: #FF7E4A;
         //background: #F54;
 
         #website-description {
-            height: 20%;
-            position: absolute;
-            top: 140px;
+            height: 100px;
+            top: 10px;
 
             h2 {
                 font-size: 30px;
@@ -136,7 +132,7 @@ $orange-yellow: #FF7E4A;
 
         #not-description-wrapper {
             width: 100%;
-            height: calc(100% - 20%);
+            height: calc(100% - 100px);
         }
 
         #not-description {
@@ -149,6 +145,10 @@ $orange-yellow: #FF7E4A;
                // border-top: 5px solid $orange-yellow;
                 border-radius: 0px;
             }
+
+            img {
+                margin-top: 10px;
+            }
         }
     }
 }
@@ -156,7 +156,8 @@ $orange-yellow: #FF7E4A;
 @media (max-height: 600px) {
     #search-body {
         #not-description {
-            justify-content: flex-end;
+            //justify-content: flex-end;
+            margin-top: 100px;
 
             img {
                 margin-bottom: 20px;
@@ -299,9 +300,10 @@ $orange-yellow: #FF7E4A;
 
 @media (max-width: 500px) {
     #autocomplete-container {
-        position: absolute;
         top: 0;
+        position: relative;
         padding: 10px;
+        margin-top: 1px;
 
         #autocomplete-form {
             h1 {
