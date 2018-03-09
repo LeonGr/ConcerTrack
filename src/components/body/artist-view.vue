@@ -13,29 +13,6 @@ $orange-yellow: #FF7E4A;
     position: absolute;
     top: 50px;
 
-    #tracked-link {
-        position: absolute;
-        top: -50px;
-        z-index: 3;
-        display: flex;
-        align-items: center;
-        height: 50px;
-        right: 570px;
-        text-decoration: none;
-
-        p {
-            font-weight: bold;
-            color: $orange-yellow;
-            font-size: 16px;
-
-            transition: 0.2s all;
-
-            &:hover {
-                color: #F0443A;
-            }
-        }
-    }
-
     #output {
         width: 100%;
         height: 100%;
@@ -407,9 +384,6 @@ $orange-yellow: #FF7E4A;
 
 <template>
     <div id="output-container">
-        <router-link :to="'/tracked'" id="tracked-link">
-            <p>Tracked Artists</p>
-        </router-link>
         <div id="output">
             <div id="left-side">
                 <!--If we get an image from lastFM show it. Otherwise use the one from BIT-->
@@ -555,6 +529,7 @@ export default {
     },
 
     mounted: function() {
+        // Change header stuff to fit this page
         document.getElementById('search-tracked-view').style.display = 'block';
 
         // If the page loads for the first time get all information

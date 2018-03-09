@@ -177,7 +177,8 @@ $orange-yellow: #FF7E4A;
 
                 .artist-name {
                     a {
-                        color: $orange-red;
+                        font-size: 20px;
+                        color: #333;
                         text-decoration: none;
                     }
                 }

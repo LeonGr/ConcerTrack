@@ -26,21 +26,24 @@ header {
             color: #333;
             font-size: 30px;
         }
-    }
 
-//    #header-title-link.dark {
-//        color: #EEE;
-//    }
+        @media (max-width: 380px) {
+            h2 {
+                font-size: 28px;
+            }
+        }
+
+        @media (max-width: 350px) {
+            h2 {
+                font-size: 20px;
+            }
+        }
+    }
 
     .square {
         float: right;
         width: 50px;
         height: 50px;
-        //transition: transform 0.5s;
-
-        //&:hover {
-            //transform: rotate(180deg);
-        //}
     }
 
     .square:nth-of-type(1) {
@@ -58,11 +61,47 @@ header {
     .square:nth-of-type(5) {
         background-color: $purple-red;
     }
+
+
+    #tracked-link {
+        display: flex;
+        align-items: center;
+        height: 50px;
+        text-decoration: none;
+        margin-right: 5px;
+
+        p {
+            font-weight: bold;
+            color: $orange-yellow;
+            font-size: 16px;
+
+            transition: 0.2s all;
+
+            &:hover {
+                color: #F0443A;
+            }
+        }
+    }
+
+
 }
 
-//header.dark {
-//    background-color: #333;
-//}
+@media (max-width: 650px) {
+    header {
+        .square {
+            height: 5px;
+            position: absolute;
+            top: 0;
+            width: 20%;
+        }
+
+        @for $i from 1 through 5 {
+            .square:nth-of-type(#{$i}) {
+                left: ($i - 1) * 20%;
+            }
+        }
+    }
+}
 </style>
 
 <style lang="scss">
@@ -72,8 +111,7 @@ $orange-red: #CA283D;
 $orange: #F0443A;
 $orange-yellow: #FF7E4A;
 #search-tracked-view {
-    position: absolute;
-    right: 250px;
+    position: relative;
     height: 50px;
     z-index: 5;
 
@@ -188,6 +226,10 @@ $orange-yellow: #FF7E4A;
             <h2>ConcerTrack</h2>
         </router-link>
 
+        <router-link :to="'/tracked'" id="tracked-link">
+            <p>Tracked Artists</p>
+        </router-link>
+
         <div id="search-tracked-view">
             <autocomplete
                 title=""
@@ -197,6 +239,7 @@ $orange-yellow: #FF7E4A;
                 submitText="<i class='fa fa-search' aria-hidden='true'></i>">
             </autocomplete>
         </div>
+
 
         <!--spans for coloured squares-->
         <span class="square"></span>

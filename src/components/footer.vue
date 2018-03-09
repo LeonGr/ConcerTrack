@@ -35,15 +35,32 @@ footer {
         background-color: $orange-yellow;
     }
 }
+
+@media (max-width: 650px) {
+    footer {
+        .square {
+            height: 5px;
+            position: absolute;
+            bottom: 0;
+            width: 20%;
+        }
+
+        @for $i from 1 through 5 {
+            .square:nth-of-type(#{$i}) {
+                left: ($i - 1) * 20%;
+            }
+        }
+    }
+}
 </style>
 
 <template>
     <footer>
         <!--spans for coloured squares-->
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
+        <span class="square"></span>
+        <span class="square"></span>
+        <span class="square"></span>
+        <span class="square"></span>
+        <span class="square"></span>
     </footer>
 </template>

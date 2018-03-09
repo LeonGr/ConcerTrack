@@ -22,29 +22,6 @@ $orange-yellow: #FF7E4A;
     color: #ccc;
 }
 
-#tracked-link {
-    position: absolute;
-    top: -50px;
-    z-index: 3;
-    display: flex;
-    align-items: center;
-    height: 50px;
-    right: 270px;
-    text-decoration: none;
-
-    p {
-        font-weight: bold;
-        color: $orange-yellow;
-        font-size: 16px;
-
-        transition: 0.2s all;
-
-        &:hover {
-            color: #F0443A;
-        }
-    }
-}
-
 #search-body {
     position: absolute;
     top: 50px;
@@ -82,6 +59,10 @@ $orange-yellow: #FF7E4A;
         }
     }
 
+    #not-description-wrapper {
+        width: 100%;
+    }
+
     #not-description {
         width: 100%;
         display: flex;
@@ -109,18 +90,26 @@ $orange-yellow: #FF7E4A;
             }
         }
 
-        #not-description {
+        #not-description-wrapper {
+            width: auto;
             height: calc(100% - 150px);
+            display: flex;
+            align-items: center;
+        }
+
+        #not-description {
+            //height: calc(100% - 150px);
+            height: 100%;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: space-around;
 
 
             img {
                 width: 80%;
                 max-width: 400px;
                 height: auto;
-                margin-top: 10px;
+                margin-top: 1px;
             }
         }
     }
@@ -128,19 +117,22 @@ $orange-yellow: #FF7E4A;
 
 @media (max-width: 500px) {
     #search-body {
-        background: #F54;
+        //background: #F54;
 
         #website-description {
-            height: 100px;
+            height: 20%;
 
             h2 {
                 font-size: 30px;
             }
         }
 
-        #not-description {
-            height: calc(100% - 100px);
+        #not-description-wrapper {
+            width: 100%;
+            height: calc(100% - 20%);
+        }
 
+        #not-description {
             #autocomplete-container {
                 width: 100%;
                 box-sizing: border-box;
@@ -296,21 +288,22 @@ $orange-yellow: #FF7E4A;
             </h2>
         </div>
 
-        <div id="not-description">
-            <autocomplete
-                title="Search for events from an artist:"
-                placeholder="Artist name"
-                data="static/AllList.json"
-                callback="artistSearch"
-                submitText="Search">
-            </autocomplete>
+        <div id="not-description-wrapper">
+            <div id="not-description">
+                <autocomplete
+                    title="Search for events from an artist:"
+                    placeholder="Artist name"
+                    data="static/AllList.json"
+                    callback="artistSearch"
+                    submitText="Search">
+                </autocomplete>
 
-            <img src="static/map.svg" alt="">
+                <img src="static/map.svg" alt="">
+            </div>
         </div>
-
-        <router-link :to="'/tracked'" id="tracked-link">
-            <p>Tracked Artists</p>
-        </router-link>
+        <!--<router-link :to="'/tracked'" id="tracked-link">-->
+            <!--<p>Tracked Artists</p>-->
+        <!--</router-link>-->
     </div>
 </template>
 
@@ -330,6 +323,7 @@ export default {
     mounted: function() {
         document.getElementById('input-field').focus();
 
+        // Change header stuff to fit this page
         document.getElementById('search-tracked-view').style.display = 'none';
     },
 
