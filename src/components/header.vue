@@ -13,7 +13,8 @@ header {
     justify-content: flex-end;
     box-shadow: 0 0 9px 0 rgba(0,0,0,.3);
     background-color: white;
-    position: absolute;
+    //position: absolute;
+    position: relative;
     z-index: 2;
 
     #header-title-link {

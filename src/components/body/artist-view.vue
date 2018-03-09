@@ -10,8 +10,9 @@ $orange-yellow: #FF7E4A;
     //display: flex;
     justify-content: center;
     color: #222;
-    position: absolute;
-    top: 50px;
+    position: relative;
+    //position: absolute;
+    //top: 50px;
 
     #output {
         width: 100%;

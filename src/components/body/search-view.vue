@@ -23,11 +23,16 @@ $orange-yellow: #FF7E4A;
 }
 
 #search-body {
-    position: absolute;
-    top: 50px;
+    //position: absolute;
+    position: relative;
+    //top: 50px;
     width: 100%;
-    min-height: calc(100% - 100px);
-    height: calc(100% - 100px);
+    //min-height: calc(100% - 100px);
+    //height: calc(100% - 100px);
+
+    min-height: calc(100vh - 100px);
+    height: calc(100vh - 100px);
+
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -121,6 +126,8 @@ $orange-yellow: #FF7E4A;
 
         #website-description {
             height: 20%;
+            position: absolute;
+            top: 140px;
 
             h2 {
                 font-size: 30px;
@@ -141,6 +148,18 @@ $orange-yellow: #FF7E4A;
                 border: none;
                // border-top: 5px solid $orange-yellow;
                 border-radius: 0px;
+            }
+        }
+    }
+}
+
+@media (max-height: 600px) {
+    #search-body {
+        #not-description {
+            justify-content: flex-end;
+
+            img {
+                margin-bottom: 20px;
             }
         }
     }
@@ -254,7 +273,7 @@ $orange-yellow: #FF7E4A;
         list-style: none;
         background-color: #eee;
         box-sizing: border-box;
-        width: 440px;
+        width: 100%;
         border-bottom: 5px solid $orange-yellow;
 
         li {
@@ -267,12 +286,37 @@ $orange-yellow: #FF7E4A;
 
         @media screen and (max-height: 750px) {
             li {
-                padding: 3px 20px;
+                //padding: 3px 20px;
             }
         }
 
         .selected {
             background-color: $orange-yellow;
+        }
+    }
+
+}
+
+@media (max-width: 500px) {
+    #autocomplete-container {
+        position: absolute;
+        top: 0;
+        padding: 10px;
+
+        #autocomplete-form {
+            h1 {
+                font-size: 18px;
+            }
+        }
+
+        #input-field {
+            padding: 10px;
+        }
+
+        #search-results {
+            top: 0;
+            margin-top: -10px;
+            position: relative;
         }
     }
 }

@@ -9,7 +9,8 @@ footer {
     width: 100%;
     height: 50px;
     box-shadow: 0 0 9px 0 rgba(0,0,0,.3);
-    position: absolute;
+    position: relative;
+    //position: absolute;
     bottom: 0;
     background-color: white;
 
