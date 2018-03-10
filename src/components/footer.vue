@@ -35,6 +35,16 @@ footer {
     span:nth-of-type(5) {
         background-color: $orange-yellow;
     }
+
+    a {
+        color: $orange-yellow;
+        float: right;
+        display: flex;
+        align-items: center;
+        height: 100%;
+        padding: 5px;
+        box-sizing: border-box;
+    }
 }
 
 @media (max-width: 650px) {
@@ -63,5 +73,8 @@ footer {
         <span class="square"></span>
         <span class="square"></span>
         <span class="square"></span>
+
+        <a href="contact">Contact</a>
+        <a href="faq">FAQ</a>
     </footer>
 </template>

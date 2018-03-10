@@ -89,10 +89,12 @@ header {
 
 @media (max-width: 650px) {
     header {
+        top: 5px;
+
         .square {
             height: 5px;
             position: absolute;
-            top: 0;
+            top: -5px;
             width: 20%;
         }
 

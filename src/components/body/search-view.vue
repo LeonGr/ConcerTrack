@@ -86,6 +86,7 @@ $orange-yellow: #FF7E4A;
     #search-body {
         #website-description {
             height: 150px;
+            position: relative;
 
             h2 {
                 font-size: 35px;
@@ -94,7 +95,7 @@ $orange-yellow: #FF7E4A;
 
         #not-description-wrapper {
             width: auto;
-            height: calc(100% - 150px);
+            height: calc(100vh - 250px);
             display: flex;
             align-items: center;
         }
@@ -106,12 +107,18 @@ $orange-yellow: #FF7E4A;
             align-items: center;
             justify-content: space-around;
 
+            #img-container {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 400px;
+            }
 
             img {
                 width: 80%;
                 max-width: 400px;
                 height: auto;
-                //margin-top: 50px;
+                margin-top: 1px;
             }
         }
     }
@@ -146,25 +153,29 @@ $orange-yellow: #FF7E4A;
                 border-radius: 0px;
             }
 
+            #img-container {
+                height: 40vh;
+            }
+
             img {
-                margin-top: 10px;
+                //margin-top: 10px;
             }
         }
     }
 }
 
-@media (max-height: 600px) {
-    #search-body {
-        #not-description {
-            //justify-content: flex-end;
-            margin-top: 100px;
-
-            img {
-                margin-bottom: 20px;
-            }
-        }
-    }
-}
+//@media (max-height: 600px) {
+//    #search-body {
+//        #not-description {
+//            //justify-content: flex-end;
+//            margin-top: 100px;
+//
+//            img {
+//                margin-bottom: 20px;
+//            }
+//        }
+//    }
+//}
 </style>
 
 <style lang="scss">
@@ -344,7 +355,9 @@ $orange-yellow: #FF7E4A;
                     submitText="Search">
                 </autocomplete>
 
-                <img src="static/map.svg" alt="">
+                <div id="img-container">
+                    <img src="static/map.svg" alt="">
+                </div>
             </div>
         </div>
         <!--<router-link :to="'/tracked'" id="tracked-link">-->
