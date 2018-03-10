@@ -24,16 +24,13 @@ $orange-yellow: #FF7E4A;
             width: 50%;
 
             h1 {
+                color: #333;
                 margin-top: 50px;
             }
 
             #artist-image {
-                //width: 50%;
                 width: calc(50% - 60px);
                 box-shadow: 0 4px 9px 0 rgba(0, 0, 0, 0.3);
-                //padding: 0 30px 0 30px;
-                //box-sizing: border-box;
-                //margin-top: 50px;
                 margin: 50px 30px 0 30px;
             }
 
@@ -85,6 +82,7 @@ $orange-yellow: #FF7E4A;
 
             p {
                 margin-top: 20px;
+                color: #444;
 
             }
 
@@ -98,7 +96,7 @@ $orange-yellow: #FF7E4A;
                 font-size: 16px;
 
                 .link-icon {
-                    color: inherit;
+                    color: #444;
 
                     i {
                         margin: 20px 3px 0 0;
@@ -114,6 +112,7 @@ $orange-yellow: #FF7E4A;
             display: flex;
             flex-direction: column;
             font-size: 16px;
+            color: #333;
 
             #local-event-container {
                 box-sizing: border-box;
@@ -200,7 +199,6 @@ $orange-yellow: #FF7E4A;
                     padding-top: 10px;
                     font-weight: bold;
                     //flex: 0 1 auto;
-                    color: black;
                 }
 
                 #event-list {
