@@ -85,6 +85,7 @@ header {
     }
 
 
+
 }
 
 @media (max-width: 650px) {
@@ -219,6 +220,13 @@ $orange-yellow: #FF7E4A;
             }
         }
     }
+
+
+}
+@media (max-width: 1000px) {
+    #search-tracked-view {
+        display: none;
+    }
 }
 </style>
 
@@ -236,7 +244,7 @@ $orange-yellow: #FF7E4A;
         <div id="search-tracked-view">
             <autocomplete
                 title=""
-                placeholder="Search for another artist"
+                placeholder="Search for an artist"
                 data="static/AllList.json"
                 callback="artistSearch"
                 submitText="<i class='fa fa-search' aria-hidden='true'></i>">

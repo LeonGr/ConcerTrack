@@ -6,26 +6,53 @@ $orange: #F0443A;
 $orange-yellow: #FF7E4A;
 
 #error-container {
-    position: absolute;
-    top: 50px;
-    height: 80%;
-    color: $orange-red;
+    position: relative;
+    height: calc(100vh - 100px);
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
 
-    text-align: center;
-
     font-size: 18px;
 
     flex-direction: column;
 
+    #error-message-container {
+        width: 600px;
+        height: 300px;
+
+        h1 {
+            font-size: 30px;
+            color: #333;
+        }
+
+        p {
+            margin-top: 20px;
+            color: #444;
+        }
+    }
+
     a {
-        margin-top: 20px;
         color: $orange-yellow;
         cursor: pointer;
+        position: relative;
+        width: 100%;
+        text-align: center;
+        display: block;
+        top: 40px;
         text-decoration: underline;
+    }
+
+    @media (max-width: 700px) {
+        #error-message-container {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+
+        }
     }
 }
 
@@ -35,9 +62,13 @@ $orange-yellow: #FF7E4A;
 
 <template>
     <div id="error-container">
-        <p v-html="errorMessage"></p>
+        <div id="error-message-container">
+            <h1>Whoopsie daisy!</h1>
 
-        <a v-on:click="goBack">Go back to previous page</a>
+            <p v-html="errorMessage"></p>
+
+            <a v-on:click="goBack">Go back to previous page</a>
+        </div>
     </div>
 </template>
 
@@ -74,7 +105,7 @@ export default {
             try {
                 JSON.parse(plain);
             } catch (e) {
-                this.errorMessage = "Invalid import code. Are you sure you copied the correct URL? <br> It should look something like this: " + window.location.origin + "/#/import/eyJsaXN0IjpbInJpY2sgYXN0bGV5Il19"
+                this.errorMessage = "Invalid import code. Are you sure you copied the correct URL? <br> It should look something like this: <a href='" + window.location.origin + "/#/import/eyJsaXN0IjpbInJpY2sgYXN0bGV5Il19'>" + window.location.origin + "/#/import/eyJsaXN0IjpbInJpY2sgYXN0bGV5Il19</a>"
                 return;
             }
 

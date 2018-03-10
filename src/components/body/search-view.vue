@@ -23,12 +23,8 @@ $orange-yellow: #FF7E4A;
 }
 
 #search-body {
-    //position: absolute;
     position: relative;
-    //top: 50px;
     width: 100%;
-    //min-height: calc(100% - 100px);
-    //height: calc(100% - 100px);
 
     min-height: calc(100vh - 100px);
 
@@ -37,7 +33,6 @@ $orange-yellow: #FF7E4A;
     justify-content: space-around;
     flex-direction: column;
 
-    //background-color: #F54;
     background:linear-gradient(0deg,rgba(240, 68, 58, 0.7),rgba(240, 68, 58, 0.7)), url("/static/musician.jpg");
     background-size: cover;
     background-repeat: no-repeat;
@@ -50,10 +45,6 @@ $orange-yellow: #FF7E4A;
         display: flex;
         align-items: center;
         justify-content: center;
-
-        h1 {
-
-        }
 
         h2 {
             font-size: 50px;
@@ -101,7 +92,6 @@ $orange-yellow: #FF7E4A;
         }
 
         #not-description {
-            //height: calc(100% - 150px);
             height: 100%;
             flex-direction: column;
             align-items: center;
@@ -163,19 +153,6 @@ $orange-yellow: #FF7E4A;
         }
     }
 }
-
-//@media (max-height: 600px) {
-//    #search-body {
-//        #not-description {
-//            //justify-content: flex-end;
-//            margin-top: 100px;
-//
-//            img {
-//                margin-bottom: 20px;
-//            }
-//        }
-//    }
-//}
 </style>
 
 <style lang="scss">
@@ -187,7 +164,6 @@ $orange-yellow: #FF7E4A;
 #search-body {
 #autocomplete-container {
     background-color: white;
-    //border: 1px solid #ccc;
     border-left: 5px solid $orange-yellow;
     box-shadow: 0 4px 9px 0 rgba(0,0,0,.3);
     border-radius: 5px;
@@ -249,7 +225,6 @@ $orange-yellow: #FF7E4A;
         transition: box-shadow 200ms cubic-bezier(0.4, 0.0, 0.2, 1);
 
         &:focus, &:hover {
-            //box-shadow: 0 1px 9px 0 rgba(0,0,0,.3);
             box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
         }
     }
@@ -278,7 +253,6 @@ $orange-yellow: #FF7E4A;
     }
 
     #search-results {
-        //border: 1px solid $orange-yellow;
         box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
         position: absolute;
         top: 100px;
@@ -293,12 +267,6 @@ $orange-yellow: #FF7E4A;
 
             &:hover {
                 cursor: pointer;
-            }
-        }
-
-        @media screen and (max-height: 750px) {
-            li {
-                //padding: 3px 20px;
             }
         }
 
@@ -360,9 +328,6 @@ $orange-yellow: #FF7E4A;
                 </div>
             </div>
         </div>
-        <!--<router-link :to="'/tracked'" id="tracked-link">-->
-            <!--<p>Tracked Artists</p>-->
-        <!--</router-link>-->
     </div>
 </template>
 

@@ -74,7 +74,11 @@ footer {
         <span class="square"></span>
         <span class="square"></span>
 
-        <a href="contact">Contact</a>
-        <a href="faq">FAQ</a>
+        <router-link :to="'/contact'">
+            <p>Contact</p>
+        </router-link>
+        <router-link :to="'/faq'">
+            <p>FAQ</p>
+        </router-link>
     </footer>
 </template>

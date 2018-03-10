@@ -1,23 +1,21 @@
 <style lang="scss" scoped>
 #output-container {
-    height: calc(100vh - 100px);
+    min-height: calc(100vh - 100px);
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     color: #222;
-    position: absolute;
-    top: 50px;
+    position: relative;
 
     #output {
         #left-side {
             margin: 0 auto;
             margin-bottom: 100px;
-            width: 50%;
+            width: 600px;
 
             h1 {
                 margin-top: 50px;
-                //line-height: 0.7
             }
 
             img {
@@ -25,7 +23,6 @@
                 padding: 0 30px 0 30px;
                 box-sizing: border-box;
                 margin-top: 50px;
-                //position: absolute;
                 left: 50px;
                 top: 50px;
             }
@@ -49,6 +46,27 @@
                         margin: 20px 3px 0 0;
                         font-size: 25px;
                     }
+                }
+            }
+        }
+    }
+
+    @media (max-width: 700px) {
+        #output {
+            #left-side {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+
+                img {
+                    padding: 0px;
+                    width: 80%;
+                }
+
+                #info-container {
+                    width: 80%;
+                    float: none;
                 }
             }
         }
