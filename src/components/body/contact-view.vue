@@ -20,15 +20,35 @@ $orange-yellow: #FF7E4A;
         box-sizing: border-box;
         color: #333;
 
+        h1 {
+            font-size: 32px;
+            text-decoration: underline;
+            text-decoration-color: $orange-yellow;
+        }
+
         p {
             color: #444;
             margin-top: 20px;
         }
     }
 }
+@media (max-width: 600px) {
+    #contact {
+        #contact-body {
+            h1 {
+                font-size: 25px;
+            }
+        }
+    }
+}
+
 @media (max-height: 600px) {
     #contact {
         #contact-body {
+            h1 {
+                font-size: 25px;
+            }
+
             height: 100%;
         }
     }

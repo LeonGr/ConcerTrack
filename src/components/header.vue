@@ -28,18 +28,20 @@ header {
             font-size: 30px;
         }
 
-        @media (max-width: 380px) {
+        @media (max-width: 440px) {
             h2 {
                 font-size: 28px;
+                font-size: 7vw;
             }
         }
 
-        @media (max-width: 350px) {
+        @media (max-width: 420px) {
             h2 {
-                font-size: 20px;
+                font-size: 6vw;
             }
         }
     }
+
 
     .square {
         float: right;
@@ -83,9 +85,15 @@ header {
             }
         }
     }
+}
 
-
-
+@media (max-width: 800px) {
+    header {
+        #tracked-link {
+            width: 70px;
+            text-align: center;
+        }
+    }
 }
 
 @media (max-width: 650px) {
@@ -106,6 +114,21 @@ header {
         }
     }
 }
+
+@media (max-width: 340px) {
+    header {
+        #header-title-link {
+            left: 10px;
+        }
+
+        #tracked-link {
+            p {
+                font-size: 14px;
+            }
+        }
+    }
+}
+
 </style>
 
 <style lang="scss">
@@ -220,12 +243,162 @@ $orange-yellow: #FF7E4A;
             }
         }
     }
-
-
 }
+
+#search-icon {
+    display: none;
+}
+
 @media (max-width: 1000px) {
     #search-tracked-view {
         display: none;
+    }
+
+    #search-icon {
+        display: block;
+        padding: 10px;
+        color: #333;
+        cursor: pointer;
+        transition: color 0.3s;
+        user-select: none;
+
+        &:hover {
+            color: #777;
+        }
+    }
+}
+
+#search-mobile {
+    position: absolute;
+    height: 50px;
+    z-index: 5;
+    top: 50px;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    border-bottom: 5px solid $orange-yellow;
+    padding-bottom: 5px;
+
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
+
+    background-color: white;
+
+    #search-mobile-close {
+        width: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+
+        i {
+            position: relative;
+            top: 2px;
+            font-size: 25px;
+        }
+    }
+
+    #autocomplete-container {
+
+        h1 {
+            font-size: 20px;
+            font-weight: 300;
+        }
+
+        #errorMessage {
+            border-left: 5px solid $orange-red;
+            padding: 15px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            width: 300px;
+            box-shadow: 0 0 9px 0 rgba(0,0,0,.3);
+            border-radius: 3px;
+
+            position: absolute;
+
+            cursor: pointer;
+
+            background-color: white;
+            top: calc(100vh - 160px);
+            right: calc(100vw - 600px)
+        }
+
+        form {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #input-field {
+            background: #eee;
+            padding: 10px;
+            height: 40px;
+            margin-top: 5px;
+            margin-right: 5px;
+            border-radius: 3px;
+            font-size: 16px;
+            //border: 1px solid $orange-yellow;
+            box-sizing: border-box;
+            outline: none;
+            width: calc(100vw - 50px);
+        }
+
+        #search-results {
+            border-bottom: 5px solid $orange-yellow;
+            box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
+            //border: 1px solid $orange-yellow;
+            position: absolute;
+            top: 40px;
+            right: 5px;
+            list-style: none;
+            background-color: #eee;
+            box-sizing: border-box;
+            width: calc(100vw - 50px);
+
+            li {
+                padding: 4px 20px;
+
+                &:hover {
+                    cursor: pointer;
+                }
+            }
+
+            .selected {
+                background-color: $orange-yellow;
+            }
+        }
+
+        #submitButton {
+            display: none;
+            position: absolute;
+            right: 8px;
+            margin-top: 2px;
+            border-radius: 3px;
+            background-color: $orange-yellow;
+            padding: 5px 18px;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            box-shadow: 0 1px 9px 0 rgba(0,0,0,.3);
+
+            cursor: pointer;
+            transition: all 0.2s;
+            outline: none;
+
+            &:hover {
+                background-color: $orange;
+                box-shadow: 0 5px 9px 0 rgba(0,0,0,.3);
+            }
+
+            &:active {
+                background-color: $orange-yellow;
+                box-shadow: none;
+            }
+        }
     }
 }
 </style>
@@ -241,7 +414,7 @@ $orange-yellow: #FF7E4A;
             <p>Tracked Artists</p>
         </router-link>
 
-        <div id="search-tracked-view">
+        <div id="search-tracked-view" v-if="!hideSearchElements">
             <autocomplete
                 title=""
                 placeholder="Search for an artist"
@@ -251,6 +424,25 @@ $orange-yellow: #FF7E4A;
             </autocomplete>
         </div>
 
+        <div id="search-mobile" v-if="showSearchMobile">
+            <div id="search-mobile-close" v-on:click="showSearch">
+                <i class="fa fa-times"></i>
+            </div>
+
+            <autocomplete
+                title=""
+                placeholder="Search for an artist"
+                data="static/AllList.json"
+                callback="artistSearch"
+                submitText="<i class='fa fa-search' aria-hidden='true'></i>">
+            </autocomplete>
+        </div>
+
+
+        <div id="search-icon" v-if="!hideSearchElements" v-on:click="showSearch">
+            Search
+            <i class="fa fa-search"></i>
+        </div>
 
         <!--spans for coloured squares-->
         <span class="square"></span>
@@ -265,14 +457,52 @@ $orange-yellow: #FF7E4A;
 import store from '@/store/index.js'
 
 export default {
+    data () {
+        return {
+            hideSearchElements: false,
+            showSearchMobile: false
+        }
+    },
+
+    mounted () {
+        this.hideOrShowSearchElements();
+    },
+
+    watch: {
+        '$route' () {
+            this.hideOrShowSearchElements();
+        }
+    },
+
     methods: {
+        showSearch: function(close) {
+            this.showSearchMobile = this.showSearchMobile ? false : true;
+
+            if (this.showSearchMobile) {
+                document.getElementById('input-field').focus();
+            }
+        },
+
+        hideOrShowSearchElements: function() {
+            let path = this.$route.path;
+            path = path.split("/").pop()
+            if(!path) {
+                this.hideSearchElements = true;
+            } else {
+                this.hideSearchElements = false;
+            }
+        },
+
         callBackForm: function(callback, value) {
             if (callback == "artistSearch") {
                 let artist = value;
 
                 // Check if we get a response from BIT API before we redirect
                 store.doesArtistExist(artist).then(data => {
+                    this.showSearchMobile = false;
+
                     // If the response contains an ID redirect to artist-view
+
                     if (data.id) {
                         this.$router.push({ path: "/" + "artists/" + artist })
                     }

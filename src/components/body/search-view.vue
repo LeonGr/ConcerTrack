@@ -342,13 +342,13 @@ export default {
     },
 
     watch: {
+        '$route' () {
+            document.getElementById('input-field').focus();
+        }
     },
 
     mounted: function() {
         document.getElementById('input-field').focus();
-
-        // Change header stuff to fit this page
-        document.getElementById('search-tracked-view').style.display = 'none';
     },
 
     methods: {

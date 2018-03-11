@@ -49,10 +49,12 @@ footer {
 
 @media (max-width: 650px) {
     footer {
+        bottom: 5px;
+
         .square {
             height: 5px;
             position: absolute;
-            bottom: 0;
+            bottom: -5px;
             width: 20%;
         }
 

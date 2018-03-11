@@ -297,10 +297,6 @@ $red: #7E0030;
 $orange-red: #CA283D;
 $orange: #F0443A;
 $orange-yellow: #FF7E4A;
-#search-tracked-view {
-    display: block;
-}
-
 #country-artist-view {
     #autocomplete-container {
         h1 {
@@ -528,9 +524,6 @@ export default {
     },
 
     mounted: function() {
-        // Change header stuff to fit this page
-        document.getElementById('search-tracked-view').style.display = 'block';
-
         // If the page loads for the first time get all information
 
         let userCountry = localStorage.getItem('Country');

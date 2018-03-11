@@ -22,6 +22,7 @@ $orange-yellow: #FF7E4A;
             text-decoration: underline;
             text-decoration-color: $orange-yellow;
             color: #333;
+            font-size: 32px;
         }
 
         .question {
