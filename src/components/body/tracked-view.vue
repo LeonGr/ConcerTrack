@@ -226,11 +226,6 @@ $red: #7E0030;
 $orange-red: #CA283D;
 $orange: #F0443A;
 $orange-yellow: #FF7E4A;
-
-#search-tracked-view {
-    display: block;
-}
-
 #country-tracked-view {
     #autocomplete-container {
         h1 {
@@ -445,8 +440,6 @@ export default {
     },
 
     mounted: function() {
-        document.getElementById('search-tracked-view').style.display = 'block';
-
         console.log(store.saved);
 
         if (store.saved.loaded) {
