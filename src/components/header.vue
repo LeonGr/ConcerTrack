@@ -17,6 +17,15 @@ header {
     position: relative;
     z-index: 2;
 
+    #test {
+        width: 100vw;
+        height: 50px;
+        position: absolute;
+        user-select: none;
+        pointer-events: none;
+        background: white;
+    }
+
     #header-title-link {
         position: absolute;
         left: 20px;
@@ -72,6 +81,7 @@ header {
         height: 50px;
         text-decoration: none;
         margin-right: 5px;
+        position: relative;
 
         p {
             font-weight: bold;
@@ -166,7 +176,7 @@ $orange-yellow: #FF7E4A;
 
             background-color: white;
             top: calc(100vh - 160px);
-            right: calc(100vw - 600px)
+            right: calc(100vw - 600px);
         }
 
         form {
@@ -261,6 +271,7 @@ $orange-yellow: #FF7E4A;
         cursor: pointer;
         transition: color 0.3s;
         user-select: none;
+        position: relative;
 
         &:hover {
             color: #777;
@@ -270,8 +281,7 @@ $orange-yellow: #FF7E4A;
 
 #search-mobile {
     position: absolute;
-    height: 50px;
-    z-index: 5;
+    z-index: -1;
     top: 50px;
     width: 100%;
     display: flex;
@@ -284,12 +294,15 @@ $orange-yellow: #FF7E4A;
 
     background-color: white;
 
+
     #search-mobile-close {
         width: 50px;
         display: flex;
         justify-content: center;
         align-items: center;
+        align-self: flex-start;
         height: 100%;
+        padding: 10px 0;
 
         i {
             position: relative;
@@ -299,6 +312,7 @@ $orange-yellow: #FF7E4A;
     }
 
     #autocomplete-container {
+        overflow: hidden;
 
         h1 {
             font-size: 20px;
@@ -307,23 +321,21 @@ $orange-yellow: #FF7E4A;
 
         #errorMessage {
             border-left: 5px solid $orange-red;
-            padding: 15px 10px;
+            padding: 5px 8px;
+            margin-top: 5px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 18px;
+            //justify-content: center;
+            font-size: 15px;
             font-weight: bold;
-            width: 300px;
-            box-shadow: 0 0 9px 0 rgba(0,0,0,.3);
+            max-width: 400px;
             border-radius: 3px;
-
-            position: absolute;
 
             cursor: pointer;
 
             background-color: white;
             top: calc(100vh - 160px);
-            right: calc(100vw - 600px)
+            right: calc(100vw - 600px);
         }
 
         form {
@@ -341,7 +353,6 @@ $orange-yellow: #FF7E4A;
             margin-right: 5px;
             border-radius: 3px;
             font-size: 16px;
-            //border: 1px solid $orange-yellow;
             box-sizing: border-box;
             outline: none;
             width: calc(100vw - 50px);
@@ -350,7 +361,6 @@ $orange-yellow: #FF7E4A;
         #search-results {
             border-bottom: 5px solid $orange-yellow;
             box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
-            //border: 1px solid $orange-yellow;
             position: absolute;
             top: 40px;
             right: 5px;
@@ -405,6 +415,7 @@ $orange-yellow: #FF7E4A;
 
 <template>
     <header>
+        <div id="test">&nbsp;</div>
         <!--link back to search-view-->
         <router-link :to="'/'" id="header-title-link">
             <h2>ConcerTrack</h2>
@@ -424,7 +435,7 @@ $orange-yellow: #FF7E4A;
             </autocomplete>
         </div>
 
-        <div id="search-mobile" v-if="showSearchMobile">
+        <div id="search-mobile" v-if="showSearchMobile" class="animated slideInDown">
             <div id="search-mobile-close" v-on:click="showSearch">
                 <i class="fa fa-times"></i>
             </div>
@@ -439,7 +450,7 @@ $orange-yellow: #FF7E4A;
         </div>
 
 
-        <div id="search-icon" v-if="!hideSearchElements" v-on:click="showSearch">
+        <div id="search-icon" v-if="!hideSearchElements" v-on:click="showSearch(this)">
             Search
             <i class="fa fa-search"></i>
         </div>
@@ -471,15 +482,31 @@ export default {
     watch: {
         '$route' () {
             this.hideOrShowSearchElements();
+
+            this.showSearchMobile = false;
         }
     },
 
     methods: {
-        showSearch: function(close) {
-            this.showSearchMobile = this.showSearchMobile ? false : true;
+        showSearch: function() {
+            let showSearchMobile = this.showSearchMobile ? false : true;
 
-            if (this.showSearchMobile) {
+            if (showSearchMobile) {
                 document.getElementById('input-field').focus();
+                this.showSearchMobile = true;
+            } else {
+                console.log('test')
+                let searchMobile = document.getElementById('search-mobile')
+                searchMobile.classList.add('slideOutUp');
+
+                let slideOut = () => {
+                    searchMobile.classList.remove('slideOutUp');
+                    this.showSearchMobile = false;
+                }
+
+                searchMobile.addEventListener("animationend", function() {
+                    slideOut();
+                })
             }
         },
 
