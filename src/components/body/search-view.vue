@@ -141,6 +141,8 @@ $orange-yellow: #FF7E4A;
                 border: none;
                // border-top: 5px solid $orange-yellow;
                 border-radius: 0px;
+
+                overflow: hidden;
             }
 
             #img-container {
@@ -172,7 +174,6 @@ $orange-yellow: #FF7E4A;
     width: 440px;
     height: 110px;
 
-    overflow: hidden;
 
     #title {
         font-weight: bold;

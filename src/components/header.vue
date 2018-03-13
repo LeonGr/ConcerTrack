@@ -56,6 +56,7 @@ header {
         float: right;
         width: 50px;
         height: 50px;
+        position: relative;
     }
 
     .square:nth-of-type(1) {
