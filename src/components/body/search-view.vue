@@ -290,6 +290,15 @@ $orange-yellow: #FF7E4A;
             }
         }
 
+        #errorMessage {
+            position: relative;
+            box-shadow: none;
+            bottom: 0;
+            left: 0;
+            padding: 5px 10px;
+            font-size: 15px;
+        }
+
         #input-field {
             padding: 10px;
         }
@@ -365,8 +374,15 @@ export default {
                 }).catch(error => {
                     // If we get an error that means the artist has not been found
                     if (error.toString().includes("SyntaxError")) {
-                        this.$children[0].errorMessage = "Sorry, we couldn't find that artist :(";
-                    }
+                        for(let i = 0, x = this.$children.length; i < x; i++) {
+
+                            let child = this.$children[i];
+
+                            if (child.$el.id == "autocomplete-container") {
+                                child.inputValue = artist;
+                                child.errorMessage = "Sorry, we couldn't find that artist :("
+                            }
+                        }                    }
                 })
             }
         },

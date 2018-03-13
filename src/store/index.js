@@ -2,7 +2,7 @@ let store = {}
 
 export default store;
 
-    // Check if we get a response from BIT API for supplied artist name
+// Check if we get a response from BIT API for supplied artist name
 store.doesArtistExist = function(artist) {
     if (artist.toLowerCase() == "leon grasmeijer") {
         this.$router.push({ path: "/" + "artists/" + "Leon Grasmeijer" })
@@ -29,6 +29,7 @@ store.doesArtistExist = function(artist) {
     })
 }
 
+// Save tracked artists to save data usage
 store.saved = {
     loaded: false,
     allLocalEvents: [],
@@ -37,6 +38,7 @@ store.saved = {
     artistImages: []
 }
 
+// Reset saved tracked artists
 store.resetSaved = function() {
     store.saved = {
         loaded: false,

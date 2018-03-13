@@ -6,10 +6,16 @@
             <button id="submitButton" v-on:click="submitForm" v-html="submitText"></button>
 
             <ul id="search-results" v-if="showMatching.length">
-                <li v-for="match in showMatching" v-on:click="clickSearchResult($event)" v-on:mouseover="hoverSearchResult($event)">{{ match }}</li>
+                <li
+                    v-for="(match, index) in showMatching"
+                    v-on:click="clickSearchResult($event)"
+                    v-on:mouseover="hoverSearchResult($event)"
+                    class="animated fadeIn"
+                    :style="{ animationDelay: index * 0.03 + 's' }"
+                    >{{ match }}</li>
             </ul>
         </form>
-        <h1 v-if="errorMessage" id="errorMessage" v-on:click="hideError">{{ errorMessage }}</h1>
+        <h1 v-if="errorMessage" id="errorMessage" v-on:click="hideError" class="animated lightSpeedIn">{{ errorMessage }}</h1>
     </div>
 </template>
 
@@ -29,12 +35,19 @@ export default {
         }
     },
 
+    // Variables from autocomplete element in parent
     props: {
         title: '',
         placeholder: '',
         data: '',
         callback: '',
         submitText: ''
+    },
+
+    watch: {
+        '$route' () {
+            this.errorMessage = '';
+        }
     },
 
     mounted: function() {
@@ -47,6 +60,7 @@ export default {
             }
         }
 
+        // If user clicks somewhere else than search results or input field clear results
         window.addEventListener("mousedown", function(event) {
             deselectInput(event);
         })
@@ -152,10 +166,10 @@ export default {
                 if (this.selectedSuggestion == null) {
                     this.selectedSuggestion = 0;
                     suggestions[this.selectedSuggestion].classList.add('selected');
-                } else if (this.selectedSuggestion == this.showMatching.length - 1) {
+                } else if (this.selectedSuggestion == this.showMatching.length - 1) { // When we are at the bottom and go down wrap around and select first results
                     suggestions[0].classList.add('selected');
                     this.selectedSuggestion = 0;
-                } else {
+                } else { // Otherwise select next result
                     this.selectedSuggestion++
                     suggestions[this.selectedSuggestion].classList.add('selected');
                 }
@@ -188,6 +202,9 @@ export default {
             this.selectedSuggestion = null;
             // Start giving suggestions when input is more than minimal amount of characters
             const MIN_CHARS = 1;
+
+            // Remove last errorMessage when users starts typing again
+            this.errorMessage = ''
 
             let input = this.inputValue.toLowerCase();//.replace(/[^a-zA-Z]/g, ""); <- uncomment to filter special characters
 
@@ -284,7 +301,17 @@ export default {
         },
 
         hideError: function() {
-            this.errorMessage = '';
+            let errorMessageElement = document.getElementById('errorMessage')
+            errorMessageElement.classList.add('lightSpeedOut');
+
+            let clearErrorMessage = () => {
+                errorMessageElement.classList.remove('lightSpeedOut');
+                this.errorMessage = '';
+            }
+
+            errorMessageElement.addEventListener('animationend', function() {
+                clearErrorMessage();
+            })
         }
     }
 }

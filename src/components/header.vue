@@ -509,8 +509,16 @@ export default {
                 }).catch(error => {
                     // If we get an error that means the artist has not been found
                     if (error.toString().includes("SyntaxError")) {
-                        console.log(this.$children)
-                        this.$children[1].errorMessage = "Sorry, we couldn't find that artist :(";
+
+                        for(let i = 0, x = this.$children.length; i < x; i++) {
+
+                            let child = this.$children[i];
+
+                            if (child.$el.id == "autocomplete-container") {
+                                child.inputValue = artist;
+                                child.errorMessage = "Sorry, we couldn't find that artist :("
+                            }
+                        }
                     }
                 })
             }

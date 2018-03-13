@@ -17,10 +17,10 @@ export default new Router({
         { path: '/contact', component: ContactView },
         { path: '/import/:importCode', component: ImportView },
         { path: '/tracked', component: TrackedView },
-        { path: '/artists/Leon%20Grasmeijer', component: EasterEgg },
         { path: '/artists/Leon Grasmeijer', component: EasterEgg },
+        { path: '/artists/Leon%20Grasmeijer', redirect: '/artists/Leon Grasmeijer' },
         { path: '/artists/:artist', component: ArtistView },
         { path: '/', component: SearchView },
-        { path: '*', redirect: '/' }
+        { path: '*', redirect: '/' } // Any unknown url locations redirect to landing page
     ]
 })

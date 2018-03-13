@@ -7,12 +7,9 @@ $orange-yellow: #FF7E4A;
 #output-container {
     height: calc(100vh - 100px);
     width: 100%;
-    //display: flex;
     justify-content: center;
     color: #222;
-    //position: absolute;
     position: relative;
-    //top: 50px;
 
     #undo-notification {
         border-left: 5px solid $orange-yellow;
@@ -309,7 +306,7 @@ $orange-yellow: #FF7E4A;
 
 <template>
     <div id="output-container">
-        <span id="undo-notification" v-if="removedArtist">
+        <span id="undo-notification" v-if="removedArtist" class="animated lightSpeedIn">
             <p>
             {{ removedArtist }} removed from tracked artists, <a v-on:click="undoRemove">undo?</a>
             </p>
@@ -352,7 +349,12 @@ $orange-yellow: #FF7E4A;
                     Loading events...
                 </div>
 
-                <div v-for="event in orderedEvents" v-if="showEvents && !showAllEvents" class="tracked-artist-event">
+                <div
+                    v-for="(event, index) in orderedEvents"
+                    v-if="showEvents && !showAllEvents"
+                    class="tracked-artist-event animated fadeInLeft"
+                    :style="{ animationDelay: index * 0.1 + 's' }">
+
                     <img :src="event.imageUrl" :alt="event.lineup[0]" class="artist-image">
                     <div class="event-info-wrapper">
                         <h2 class="artist-name"><a v-bind:href="'#/artists/' + event.lineup[0]">{{ event.lineup[0] }}</a></h2>
@@ -481,6 +483,7 @@ export default {
         }
 
         store.saved.loaded = true;
+
     },
 
     methods: {
@@ -782,7 +785,17 @@ export default {
 
             localStorage.setItem('Tracked', JSON.stringify(this.trackedArtists));
 
-            this.removedArtist = '';
+            let undoNotification = document.getElementById('undo-notification')
+            undoNotification.classList.add('lightSpeedOut');
+
+            let clearRemovedArtist = () => {
+                this.classList.remove('lightSpeedOut');
+                this.removedArtist = ''
+            }
+
+            undoNotification.addEventListener("animationend", function() {
+                clearRemovedArtist();
+            })
 
             this.sortTrackedArtists();
         },
