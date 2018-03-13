@@ -450,7 +450,7 @@ $orange-yellow: #FF7E4A;
         </div>
 
 
-        <div id="search-icon" v-if="!hideSearchElements" v-on:click="showSearch(this)">
+        <div id="search-icon" v-if="!hideSearchElements" v-on:click="showSearch">
             Search
             <i class="fa fa-search"></i>
         </div>
