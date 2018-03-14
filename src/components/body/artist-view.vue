@@ -491,7 +491,6 @@ import store from '@/store/index.js'
 
 export default {
     data: function() {
-        this.getAllInformation();
         return {
             // Init local variables
             artist: '',
@@ -528,6 +527,8 @@ export default {
             this.countrySet = userCountry;
         }
 
+        this.getAllInformation();
+
         this.getTrackedArtists();
     },
 
@@ -557,6 +558,7 @@ export default {
         getArtistEvents: function() {
             // Store artist from url in local variable
             this.artist = this.$route.params.artist
+
 
             const apiURL = "https://rest.bandsintown.com/"
             const apiExtension = "?app_id='ConcerTrack v0.0.1'"
@@ -598,67 +600,77 @@ export default {
                 })
             }
 
-            /* Data:
-            Array containing all events:
-                artist_id: artist ID
-                datetime: ISO format date of event
-                id: event ID
-                lineup: Artists present at event
-                offers: array of ticket info
-                    status: if tickets are available
-                    type: what type of offer (seems to be tickets always)
-                    url: link to tickets redirect through BIT
-                on_sale_datetime: when tickets go on sale
-                ticketUrl: another url to tickets
-                venue: object with information about venue
-                    city: the city
-                    country: the country
-                    latitude: the latitude
-                    longitude: the longitude
-                    name: name of the venue
-                    region: state or province (or some random number)
-            */
-            getEvents(this.artist).then(data => {
-                this.events = data;
-                //console.log("BIT event data:")
-                //console.log(data)
+            if(store.lastArtistEvents && store.lastArtistEvents.artist.toLowerCase() == this.artist.toLowerCase()) {
+                this.events = store.lastArtistEvents;
+                this.localEvents = store.lastArtistEventsLocal;
+            }
 
-                this.events.forEach((event) => {
-                    // Change ISO date to readable date format
-                    let date = new Date(event.datetime);
-                    let months = ["Jan","Feb","Mar","Apr","May", "June","July","Aug","Sept","Oct","Nov","Dec"];
-                    //event.datetime = `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
-                    event.datetime = `${date.getDate()} ${months[date.getMonth()]}`;
+            else {
+                /* Data:
+                Array containing all events:
+                    artist_id: artist ID
+                    datetime: ISO format date of event
+                    id: event ID
+                    lineup: Artists present at event
+                    offers: array of ticket info
+                        status: if tickets are available
+                        type: what type of offer (seems to be tickets always)
+                        url: link to tickets redirect through BIT
+                    on_sale_datetime: when tickets go on sale
+                    ticketUrl: another url to tickets
+                    venue: object with information about venue
+                        city: the city
+                        country: the country
+                        latitude: the latitude
+                        longitude: the longitude
+                        name: name of the venue
+                        region: state or province (or some random number)
+                */
+                getEvents(this.artist).then(data => {
+                    this.events = data;
 
-                    // If we have a ticket url show it otherwise redirect to search
-                    if(event.offers.length){
-                        event.ticketUrl = event.offers[0].url;
-                    } else {
-                        event.searchUrl = "https://duckduckgo.com/?q=" + data.artist + " " + event.datetime;
-                    }
+                    this.events.forEach((event) => {
+                        // Change ISO date to readable date format
+                        let date = new Date(event.datetime);
+                        let months = ["Jan","Feb","Mar","Apr","May", "June","July","Aug","Sept","Oct","Nov","Dec"];
+                        //event.datetime = `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+                        event.datetime = `${date.getDate()} ${months[date.getMonth()]}`;
 
-                    if (event.venue.country == this.countrySet) {
-                        this.localEvents.push(event);
-                    }
+                        // If we have a ticket url show it otherwise redirect to search
+                        if(event.offers.length){
+                            event.ticketUrl = event.offers[0].url;
+                        } else {
+                            event.searchUrl = "https://duckduckgo.com/?q=" + data.artist + " " + event.datetime;
+                        }
+
+                        if (event.venue.country == this.countrySet) {
+                            this.localEvents.push(event);
+                        }
+                    })
+
+                    store.lastArtistEvents = this.events;
+                    store.lastArtistEventsLocal = this.localEvents;
                 })
-            })
+            }
 
-            /* Data:
-            facebook_page_url: url to facebook page
-            id: artist ID
-            image_url: url to image of artist
-            name: artist name
-            thumb_url: url to thumbnail image
-            tracker_count: number of BIT trackers
-            upcoming_event_count: number of upcoming events
-            url: link to BIT page of artist
-            */
-            getArtistInfo(this.artist).then(data => {
-                this.artistInfo = data;
-
-                //console.log("BIT data: ")
-                //console.log(this.artistInfo);
-            })
+            if (store.lastArtist && store.lastArtist.name.toLowerCase() == this.artist.toLowerCase()){
+                this.artistInfo = store.lastArtist;
+            } else {
+                /* Data:
+                facebook_page_url: url to facebook page
+                id: artist ID
+                image_url: url to image of artist
+                name: artist name
+                thumb_url: url to thumbnail image
+                tracker_count: number of BIT trackers
+                upcoming_event_count: number of upcoming events
+                url: link to BIT page of artist
+                */
+                getArtistInfo(this.artist).then(data => {
+                    this.artistInfo = data;
+                    store.lastArtist = data;
+                })
+            }
         },
 
         checkBandcampAccount: function() {
@@ -691,36 +703,45 @@ export default {
                 })
             }
 
-            /* Data:
-            bio: short description of artist
-            image: url to artist image
-            name: artist name
-            ontour: 1 if artist is on tour otherwise 0
-            similar: object with similar artists
-                artists: array of artists
-                    image: image of similar artist
-                    name: name of similar artist
-                    url: url to last fm page of similar artist
-            stats: object with lastfm stats
-                listeners: number of listeners
-                playcount: number of plays from listeners
-                streamable: 1 if you can stream from lastfm 0 otherwise
-                tags: object with array of tags
-                    tags: array of tags
-            */
-            getData().then(data => {
-                if (data.error){
-                    throw data.message;
-                    return;
-                }
-
-                this.lastFMData = data.artist;
+            if (store.lastLastFMdata && store.lastLastFMdata.name.toLowerCase() == this.artist.toLowerCase()) {
+                this.lastFMData = store.lastLastFMdata;
                 this.artist = this.lastFMData.name;
-                this.artistBio = data.artist.bio.summary;
-                this.imageUrl = data.artist.image[data.artist.image.length - 1]["#text"] || this.artistInfo.image_url;
-                //console.log("Last FM data: ");
-                //console.log(data.artist);
-            })
+                this.artistBio = this.lastFMData.bio.summary;
+                this.imageUrl = this.lastFMData.image[this.lastFMData.image.length - 1]["#text"] || this.artistInfo.image_url;
+            }
+
+            else {
+                /* Data:
+                bio: short description of artist
+                image: url to artist image
+                name: artist name
+                ontour: 1 if artist is on tour otherwise 0
+                similar: object with similar artists
+                    artists: array of artists
+                        image: image of similar artist
+                        name: name of similar artist
+                        url: url to last fm page of similar artist
+                stats: object with lastfm stats
+                    listeners: number of listeners
+                    playcount: number of plays from listeners
+                    streamable: 1 if you can stream from lastfm 0 otherwise
+                    tags: object with array of tags
+                        tags: array of tags
+                */
+                getData().then(data => {
+                    if (data.error){
+                        throw data.message;
+                        return;
+                    }
+
+                    this.lastFMData = data.artist;
+                    this.artist = this.lastFMData.name;
+                    this.artistBio = this.lastFMData.bio.summary;
+                    this.imageUrl = this.lastFMData.image[this.lastFMData.image.length - 1]["#text"] || this.artistInfo.image_url;
+
+                    store.lastLastFMdata = this.lastFMData;
+                })
+            }
         },
 
         callBackForm: function(callback, value) {

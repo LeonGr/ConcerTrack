@@ -48,3 +48,12 @@ store.resetSaved = function() {
         artistImages: []
     }
 }
+
+// Last loaded artist information
+store.lastArtist;
+store.lastArtistEvents;
+store.lastArtistEventsLocal;
+store.lastLastFMdata;
+
+// Artist list
+store.artistList;

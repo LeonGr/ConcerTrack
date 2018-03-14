@@ -529,8 +529,10 @@ export default {
                 store.doesArtistExist(artist).then(data => {
                     this.showSearchMobile = false;
 
-                    // If the response contains an ID redirect to artist-view
+                    // Store new data
+                    store.lastArtist = data;
 
+                    // If the response contains an ID redirect to artist-view
                     if (data.id) {
                         this.$router.push({ path: "/" + "artists/" + artist })
                     }

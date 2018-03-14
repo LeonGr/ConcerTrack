@@ -20,6 +20,8 @@
 </template>
 
 <script>
+import store from '@/store/index.js'
+
 export default {
     data: function() {
         return {
@@ -115,9 +117,14 @@ export default {
                 })
             }
 
-            fetchArtistList().then(data => {
-                this.listOfData = data;
-            });
+            if (store.artistList) {
+                this.listOfData = store.artistList;
+            } else {
+                fetchArtistList().then(data => {
+                    this.listOfData = data;
+                    store.artistList = this.listOfData;
+                });
+            }
         },
 
         deselectInput: function() {
