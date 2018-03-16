@@ -56,6 +56,8 @@ $orange-yellow: #FF7E4A;
             font-size: 32px;
             align-self: flex-start;
             margin-top: 50px;
+            text-decoration: underline;
+            text-decoration-color: $orange-yellow;
         }
 
         #local-events {
@@ -84,6 +86,7 @@ $orange-yellow: #FF7E4A;
         #export-button-container {
             align-self: flex-start;
             width: 300px;
+            height: 120px;
 
             button {
                 margin-top: 20px;
@@ -96,8 +99,31 @@ $orange-yellow: #FF7E4A;
 
             textarea {
                 width: 260px;
+                height: 20px;
                 margin-top: 20px;
                 border: 1px solid #ccc;
+            }
+        }
+
+        #all-artists-button {
+            background-color: $orange-yellow;
+            width: calc(100% - 40px);
+            height: 50px;
+            margin-top: 20px;
+            box-shadow: 0 1px 9px 0 rgba(0,0,0,.3);
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            outline: none;
+            border-radius: 3px;
+
+            display: none;
+
+            transition: all 0.2s;
+
+            &:hover {
+                background-color: $orange;
             }
         }
 
@@ -122,6 +148,10 @@ $orange-yellow: #FF7E4A;
                 box-shadow: 0 8px 6px -6px rgba(0, 0, 0, 0.3);
                 box-sizing: border-box;
                 padding-left: 5px;
+
+                .fa-times {
+                    display: none;
+                }
             }
 
             #tracked-artist-list {
@@ -215,6 +245,176 @@ $orange-yellow: #FF7E4A;
         }
     }
 }
+@media (max-width: 1200px) {
+    #output-container {
+        #main-content {
+            flex-direction: row;
+
+            #not-list-container {
+                align-self: flex-start;
+            }
+
+            h1 {
+                margin-top: 30px;
+                height: 40px;
+            }
+
+            #tracked-artist-events-list {
+                width: calc(100% - 650px);
+                padding: 0;
+            }
+
+            #tracked-artist-list-container {
+                #tracked-artist-list {
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 1100px) {
+    #output-container {
+        overflow-y: hidden;
+
+        #main-content {
+            #not-list-container {
+                #all-artists-button {
+                    display: block;
+                }
+            }
+            #tracked-artist-events-list {
+                width: calc(100% - 300px);
+                padding: 0;
+            }
+
+            #tracked-artist-list-container {
+                position: absolute;
+                top: 0;
+                right: 0;
+                z-index: 3;
+                display: none;
+                background-color: white;
+                box-shadow: -2px 0px 20px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
+
+                #artist-list-header {
+                    p {
+                        width: 100%;
+                    }
+
+                    .fa-times {
+                        display: block;
+                        padding: 20px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 750px) {
+    #output-container {
+        #main-content {
+            padding: 0;
+
+            #not-list-container {
+                width: 100%;
+                height: 70px;
+                display: flex;
+                align-items: center;
+                padding-left: 20px;
+
+                h1 {
+                    font-size: 25px;
+                    margin-top: 0;
+                    height: auto;
+                    align-self: auto;
+                }
+
+                #local-events {
+                    display: none;
+                }
+
+                #ask-location {
+                    position: absolute;
+
+                    width: calc(100% - 40px);
+                    display: flex;
+                    flex-wrap: wrap;
+
+                    box-sizing: border-box;
+
+                    top: 50px;
+
+                    p {
+                        display: none;
+                    }
+                }
+
+                #export-button-container {
+                    display: none;
+                }
+
+
+                #all-artists-button {
+                    position: absolute;
+                    font-size: 15px;
+                    width: 100px;
+                    margin: 0;
+                    right: 5px;
+                    background: none;
+                    color: #333;
+                    box-shadow: none;
+                    text-decoration: underline;
+                    font-weight: 300;
+                }
+            }
+
+            #tracked-artist-events-list {
+                width: 100%;
+                height: calc(100% - 50px);
+
+                .tracked-artist-event {
+                    padding: 0 10px;
+
+                    .artist-image {
+                        width: 60px;
+                        height: 60px;
+                        margin-right: 10px;
+                    }
+
+                    .event-info-wrapper {
+                        width: calc(100% - 70px);
+
+                        .artist-name {
+                            height: 20px;
+                            width: 100%;
+
+                            a {
+                                text-overflow: ellipsis;
+                                white-space: nowrap;
+                                overflow: hidden;
+                                height: 100%;
+                                width: 100%;
+                                font-size: 15px;
+                                display: block;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 350px) {
+    #output-container {
+        #main-content {
+            #tracked-artist-list-container {
+                width: 100%;
+            }
+        }
+    }
+}
 </style>
 
 <style lang="scss">
@@ -301,6 +501,32 @@ $orange-yellow: #FF7E4A;
             }
         }
     }
+
+    @media (max-width: 750px) {
+        width: 100%;
+
+        #autocomplete-container {
+
+            #title {
+                font-size: 18px;
+            }
+
+            #input-field {
+                width: 100%;
+                height: 30px;
+            }
+
+            #search-results {
+                position: relative;
+                top: 0;
+                width: 100%;
+
+                li {
+                    padding: 2px 10px;
+                }
+            }
+        }
+    }
 }
 </style>
 
@@ -313,36 +539,42 @@ $orange-yellow: #FF7E4A;
         </span>
 
         <div id="main-content">
-            <h1>Tracked Artists:</h1>
-            <div id="local-events" v-if="countrySet">
-                <b>Showing events in: '{{ countrySet }}'</b>
-                <br>
-                <button v-on:click="resetCountry">Change location</button>
-            </div>
-            <div id="ask-location" v-else>
-                <p>
-                    No location set, do you want to set it now so we can show you events in your country?
-                </p>
 
-                <div id="country-tracked-view">
-                    <autocomplete
-                     title="Select country:"
-                     placeholder="Country name"
-                     data="static/countries.json"
-                     callback="countrySearch"
-                     submitText="Select">
-                    </autocomplete>
+            <div id="not-list-container">
+                <h1>Tracked Artists</h1>
+
+                <div id="local-events" v-if="countrySet">
+                    <b>Showing events in: '{{ countrySet }}'</b>
+                    <br>
+                    <button v-on:click="resetCountry">Change location</button>
                 </div>
-            </div>
+                <div id="ask-location" v-else>
+                    <p>
+                        No location set, do you want to set it now so we can show you events in your country?
+                    </p>
 
-            <div id="export-button-container">
-                <button v-on:click="getExportLink">Get link to export tracked artists:</button>
-                <br>
-                <textarea id="" name="" cols="30" rows="10" v-if="encodedLink">{{ encodedLink }}</textarea>
-                <br>
-                <p v-if="encodedLink">Open this URL in your browser to share tracked artists.</p>
-            </div>
+                    <div id="country-tracked-view">
+                        <autocomplete
+                         title="Select country:"
+                         placeholder="Country name"
+                         data="static/countries.json"
+                         callback="countrySearch"
+                         submitText="Select">
+                        </autocomplete>
+                    </div>
+                </div>
 
+                <div id="export-button-container">
+                    <button v-on:click="getExportLink">Get link to export tracked artists:</button>
+                    <br>
+                    <textarea id="" name="" cols="30" rows="10" v-if="shortUrl">{{ shortUrl }}</textarea>
+                    <br>
+                    <p v-if="shortUrl">Open this URL in any other browser to share your tracked artists.</p>
+                </div>
+
+                <button id="all-artists-button" v-on:click="showAllTrackedArtists">All Tracked Artists</button>
+
+            </div>
 
             <div id="tracked-artist-events-list">
                 <div class="message-div" v-if="loading && countrySet">
@@ -384,8 +616,8 @@ $orange-yellow: #FF7E4A;
             </div>
 
             <!--Show list of all tracked artists if there's any.-->
-            <div id="tracked-artist-list-container">
-                <div id="artist-list-header">All tracked artists:</div>
+            <div id="tracked-artist-list-container" class="animated">
+                <div id="artist-list-header"><p>All tracked artists:</p> <i class="fa fa-times" v-on:click="hideAllTrackedArtists"></i></div>
 
                 <div id="tracked-artist-list">
                     <span v-for="artist in trackedArtists.list">
@@ -423,7 +655,8 @@ export default {
             BITlast: false,
             startTime: 0,
             trackedArtists: {"list": []},
-            removedArtist: ''
+            removedArtist: '',
+            shortUrl: ''
         }
     },
 
@@ -487,6 +720,37 @@ export default {
     },
 
     methods: {
+        showAllTrackedArtists: function() {
+            let artistList = document.getElementById('tracked-artist-list-container');
+
+            artistList.style.display = 'block';
+            artistList.classList.add('slideInRight');
+
+            let removeAnimationClass = () => {
+                artistList.classList
+            }
+
+            artistList.addEventListener("animationend", function() {
+                this.classList.remove('slideInRight');
+                this.style.display = 'block';
+            })
+        },
+
+        hideAllTrackedArtists: function() {
+            let artistList = document.getElementById('tracked-artist-list-container');
+
+            artistList.classList.add('slideOutRight');
+
+            let removeAnimationClass = () => {
+                artistList.classList
+            }
+
+            artistList.addEventListener("animationend", function() {
+                this.classList.remove('slideOutRight');
+                this.style.display = 'none';
+            })
+        },
+
         getArtistEvents: function(artist) {
             // Store artist from url in local variable
             const apiURL = "https://rest.bandsintown.com/"
@@ -727,8 +991,26 @@ export default {
         getExportLink: function() {
             // Convert list of artists to base64 because it looks better I guess
             let encodedArtists = btoa(JSON.stringify({ list: this.trackedArtists.list }));
+			console.log(encodedArtists)
+
             encodedArtists = encodedArtists.split("=").shift();
             this.encodedLink = window.location.origin + "/#/import/" + encodedArtists;
+
+            fetch("https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyBNloeeEkS5UZofgsHxbcA-P7gq8XRffMQ", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    longUrl: this.encodedLink
+                })
+            }).then(response => {
+                return response.json()
+            }).then(data => {
+                console.log(data);
+                this.shortUrl = data.id;
+            })
         },
 
         showLocalEvents: function() {
