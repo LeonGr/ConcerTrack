@@ -236,6 +236,10 @@ $orange-yellow: #FF7E4A;
                         box-sizing: border-box;
                     }
 
+                    .event-combined {
+                        display: none;
+                    }
+
                     .event-tickets {
                         width: 20%;
                     }
@@ -252,6 +256,7 @@ $orange-yellow: #FF7E4A;
 
             #not-list-container {
                 align-self: flex-start;
+                box-sizing: border-box;
             }
 
             h1 {
@@ -288,8 +293,9 @@ $orange-yellow: #FF7E4A;
             }
 
             #tracked-artist-list-container {
+                height: calc(100vh - 50px);
                 position: absolute;
-                top: 0;
+                top: 5px;
                 right: 0;
                 z-index: 3;
                 display: none;
@@ -311,17 +317,21 @@ $orange-yellow: #FF7E4A;
     }
 }
 
-@media (max-width: 750px) {
+@media (max-width: 800px) {
     #output-container {
+        height: auto;
+        min-height: calc(100vh - 100px);
+
         #main-content {
             padding: 0;
 
             #not-list-container {
                 width: 100%;
-                height: 70px;
+                height: 90px;
                 display: flex;
                 align-items: center;
                 padding-left: 20px;
+                flex-wrap: wrap;
 
                 h1 {
                     font-size: 25px;
@@ -331,7 +341,17 @@ $orange-yellow: #FF7E4A;
                 }
 
                 #local-events {
-                    display: none;
+                    margin: 0;
+                    width: 100%;
+
+                    b, br {
+                        display: none;
+                    }
+
+                    button {
+                        margin: 0;
+                        font-size: 15px;
+                    }
                 }
 
                 #ask-location {
@@ -371,7 +391,11 @@ $orange-yellow: #FF7E4A;
 
             #tracked-artist-events-list {
                 width: 100%;
-                height: calc(100% - 50px);
+                min-height: calc(100vh - 190px);
+
+                .message-div {
+                    height: calc(90vh - 190px);
+                }
 
                 .tracked-artist-event {
                     padding: 0 10px;
@@ -384,6 +408,7 @@ $orange-yellow: #FF7E4A;
 
                     .event-info-wrapper {
                         width: calc(100% - 70px);
+                        align-items: center;
 
                         .artist-name {
                             height: 20px;
@@ -399,8 +424,36 @@ $orange-yellow: #FF7E4A;
                                 display: block;
                             }
                         }
+
+                        .event-venue, .event-city {
+                            display: none;
+                        }
+
+                        .event-combined {
+                            width: 100%;
+                            display: block;
+                        }
+
+                        .event-tickets {
+                            position: absolute;
+                            top: 0;
+                            right: 0;
+                            height: 100%;
+                            display: flex;
+                            align-items: center;
+                        }
                     }
                 }
+            }
+        }
+    }
+}
+
+@media (max-width: 400px) {
+    #output-container {
+        #main-content{
+            #tracked-artist-list-container {
+                width: 100%;
             }
         }
     }
@@ -409,8 +462,16 @@ $orange-yellow: #FF7E4A;
 @media (max-width: 350px) {
     #output-container {
         #main-content {
-            #tracked-artist-list-container {
-                width: 100%;
+            #not-list-container {
+                h1 {
+                    font-size: 22px;
+                }
+
+                #all-artists-button {
+                    right: 0;
+                    width: 90px;
+                    font-size: 14px;
+                }
             }
         }
     }
@@ -593,6 +654,7 @@ $orange-yellow: #FF7E4A;
                         <p class="event-date">{{ event.datetime }}</p>
                         <p class="event-city">{{ event.venue.city }}</p>
                         <p class="event-venue">{{ event.venue.name }}</p>
+                        <p class="event-combined">{{ event.venue.city }}<br>{{ event.venue.name }}</p>
                         <a class="event-tickets" :href="event.ticketUrl" v-if="event.ticketUrl">Tickets</a>
                         <a class="event-tickets" :href="event.searchUrl" v-else>Search for tickets</a>
                     </div>

@@ -422,7 +422,7 @@ $orange-yellow: #FF7E4A;
             <h2>ConcerTrack</h2>
         </router-link>
 
-        <router-link :to="'/tracked'" id="tracked-link">
+        <router-link :to="'/tracked'" id="tracked-link" v-if="showTrackedLink">
             <p>Tracked Artists</p>
         </router-link>
 
@@ -472,7 +472,8 @@ export default {
     data () {
         return {
             hideSearchElements: false,
-            showSearchMobile: false
+            showSearchMobile: false,
+            showTrackedLink: true
         }
     },
 
@@ -514,11 +515,15 @@ export default {
         hideOrShowSearchElements: function() {
             let path = this.$route.path;
             path = path.split("/").pop()
-            if(!path) {
-                this.hideSearchElements = true;
-            } else {
-                this.hideSearchElements = false;
-            }
+//            if(!path) {
+//                this.hideSearchElements = true;
+//            } else {
+//                this.hideSearchElements = false;
+//            }
+
+            this.hideSearchElements = path ? false : true;
+
+            this.showTrackedLink = path == 'tracked' ? false : true;
         },
 
         callBackForm: function(callback, value) {
