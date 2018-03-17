@@ -70,9 +70,6 @@ export default {
         let inputField = this.$el.children[0].children[1];
         // Should happen when search-view is loaded the first time:
 
-        // Listen for arrowkey events to select search results
-
-
         // Extra function because we can't use `this` in eventlistener function
         let callSelectFuncion = (key) => {
             if (key == 'ArrowDown' || key == 'Tab')
@@ -117,12 +114,12 @@ export default {
                 })
             }
 
-            if (store.artistList) {
-                this.listOfData = store.artistList;
+            if (store.autocompleteList && store.autocompleteList[this.data]) {
+                this.listOfData = store.autocompleteList[this.data];
             } else {
                 fetchArtistList().then(data => {
                     this.listOfData = data;
-                    store.artistList = this.listOfData;
+                    store.autocompleteList[this.data] = this.listOfData;
                 });
             }
         },

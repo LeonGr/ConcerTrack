@@ -145,9 +145,10 @@ $orange-yellow: #FF7E4A;
                 align-items: center;
                 font-weight: bold;
                 font-size: 18px;
-                box-shadow: 0 8px 6px -6px rgba(0, 0, 0, 0.3);
+                box-shadow: 0 2px 6px 2px rgba(0, 0, 0, 0.3);
                 box-sizing: border-box;
                 padding-left: 5px;
+                border-bottom: 5px solid $orange-yellow;
 
                 .fa-times {
                     display: none;
@@ -249,7 +250,7 @@ $orange-yellow: #FF7E4A;
         }
     }
 }
-@media (max-width: 1200px) {
+@media (max-width: 1300px) {
     #output-container {
         #main-content {
             flex-direction: row;
@@ -265,8 +266,8 @@ $orange-yellow: #FF7E4A;
             }
 
             #tracked-artist-events-list {
-                width: calc(100% - 650px);
-                padding: 0;
+                width: calc(100% - 660px);
+                padding-left: 10px;
             }
 
             #tracked-artist-list-container {
@@ -277,7 +278,7 @@ $orange-yellow: #FF7E4A;
     }
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 1200px) {
     #output-container {
         overflow-y: hidden;
 
@@ -287,15 +288,15 @@ $orange-yellow: #FF7E4A;
                     display: block;
                 }
             }
+
             #tracked-artist-events-list {
-                width: calc(100% - 300px);
-                padding: 0;
+                width: calc(100% - 310px);
             }
 
             #tracked-artist-list-container {
                 height: calc(100vh - 50px);
                 position: absolute;
-                top: 5px;
+                top: 1px;
                 right: 0;
                 z-index: 3;
                 display: none;
@@ -303,6 +304,9 @@ $orange-yellow: #FF7E4A;
                 box-shadow: -2px 0px 20px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
 
                 #artist-list-header {
+                   // box-shadow: -6px 8px 6px -6px rgba(0, 0, 0, 0.3);
+                    box-shadow: -0px 2px 6px 2px rgba(0, 0, 0, 0.3);
+
                     p {
                         width: 100%;
                     }
@@ -392,6 +396,7 @@ $orange-yellow: #FF7E4A;
             #tracked-artist-events-list {
                 width: 100%;
                 min-height: calc(100vh - 190px);
+                overflow: auto;
 
                 .message-div {
                     height: calc(90vh - 190px);
@@ -441,6 +446,7 @@ $orange-yellow: #FF7E4A;
                             height: 100%;
                             display: flex;
                             align-items: center;
+                            justify-content: center;
                         }
                     }
                 }
@@ -563,6 +569,14 @@ $orange-yellow: #FF7E4A;
         }
     }
 
+    @media (max-width: 1200px) {
+        #autocomplete-container {
+            #search-results {
+                top: 230px;
+            }
+        }
+    }
+
     @media (max-width: 750px) {
         width: 100%;
 
@@ -637,7 +651,7 @@ $orange-yellow: #FF7E4A;
 
             </div>
 
-            <div id="tracked-artist-events-list">
+            <div id="tracked-artist-events-list" class="scrollable">
                 <div class="message-div" v-if="loading && countrySet">
                     Loading events...
                 </div>
@@ -787,6 +801,7 @@ export default {
 
             artistList.style.display = 'block';
             artistList.classList.add('slideInRight');
+            document.body.style.overflow = 'hidden';
 
             let removeAnimationClass = () => {
                 artistList.classList
@@ -802,6 +817,7 @@ export default {
             let artistList = document.getElementById('tracked-artist-list-container');
 
             artistList.classList.add('slideOutRight');
+            document.body.style.overflow = 'auto';
 
             let removeAnimationClass = () => {
                 artistList.classList

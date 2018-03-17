@@ -7,12 +7,9 @@ $orange-yellow: #FF7E4A;
 #output-container {
     height: calc(100vh - 100px);
     width: 100%;
-    //display: flex;
     justify-content: center;
     color: #222;
     position: relative;
-    //position: absolute;
-    //top: 50px;
 
     #output {
         width: 100%;
@@ -25,13 +22,13 @@ $orange-yellow: #FF7E4A;
 
             h1 {
                 color: #333;
-                margin-top: 50px;
+                margin-top: 30px;
             }
 
             #artist-image {
                 width: calc(50% - 60px);
                 box-shadow: 0 4px 9px 0 rgba(0, 0, 0, 0.3);
-                margin: 50px 30px 0 30px;
+                margin: 30px 30px 0 30px;
             }
 
             #track-button-tracked, #track-button {
@@ -117,7 +114,7 @@ $orange-yellow: #FF7E4A;
             #local-event-container {
                 box-sizing: border-box;
                 padding-left: 20px;
-                margin-top: 50px;
+                margin-top: 30px;
 
                 flex: 0 1 auto;
                 max-height: 50%;
@@ -136,7 +133,7 @@ $orange-yellow: #FF7E4A;
                         width: 100%;
                     }
 
-                    button {
+                    #change-location-button {
                         background-color: transparent;
                         color: $orange-red;
                         text-decoration: underline;
@@ -181,7 +178,7 @@ $orange-yellow: #FF7E4A;
 
             #event-container {
                 box-sizing: border-box;
-                padding: 50px 0 0 20px;
+                padding: 10px 0 0 20px;
                 width: 100%;
                 flex: 1 1 auto;
                 //max-height: 50%;
@@ -228,9 +225,7 @@ $orange-yellow: #FF7E4A;
     padding: 10px 0;
     padding-right: 14px;
     margin-top: 5px;
-    //box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.3);
     box-shadow: 0 8px 6px -6px rgba(0, 0, 0, 0.3);
-    //border-bottom: 1px solid #333;
     border-top: 5px solid $orange-yellow;
     font-size: 0;
 
@@ -289,6 +284,76 @@ $orange-yellow: #FF7E4A;
         width: 10%;
     }
 }
+
+.show-more-less-button {
+    height: 60px;
+    width: 100%;
+    outline: none;
+    background-color: #EEE;
+    color: $orange-red;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+@media (max-width: 1200px) {
+    #output-container {
+        height: auto;
+        min-height: calc(100vh - 100px);
+
+        #output {
+            flex-direction: column;
+            align-items: center;
+
+            #left-side, #right-side {
+                width: 700px;
+            }
+
+            #right-side {
+                height: calc(100vh - 100px);
+
+                #local-event-container, #event-container {
+                    padding: 0;
+                }
+
+                #event-container {
+                    margin-top: 20px;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 750px) {
+    #output-container {
+
+        #output {
+
+            #left-side, #right-side {
+                width: 100%;
+            }
+
+            #right-side {
+                height: auto;
+
+                #local-event-container, #event-container {
+                    max-height: none;
+                    padding: 0 10px;
+
+                    #local-events {
+                        #local-events-list {
+                            max-height: none;
+                            overflow: auto;
+                        }
+                    }
+
+                    #event-list {
+                        overflow: auto;
+                    }
+                }
+            }
+        }
+    }
+}
 </style>
 
 <style lang="scss">
@@ -313,6 +378,7 @@ $orange-yellow: #FF7E4A;
             display: flex;
             flex-direction: column;
             justify-content: space-around;
+            position: relative;
         }
 
         #input-field {
@@ -322,7 +388,6 @@ $orange-yellow: #FF7E4A;
             margin-top: 5px;
             height: 50px;
             font-size: 16px;
-         //   border: 1px solid $orange-yellow;
             box-sizing: border-box;
             outline: none;
             width: 250px;
@@ -334,7 +399,7 @@ $orange-yellow: #FF7E4A;
             //border: 1px solid $orange-yellow;
             position: absolute;
             box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
-            top: 210px;
+            top: 80px;
             list-style: none;
             background-color: #eee;
             box-sizing: border-box;
@@ -351,7 +416,13 @@ $orange-yellow: #FF7E4A;
             .selected {
                 background-color: $orange-yellow;
             }
+
+            @media (max-width: 1200px) {
+                position: absolute;
+                top: 80px;
+            }
         }
+
 
         #submitButton {
             display: none;
@@ -415,10 +486,13 @@ $orange-yellow: #FF7E4A;
                 <div id="local-event-container">
                     <h1>Local events:</h1>
                     <div id="local-events" v-if="countrySet">
-                        <button v-on:click="resetCountry">Change location</button>
-                        <p class="amount-upcoming">{{ localEvents.length }} upcoming events in country '{{ countrySet }}':</p>
+                        <button v-on:click="resetCountry" id="change-location-button">Change location</button>
+                        <p v-if="localEvents.length" class="amount-upcoming">
+                            {{ localEvents.length }} upcoming events in country '{{ countrySet }}':
+                        </p>
                         <div class="list-header"><p>Date</p><p>Venue</p><p>Location</p></div>
-                        <div v-if="localEvents.length" id="local-events-list" class="event-list">
+
+                        <div v-if="localEvents.length && showAllLocal" id="local-events-list" class="event-list">
                             <div v-for="event in localEvents" :key="event.datetime" class="event-div">
                                 <p class="event-date">{{ event.datetime }}</p>
                                 <p class="event-venue">{{ event.venue.name }}</p>
@@ -426,8 +500,21 @@ $orange-yellow: #FF7E4A;
                                 <a v-if="event.ticketUrl" :href="event.ticketUrl">Tickets</a>
                                 <a v-else :href="event.searchUrl">Search tickets</a>
                             </div>
+                            <button class="show-more-less-button" v-if="localEvents.length > 5" v-on:click="toggleMoreLessLocal">Show Less</button>
                         </div>
-                        <div v-else style="margin-top: 5px">No local upcoming events :(</div>
+
+                        <div v-if="localEvents.length && !showAllLocal" id="local-events-list" class="event-list">
+                            <div v-for="event in firstFiveLocal" :key="event.datetime" class="event-div">
+                                <p class="event-date">{{ event.datetime }}</p>
+                                <p class="event-venue">{{ event.venue.name }}</p>
+                                <p class="event-city">{{ event.venue.city }}, {{ event.venue.country }}</p>
+                                <a v-if="event.ticketUrl" :href="event.ticketUrl">Tickets</a>
+                                <a v-else :href="event.searchUrl">Search tickets</a>
+                            </div>
+                            <button class="show-more-less-button" v-if="localEvents.length > 5" v-on:click="toggleMoreLessLocal">Show More</button>
+                        </div>
+
+                        <div v-if="!localEvents.length" style="margin-top: 5px">No local upcoming events :(</div>
                     </div>
                     <div id="ask-location" v-else>
                         <p>
@@ -457,17 +544,30 @@ $orange-yellow: #FF7E4A;
                         <p>Location</p>
                     </div>
                     <hr>
-                    <div id="event-list" class="event-list" v-if="events.length">
-                        <div  v-for="event in events" :key="event.datetime" class="event-div">
+
+                    <div id="event-list" class="event-list" v-if="events.length && !showAllGlobal">
+                        <div  v-for="event in firstFiveGlobal" class="event-div">
                             <p class="event-date">{{ event.datetime }}</p>
                             <p class="event-venue">{{ event.venue.name }}</p>
                             <p class="event-city">{{ event.venue.city }}, {{ event.venue.country }}</p>
                             <a v-if="event.ticketUrl" :href="event.ticketUrl">Tickets</a>
                             <a v-else :href="event.searchUrl">Search tickets</a>
                         </div>
+                        <button class="show-more-less-button" v-if="events.length > 5" v-on:click="toggleMoreLessGlobal">Show More</button>
                     </div>
 
-                    <div v-else style="margin-top: 5px">No global upcoming events :(</div>
+                    <div id="event-list" class="event-list" v-if="events.length && showAllGlobal">
+                        <div  v-for="event in events" class="event-div">
+                            <p class="event-date">{{ event.datetime }}</p>
+                            <p class="event-venue">{{ event.venue.name }}</p>
+                            <p class="event-city">{{ event.venue.city }}, {{ event.venue.country }}</p>
+                            <a v-if="event.ticketUrl" :href="event.ticketUrl">Tickets</a>
+                            <a v-else :href="event.searchUrl">Search tickets</a>
+                        </div>
+                        <button class="show-more-less-button" v-if="events.length > 5" v-on:click="toggleMoreLessGlobal">Show Less</button>
+                    </div>
+
+                    <div v-if="!events.length" style="margin-top: 5px">No global upcoming events :(</div>
                 </div>
             </div>
         </div>
@@ -488,6 +588,7 @@ $orange-yellow: #FF7E4A;
 // - See if I can get paid for the site
 // - Add loading transition
 import store from '@/store/index.js'
+import _ from 'lodash'
 
 export default {
     data: function() {
@@ -504,7 +605,9 @@ export default {
             countrySet: false,
             localEvents: [],
             tracking: false,
-            trackedArtists: {"list": []}
+            trackedArtists: {"list": []},
+            showAllLocal: false,
+            showAllGlobal: false
         }
     },
 
@@ -519,6 +622,23 @@ export default {
         }
     },
 
+    computed: {
+        firstFiveLocal: function() {
+            return _.slice(this.localEvents, 0, 5);
+        },
+
+        firstFiveGlobal: function() {
+            return _.slice(this.events, 0, 5);
+        }
+    },
+
+    created: function() {
+        console.log('created')
+        this.getAllInformation();
+
+        this.getTrackedArtists();
+    },
+
     mounted: function() {
         // If the page loads for the first time get all information
 
@@ -526,13 +646,35 @@ export default {
         if (userCountry) {
             this.countrySet = userCountry;
         }
-
-        this.getAllInformation();
-
-        this.getTrackedArtists();
     },
 
     methods: {
+        toggleMoreLessGlobal: function() {
+            let list = document.getElementById('event-list');
+            let scrollDistance = list.scrollTop;
+
+            this.showAllGlobal = this.showAllGlobal ? false : true;
+
+            // Scroll back to where user was when they clicked button
+            // Small timeout because otherwise with longs lists the browser
+            // Would update to the top of the list after setting this
+            setTimeout(() => {
+                list.scrollTop = scrollDistance;
+            }, 1)
+        },
+
+        toggleMoreLessLocal: function() {
+            let list = document.getElementById('local-events-list');
+            let scrollDistance = list.scrollTop;
+
+            this.showAllLocal = this.showAllLocal ? false : true;
+
+            // Idem to above mentioned
+            setTimeout(() => {
+                list.scrollTop = scrollDistance;
+            }, 1)
+        },
+
         getTrackedArtists: function() {
             let trackedInfo =  JSON.parse(localStorage.getItem('Tracked'))
             if (trackedInfo)

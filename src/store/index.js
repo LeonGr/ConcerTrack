@@ -56,4 +56,4 @@ store.lastArtistEventsLocal;
 store.lastLastFMdata;
 
 // Artist list
-store.artistList;
+store.autocompleteList = {};

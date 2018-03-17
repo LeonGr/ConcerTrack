@@ -355,12 +355,14 @@ export default {
 
     watch: {
         '$route' () {
-            document.getElementById('input-field').focus();
         }
     },
 
-    mounted: function() {
+    created: function() {
         document.getElementById('input-field').focus();
+    },
+
+    mounted: function() {
     },
 
     methods: {

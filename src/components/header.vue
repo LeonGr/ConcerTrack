@@ -304,6 +304,7 @@ $orange-yellow: #FF7E4A;
         align-self: flex-start;
         height: 100%;
         padding: 10px 0;
+        cursor: pointer;
 
         i {
             position: relative;
@@ -415,7 +416,7 @@ $orange-yellow: #FF7E4A;
 </style>
 
 <template>
-    <header>
+    <header v-on:click="scrollTop">
         <div id="test">&nbsp;</div>
         <!--link back to search-view-->
         <router-link :to="'/'" id="header-title-link">
@@ -490,6 +491,13 @@ export default {
     },
 
     methods: {
+        scrollTop: function() {
+            let scrollables = document.getElementsByClassName('scrollable');
+            for(let i = 0, x = scrollables.length; i < x; i++) {
+                scrollables[i].scrollTop = 0;
+            }
+        },
+
         showSearch: function() {
             let showSearchMobile = this.showSearchMobile ? false : true;
 
