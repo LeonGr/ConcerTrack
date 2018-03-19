@@ -31,7 +31,11 @@ $orange-yellow: #FF7E4A;
                 margin: 30px 30px 0 30px;
             }
 
-            #track-button-tracked, #track-button {
+            #img-container {
+                display: none;
+            }
+
+            .normal-button {
                 width: calc(50% - 60px);
                 margin: 0 30px 0 30px;
                 height: 50px;
@@ -77,10 +81,17 @@ $orange-yellow: #FF7E4A;
                 }
             }
 
-            p {
+            #normal-bio {
                 margin-top: 20px;
                 color: #444;
+            }
 
+            .mobile-button {
+                display: none;
+            }
+
+            #mobile-bio {
+                display: none;
             }
 
             a {
@@ -91,6 +102,8 @@ $orange-yellow: #FF7E4A;
                 float: right;
                 width: 50%;
                 font-size: 16px;
+                padding-right: 30px;
+                box-sizing: border-box;
 
                 .link-icon {
                     color: #444;
@@ -251,6 +264,10 @@ $orange-yellow: #FF7E4A;
     }
 }
 
+.list-header-mobile {
+    display: none;
+}
+
 .event-date {
     background-color: $orange-yellow;
     width: 20px;
@@ -272,6 +289,10 @@ $orange-yellow: #FF7E4A;
 .event-city {
     width: 40%;
     margin-left: 20px;
+}
+
+.event-venue-location {
+    display: none;
 }
 
 .event-div {
@@ -332,12 +353,20 @@ $orange-yellow: #FF7E4A;
                 width: 100%;
             }
 
+            #left-side {
+                #info-container {
+                    h1 {
+                        font-size: 28px;
+                    }
+                }
+            }
+
             #right-side {
                 height: auto;
 
                 #local-event-container, #event-container {
                     max-height: none;
-                    padding: 0 10px;
+                    padding: 0 30px;
 
                     #local-events {
                         #local-events-list {
@@ -351,6 +380,158 @@ $orange-yellow: #FF7E4A;
                     }
                 }
             }
+        }
+    }
+}
+
+@media (max-width: 600px) {
+    #output-container {
+        #output {
+            #left-side {
+                display: flex;
+                flex-flow: row wrap;
+
+                #artist-image {
+                    display: none;
+                }
+
+                #img-container {
+                    display: block;
+                    width: calc(50% - 60px);
+                    margin: 30px 30px 0 30px;
+
+                    #artist-image-mobile {
+                        width: 100%;
+                    }
+                }
+
+                #info-container {
+                    #test {
+                        width: 100%;
+                    }
+
+                    display: flex;
+                    align-items: center;
+                    margin-top: 30px;
+
+                    h1 {
+                        flex-basis: 100%;
+                        margin: 0;
+                        font-size: 24px;
+                    }
+
+                    .link-icon {
+                        margin-right: 5px;
+                    }
+                }
+
+                #normal-bio {
+                    display: none;
+                }
+
+                .normal-button {
+                    display: none;
+                }
+
+                .mobile-button {
+                    display: block;
+                    width: calc(100%);
+                    height: 50px;
+                    margin-top: 20px;
+                    box-shadow: 0 1px 9px 0 rgba(0,0,0,.3);
+                    color: white;
+                    font-size: 20px;
+                    font-weight: bold;
+                    cursor: pointer;
+                    outline: none;
+                    border-radius: 3px;
+                }
+
+                #mobile-bio {
+                    display: block;
+
+                    padding: 10px 30px 0 30px;
+                }
+            }
+
+            #right-side {
+                #local-event-container, #event-container {
+                    padding: 0;
+
+                    h1, #change-location-button, .amount-upcoming, #ask-location {
+                        margin-left: 30px;
+                    }
+
+                    .list-header {
+                        p:first-child {
+                            margin-left: 5px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 550px) {
+    .list-header {
+        display: none;
+    }
+
+    .list-header-mobile {
+        display: block;
+
+        width: calc(100% - 14px);
+        display: block;
+        padding: 10px 0;
+        padding-right: 14px;
+        margin-top: 5px;
+        box-shadow: 0 8px 6px -6px rgba(0, 0, 0, 0.3);
+        border-top: 5px solid $orange-yellow;
+        font-size: 0;
+
+        p {
+            display: inline-block;
+            font-weight: bold;
+            font-size: 18px;
+
+
+
+            &:nth-of-type(1) {
+                width: 60px;
+            }
+
+            &:nth-of-type(2) {
+                width: 30%;
+                margin-left: 20px;
+            }
+
+            &:nth-of-type(3) {
+                margin-left: 20px;
+            }
+        }
+    }
+
+    .event-div {
+        display: flex;
+        justify-content: flex-start;
+
+        .event-venue-location {
+            display: block;
+            width: 60%;
+            margin-left: 20px;
+        }
+
+        .event-venue, .event-city {
+            display: none;
+        }
+    }
+}
+
+@media (max-width: 350px) {
+    .event-div {
+        .event-venue-location {
+            width: 50%;
         }
     }
 }
@@ -455,31 +636,43 @@ $orange-yellow: #FF7E4A;
                 <!--If we get an image from lastFM show it. Otherwise use the one from BIT-->
                 <img :src="imageUrl" alt="" v-if="imageUrl" id="artist-image">
 
-                <div id="info-container">
-                    <h1>{{ lastFMData.name }}</h1>
-
-
-                    <a :href="artistInfo.facebook_page_url" v-if="artistInfo.facebook_page_url" class="link-icon">
-                        <i class="fa fa-facebook-official" aria-hidden="true"></i>
-                    </a>
-
-                    <a :href="bandcampUrl" v-if="bandcampUrl" class="link-icon">
-                        <i class="fa fa-bandcamp" aria-hidden="true"></i>
-                    </a>
-
-
-                    <a :href="lastFMData.url" v-if="lastFMData.url" class="link-icon">
-                        <i class="fa fa-lastfm-square" aria-hidden="true"></i>
-                    </a>
-
-                    <p v-if="lastFMData" v-html="artistBio">
-                        {{ artistBio }}
-                    </p>
-
+                <div id="img-container">
+                    <img :src="imageUrl" alt="" v-if="imageUrl" id="artist-image-mobile">
                 </div>
 
-                <button id="track-button-tracked" v-if="tracking" v-on:click="trackArtist">Stop Tracking</button>
-                <button id="track-button" v-else v-on:click="trackArtist">Track Artist</button>
+                <div id="info-container">
+                    <div id="test">
+                        <h1>{{ lastFMData.name }}</h1>
+
+
+                        <a :href="artistInfo.facebook_page_url" v-if="artistInfo.facebook_page_url" class="link-icon">
+                            <i class="fa fa-facebook-official" aria-hidden="true"></i>
+                        </a>
+
+                        <a :href="bandcampUrl" v-if="bandcampUrl" class="link-icon">
+                            <i class="fa fa-bandcamp" aria-hidden="true"></i>
+                        </a>
+
+
+                        <a :href="lastFMData.url" v-if="lastFMData.url" class="link-icon">
+                            <i class="fa fa-lastfm-square" aria-hidden="true"></i>
+                        </a>
+
+                        <p v-if="lastFMData" v-html="artistBio" id="normal-bio">
+                            {{ artistBio }}
+                        </p>
+
+                        <button id="track-button-tracked" class="mobile-button" v-if="tracking" v-on:click="trackArtist">Stop Tracking</button>
+                        <button id="track-button" class="mobile-button" v-else v-on:click="trackArtist">Track Artist</button>
+                    </div>
+                </div>
+
+
+                <button id="track-button-tracked" class="normal-button" v-if="tracking" v-on:click="trackArtist">Stop Tracking</button>
+                <button id="track-button" class="normal-button" v-else v-on:click="trackArtist">Track Artist</button>
+                <p v-if="lastFMData" v-html="artistBio" id="mobile-bio">
+                    {{ artistBio }}
+                </p>
             </div>
 
             <div id="right-side">
@@ -491,12 +684,20 @@ $orange-yellow: #FF7E4A;
                             {{ localEvents.length }} upcoming events in country '{{ countrySet }}':
                         </p>
                         <div class="list-header"><p>Date</p><p>Venue</p><p>Location</p></div>
+                        <div class="list-header-mobile"> <p>Date</p> <p>Venue/Location</p> </div>
 
                         <div v-if="localEvents.length && showAllLocal" id="local-events-list" class="event-list">
                             <div v-for="event in localEvents" :key="event.datetime" class="event-div">
                                 <p class="event-date">{{ event.datetime }}</p>
                                 <p class="event-venue">{{ event.venue.name }}</p>
-                                <p class="event-city">{{ event.venue.city }}, {{ event.venue.country }}</p>
+                                <p class="event-city">{{ event.venue.city }}</p>
+
+                                <p class="event-venue-location">
+                                    {{ event.venue.name }}
+                                    <br>
+                                    {{ event.venue.city }}
+                                </p>
+
                                 <a v-if="event.ticketUrl" :href="event.ticketUrl">Tickets</a>
                                 <a v-else :href="event.searchUrl">Search tickets</a>
                             </div>
@@ -507,7 +708,14 @@ $orange-yellow: #FF7E4A;
                             <div v-for="event in firstFiveLocal" :key="event.datetime" class="event-div">
                                 <p class="event-date">{{ event.datetime }}</p>
                                 <p class="event-venue">{{ event.venue.name }}</p>
-                                <p class="event-city">{{ event.venue.city }}, {{ event.venue.country }}</p>
+                                <p class="event-city">{{ event.venue.city }}</p>
+
+                                <p class="event-venue-location">
+                                    {{ event.venue.name }}
+                                    <br>
+                                    {{ event.venue.city }}
+                                </p>
+
                                 <a v-if="event.ticketUrl" :href="event.ticketUrl">Tickets</a>
                                 <a v-else :href="event.searchUrl">Search tickets</a>
                             </div>
@@ -538,18 +746,22 @@ $orange-yellow: #FF7E4A;
                     <p v-if="events.length" class="amount-upcoming">
                         {{ artistInfo.upcoming_event_count }} upcoming events worldwide:
                     </p>
-                    <div class="list-header">
-                        <p>Date</p>
-                        <p>Venue</p>
-                        <p>Location</p>
-                    </div>
-                    <hr>
+
+                    <div class="list-header"> <p>Date</p> <p>Venue</p> <p>Location</p> </div>
+                    <div class="list-header-mobile"> <p>Date</p> <p>Venue/Location</p> </div>
 
                     <div id="event-list" class="event-list" v-if="events.length && !showAllGlobal">
                         <div  v-for="event in firstFiveGlobal" class="event-div">
                             <p class="event-date">{{ event.datetime }}</p>
                             <p class="event-venue">{{ event.venue.name }}</p>
                             <p class="event-city">{{ event.venue.city }}, {{ event.venue.country }}</p>
+
+                            <p class="event-venue-location">
+                                {{ event.venue.name }}
+                                <br>
+                                {{ event.venue.city }}, {{ event.venue.country }}
+                            </p>
+
                             <a v-if="event.ticketUrl" :href="event.ticketUrl">Tickets</a>
                             <a v-else :href="event.searchUrl">Search tickets</a>
                         </div>
@@ -561,6 +773,13 @@ $orange-yellow: #FF7E4A;
                             <p class="event-date">{{ event.datetime }}</p>
                             <p class="event-venue">{{ event.venue.name }}</p>
                             <p class="event-city">{{ event.venue.city }}, {{ event.venue.country }}</p>
+
+                            <p class="event-venue-location">
+                                {{ event.venue.name }}
+                                <br>
+                                {{ event.venue.city }}, {{ event.venue.country }}
+                            </p>
+
                             <a v-if="event.ticketUrl" :href="event.ticketUrl">Tickets</a>
                             <a v-else :href="event.searchUrl">Search tickets</a>
                         </div>
