@@ -358,11 +358,8 @@ export default {
         }
     },
 
-    created: function() {
-        document.getElementById('input-field').focus();
-    },
-
     mounted: function() {
+        document.getElementById('input-field').focus();
     },
 
     methods: {

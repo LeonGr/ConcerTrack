@@ -7,6 +7,7 @@ import SearchView from '@/components/body/search-view.vue'
 import EasterEgg from '@/components/body/easter-egg.vue'
 import ImportView from '@/components/body/import-view.vue'
 import ContactView from '@/components/body/contact-view.vue'
+import DisclaimerView from '@/components/body/disclaimer-view.vue'
 import FAQView from '@/components/body/faq-view.vue'
 
 Vue.use(Router)
@@ -15,6 +16,7 @@ export default new Router({
     routes: [
         { path: '/faq', component: FAQView },
         { path: '/contact', component: ContactView },
+        { path: '/disclaimer', component: DisclaimerView },
         { path: '/import/:importCode', component: ImportView },
         { path: '/tracked', component: TrackedView },
         { path: '/artists/Leon Grasmeijer', component: EasterEgg },

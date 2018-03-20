@@ -33,7 +33,8 @@ export default {
             lastInputLength: 0,
             maxResults: 10,
             selectedSuggestion: null,
-            errorMessage: ''
+            errorMessage: '',
+            partlyTyped: ''
         }
     },
 
@@ -86,7 +87,10 @@ export default {
             callSelectFuncion(e.key);
 
             // Stop the cursor from moving around when we select stuff
-            if (e.key.includes("ArrowUp") || e.key.includes("ArrowDown") || e.key.includes('Tab')) e.preventDefault();
+            let keyPressed = e.key.includes("ArrowUp") || e.key.includes("ArrowDown") || e.key.includes('Tab')
+            if (keyPressed) {
+                e.preventDefault();
+            }
         });
 
     },
@@ -155,29 +159,45 @@ export default {
             }
 
             if (direction == 'up') {
-                // If it's null or 0 (false values) go to the bottom
-                if (!this.selectedSuggestion) {
-                    let index = this.showMatching.length;
 
-                    suggestions[index - 1].classList.add('selected');
-                    this.selectedSuggestion = index - 1;
-                } else {
+                // When we are at the top and press up go back to input field
+                if (!this.selectedSuggestion) {
+                    this.selectedSuggestion = null;
+                    this.inputValue = this.partlyTyped;
+                }
+
+                // Otherwise select previous result
+                else {
                     this.selectedSuggestion--;
                     suggestions[this.selectedSuggestion].classList.add('selected');
                 }
             } else if (direction == 'down') {
-                // If it is null select the first one
+
+                // If it is null select the first result
                 if (this.selectedSuggestion == null) {
+                    this.partlyTyped = this.inputValue;
                     this.selectedSuggestion = 0;
                     suggestions[this.selectedSuggestion].classList.add('selected');
-                } else if (this.selectedSuggestion == this.showMatching.length - 1) { // When we are at the bottom and go down wrap around and select first results
-                    suggestions[0].classList.add('selected');
-                    this.selectedSuggestion = 0;
-                } else { // Otherwise select next result
+                }
+
+                // When we are at the bottom and press down go back to input field
+                else if (this.selectedSuggestion == this.showMatching.length - 1) {
+                    this.selectedSuggestion = null;
+                    this.inputValue = this.partlyTyped;
+                }
+
+                // Otherwise select next result
+                else {
                     this.selectedSuggestion++
                     suggestions[this.selectedSuggestion].classList.add('selected');
                 }
 
+            }
+
+            // Make input value equal to selected input
+            // So user can just press enter
+            if (suggestions[this.selectedSuggestion]) {
+                this.inputValue = suggestions[this.selectedSuggestion].innerText;
             }
         },
 
@@ -218,8 +238,8 @@ export default {
                 // Show matching artists from current matching list
                 if (input.length > this.lastInputLength && this.allMatching.length > 0) {
 
-                    // Go back to first result in search results
-                    this.selectSuggestion('down')
+                    // Go back to input field after user types more
+                    this.selectedSuggestion = null;
 
                     // Create temporary arrays to store new results
                     let newMatching = [];

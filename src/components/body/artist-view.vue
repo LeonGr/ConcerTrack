@@ -794,18 +794,6 @@ $orange-yellow: #FF7E4A;
 </template>
 
 <script>
-//TODO:
-// - Add "more results"?
-// - Show related artists in artist-view
-//   * Do we need this?
-// - Do security checks
-//   * Probably already pretty secure?
-// - Add more artists
-//   * Let users submit missing artists
-
-// - Add dark mode
-// - See if I can get paid for the site
-// - Add loading transition
 import store from '@/store/index.js'
 import _ from 'lodash'
 
