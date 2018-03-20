@@ -36,6 +36,24 @@ footer {
         background-color: $orange-yellow;
     }
 
+    #info-wrapper {
+        display: flex;
+        align-items: center;
+        height: 100%;
+
+        #footer-disclaimer {
+            padding-left: 10px;
+            display: block;
+            width: 40%;
+            box-sizing: border-box;
+        }
+
+        #links {
+            width: 60%;
+        }
+    }
+
+
     .footer-link {
         color: $orange-yellow;
         float: right;
@@ -58,9 +76,28 @@ footer {
             width: 20%;
         }
 
+
         @for $i from 1 through 5 {
             .square:nth-of-type(#{$i}) {
                 left: ($i - 1) * 20%;
+            }
+        }
+    }
+}
+
+@media (max-width: 360px) {
+    footer {
+        #info-wrapper {
+            flex-direction: column;
+
+            #footer-disclaimer, #links {
+                width: 100%;
+                text-align: center;
+            }
+
+            #links {
+                display: flex;
+                justify-content: center;
             }
         }
     }
@@ -76,18 +113,23 @@ footer {
         <span class="square"></span>
         <span class="square"></span>
 
-        <!--<p>-->
-        <!--Concert information from <a href="bandsintown.com">bandsintown</a>.<br>Huge thanks to them! Visit their site for more information.-->
-        <!--</p>-->
 
-        <router-link :to="'/contact'" class="footer-link">
-            <p>Contact</p>
-        </router-link>
-        <router-link :to="'/faq'" class="footer-link">
-            <p>FAQ</p>
-        </router-link>
-        <router-link :to="'/disclaimer'" class="footer-link">
-            <p>Disclaimer</p>
-        </router-link>
-    </footer>
+        <div id="info-wrapper">
+             <p id="footer-disclaimer">
+                Made possible by <a href="https://bandsintown.com">Bandsintown</a>.<br>
+            </p>
+
+            <div id="links">
+                <router-link :to="'/contact'" class="footer-link">
+                    <p>Contact</p>
+                </router-link>
+                <router-link :to="'/faq'" class="footer-link">
+                    <p>FAQ</p>
+                </router-link>
+                <router-link :to="'/disclaimer'" class="footer-link">
+                    <p>Disclaimer</p>
+                </router-link>
+            </div>
+        </div>
+   </footer>
 </template>

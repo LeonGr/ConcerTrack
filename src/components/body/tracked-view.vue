@@ -28,6 +28,7 @@ $orange-yellow: #FF7E4A;
         background-color: white;
         bottom: 20px;
         left: 20px;
+        cursor: pointer;
 
         p {
             margin-left: 10px;
@@ -326,6 +327,11 @@ $orange-yellow: #FF7E4A;
         height: auto;
         min-height: calc(100vh - 100px);
 
+        #undo-notification {
+            position: fixed;
+            z-index: 10;
+        }
+
         #main-content {
             padding: 0;
 
@@ -607,7 +613,11 @@ $orange-yellow: #FF7E4A;
 
 <template>
     <div id="output-container">
-        <span id="undo-notification" v-if="removedArtist" class="animated lightSpeedIn">
+        <span
+            id="undo-notification"
+            v-if="removedArtist"
+            class="animated lightSpeedIn"
+            v-on:click="hideUndo">
             <p>
             {{ removedArtist }} removed from tracked artists, <a v-on:click="undoRemove">undo?</a>
             </p>
@@ -751,8 +761,6 @@ export default {
     },
 
     mounted: function() {
-        console.log(store.saved);
-
         if (store.saved.loaded) {
             this.allLocalEvents = store.saved.allLocalEvents;
             this.trackedArtists = store.saved.trackedArtists;
@@ -760,7 +768,6 @@ export default {
             this.artistImages = store.saved.artistImages;
             this.loading = false;
             this.showEvents = true;
-            console.log(this.orderedEvents)
             return;
         }
 
@@ -892,8 +899,6 @@ export default {
             */
             getEvents(artist).then(data => {
                 this.events = data;
-                //console.log("BIT event data:")
-                //console.log(data)
 
                 this.events.forEach((event) => {
                     // Change ISO date to readable date format
@@ -903,8 +908,8 @@ export default {
                     event.datetime = `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
 
                     // If we have a ticket url show it otherwise redirect to search
-                    if(event.offers.length){
-                        event.ticketUrl = event.offers[0].url;
+                    if(event.url){
+                        event.ticketUrl = event.url;
                     } else {
                         event.searchUrl = "https://duckduckgo.com/?q=" + artist + " " + event.datetime;
                     }
@@ -925,7 +930,6 @@ export default {
 
                     if (!this.lastFMlast) return;
 
-                    console.log('BITlast')
 
                     this.showLocalEvents();
                 }
@@ -990,8 +994,6 @@ export default {
                     this.lastFMlast = true;
 
                     if (!this.BITlast) return;
-
-                    console.log('lastFMlast')
 
                     this.showLocalEvents();
                 }
@@ -1069,7 +1071,6 @@ export default {
         getExportLink: function() {
             // Convert list of artists to base64 because it looks better I guess
             let encodedArtists = btoa(JSON.stringify({ list: this.trackedArtists.list }));
-			console.log(encodedArtists)
 
             encodedArtists = encodedArtists.split("=").shift();
             this.encodedLink = window.location.origin + "/#/import/" + encodedArtists;
@@ -1086,7 +1087,6 @@ export default {
             }).then(response => {
                 return response.json()
             }).then(data => {
-                console.log(data);
                 this.shortUrl = data.id;
             })
         },
@@ -1149,8 +1149,8 @@ export default {
             undoNotification.classList.add('lightSpeedOut');
 
             let clearRemovedArtist = () => {
-                this.classList.remove('lightSpeedOut');
-                this.removedArtist = ''
+                undoNotification.classList.remove('lightSpeedOut');
+                this.removedArtist = '';
             }
 
             undoNotification.addEventListener("animationend", function() {
@@ -1176,6 +1176,20 @@ export default {
 
                 return 0;
             });
+        },
+
+        hideUndo: function() {
+            let undoNotificationElement = document.getElementById('undo-notification')
+            undoNotificationElement.classList.add('lightSpeedOut');
+
+            let clearErrorMessage = () => {
+                undoNotificationElement.classList.remove('lightSpeedOut');
+                this.removedArtist = '';
+            }
+
+            undoNotificationElement.addEventListener('animationend', function() {
+                clearErrorMessage();
+            })
         }
     }
 }

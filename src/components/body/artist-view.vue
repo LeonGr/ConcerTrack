@@ -840,7 +840,6 @@ export default {
     },
 
     created: function() {
-        console.log('created')
         this.getAllInformation();
 
         this.getTrackedArtists();
@@ -986,8 +985,9 @@ export default {
                         event.datetime = `${date.getDate()} ${months[date.getMonth()]}`;
 
                         // If we have a ticket url show it otherwise redirect to search
-                        if(event.offers.length){
-                            event.ticketUrl = event.offers[0].url;
+                        if(event.url){
+                            //event.ticketUrl = event.offers[0].url;
+                            event.ticketUrl = event.url;
                         } else {
                             event.searchUrl = "https://duckduckgo.com/?q=" + data.artist + " " + event.datetime;
                         }
@@ -1106,7 +1106,6 @@ export default {
                 }).catch(error => {
                     // If we get an error that means the artist has not been found
                     if (error.toString().includes("SyntaxError")) {
-                        console.log(this.$children)
                         this.$children[1].errorMessage = "Sorry, we couldn't find that artist :(";
                     }
                 })
