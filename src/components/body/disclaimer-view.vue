@@ -63,7 +63,7 @@ $orange-yellow: #FF7E4A;
             <h1>Disclaimer</h1>
 
             <p>
-                All information about concerts comes from <a href="https://bandsintown.com">bandsintown.com</a>. Huge thanks to them and please go to their site for more information, news, revies and more!
+                All information about concerts comes from <a href="https://bandsintown.com">bandsintown.com</a>. Huge thanks to them and please go to their site for more information, news, reviews and more!
             </p>
         </div>
     </div>

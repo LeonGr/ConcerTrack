@@ -296,8 +296,10 @@ $orange-yellow: #FF7E4A;
 
             #tracked-artist-list-container {
                 height: calc(100vh - 50px);
-                position: absolute;
-                top: 1px;
+                //position: absolute;
+                //top: 1px;
+                position: fixed;
+                top: 50px;
                 right: 0;
                 z-index: 3;
                 display: none;
@@ -488,6 +490,14 @@ $orange-yellow: #FF7E4A;
         }
     }
 }
+
+@media (max-height: 550px) {
+    #output-container {
+        #main-content {
+            min-height: 450px;
+        }
+    }
+}
 </style>
 
 <style lang="scss">
@@ -575,10 +585,19 @@ $orange-yellow: #FF7E4A;
         }
     }
 
-    @media (max-width: 1200px) {
+    @media (max-width: 1300px) {
         #autocomplete-container {
             #search-results {
                 top: 230px;
+            }
+        }
+    }
+
+    @media (max-width: 800px) {
+        #autocomplete-container {
+            #search-results {
+                position: relative;
+                top: 0;
             }
         }
     }
