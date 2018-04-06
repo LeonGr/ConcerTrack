@@ -726,7 +726,7 @@ $orange-yellow: #FF7E4A;
 
                 <div id="tracked-artist-list">
                     <span v-for="artist in trackedArtists.list">
-                        <i class="fa fa-times" v-on:click="removeFromTracked(artist)"></i><a v-bind:href="'#/artists/' + artist" > {{ artist }} </a>
+                        <i class="fa fa-times" v-on:click="removeFromTracked(artist)"></i><a v-on:click="hideAllTrackedArtists" v-bind:href="'#/artists/' + artist" > {{ artist }} </a>
                     </span>
                 </div>
             </div>

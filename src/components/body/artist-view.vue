@@ -348,6 +348,7 @@ $orange-yellow: #FF7E4A;
     #output-container {
 
         #output {
+            margin-bottom: 30px;
 
             #left-side, #right-side {
                 width: 100%;
