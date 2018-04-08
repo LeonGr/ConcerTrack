@@ -407,7 +407,7 @@ $orange-yellow: #FF7E4A;
                 }
 
                 #info-container {
-                    #test {
+                    #info-wrapper {
                         width: 100%;
                     }
 
@@ -535,6 +535,25 @@ $orange-yellow: #FF7E4A;
             width: 50%;
         }
     }
+
+    #output-container {
+        #output {
+            #left-side {
+                flex-flow: row-reverse wrap;
+
+                #info-container {
+                    #info-wrapper {
+                        margin-left: 30px;
+                    }
+                }
+
+                #track-button-tracked, #track-button {
+                    width: calc(100vw - 60px);
+                    position: relative;
+                }
+            }
+        }
+    }
 }
 </style>
 
@@ -642,7 +661,7 @@ $orange-yellow: #FF7E4A;
                 </div>
 
                 <div id="info-container">
-                    <div id="test">
+                    <div id="info-wrapper">
                         <h1>{{ lastFMData.name }}</h1>
 
 
@@ -827,6 +846,8 @@ export default {
             this.getAllInformation();
 
             this.getTrackedArtists();
+
+            //window.document.title = 'ConcerTrack - ' + this.artist
         }
     },
 
@@ -837,13 +858,16 @@ export default {
 
         firstFiveGlobal: function() {
             return _.slice(this.events, 0, 5);
-        }
+        },
+
     },
 
     created: function() {
         this.getAllInformation();
 
         this.getTrackedArtists();
+
+        //window.document.title = 'ConcerTrack - ' + this.artist
     },
 
     mounted: function() {
@@ -1058,6 +1082,8 @@ export default {
                 this.artist = this.lastFMData.name;
                 this.artistBio = this.lastFMData.bio.summary;
                 this.imageUrl = this.lastFMData.image[this.lastFMData.image.length - 1]["#text"] || this.artistInfo.image_url;
+
+                window.document.title = 'ConcerTrack - ' + this.lastFMData.name;
             }
 
             else {
@@ -1090,8 +1116,11 @@ export default {
                     this.imageUrl = this.lastFMData.image[this.lastFMData.image.length - 1]["#text"] || this.artistInfo.image_url;
 
                     store.lastLastFMdata = this.lastFMData;
+
+                    window.document.title = 'ConcerTrack - ' + this.lastFMData.name;
                 })
             }
+
         },
 
         callBackForm: function(callback, value) {

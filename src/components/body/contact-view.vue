@@ -90,6 +90,10 @@ export default {
         }
     },
 
+    created: function() {
+        window.document.title = 'ConcerTrack - Contact'
+    },
+
     mounted: function() {
     },
 

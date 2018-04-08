@@ -87,7 +87,6 @@ $orange-yellow: #FF7E4A;
         #export-button-container {
             align-self: flex-start;
             width: 300px;
-            height: 120px;
 
             button {
                 margin-top: 20px;
@@ -101,7 +100,7 @@ $orange-yellow: #FF7E4A;
             textarea {
                 width: 260px;
                 height: 20px;
-                margin-top: 20px;
+                margin: 10px 0;
                 border: 1px solid #ccc;
             }
         }
@@ -259,6 +258,7 @@ $orange-yellow: #FF7E4A;
             #not-list-container {
                 align-self: flex-start;
                 box-sizing: border-box;
+                min-height: 90px;
             }
 
             h1 {
@@ -295,11 +295,12 @@ $orange-yellow: #FF7E4A;
             }
 
             #tracked-artist-list-container {
-                height: calc(100vh - 50px);
+                height: calc(100vh);
                 //position: absolute;
                 //top: 1px;
                 position: fixed;
-                top: 50px;
+                //top: 50px;
+                top: 0;
                 right: 0;
                 z-index: 3;
                 display: none;
@@ -317,6 +318,7 @@ $orange-yellow: #FF7E4A;
                     .fa-times {
                         display: block;
                         padding: 20px;
+                        cursor: pointer;
                     }
                 }
             }
@@ -338,8 +340,7 @@ $orange-yellow: #FF7E4A;
             padding: 0;
 
             #not-list-container {
-                width: 100%;
-                height: 90px;
+                width: 400px;
                 display: flex;
                 align-items: center;
                 padding-left: 20px;
@@ -347,7 +348,7 @@ $orange-yellow: #FF7E4A;
 
                 h1 {
                     font-size: 25px;
-                    margin-top: 0;
+                    margin-top: 10px;
                     height: auto;
                     align-self: auto;
                 }
@@ -367,7 +368,7 @@ $orange-yellow: #FF7E4A;
                 }
 
                 #ask-location {
-                    position: absolute;
+                    //position: absolute;
 
                     width: calc(100% - 40px);
                     display: flex;
@@ -375,7 +376,8 @@ $orange-yellow: #FF7E4A;
 
                     box-sizing: border-box;
 
-                    top: 50px;
+                    //top: 50px;
+                    margin-top: 0px;
 
                     p {
                         display: none;
@@ -383,7 +385,18 @@ $orange-yellow: #FF7E4A;
                 }
 
                 #export-button-container {
-                    display: none;
+                    button {
+                        margin-top: 2px;
+                        font-size: 15px;
+                    }
+
+                    p {
+                        font-size: 15px;
+                    }
+
+                    br {
+                        display: none;
+                    }
                 }
 
 
@@ -393,6 +406,8 @@ $orange-yellow: #FF7E4A;
                     width: 100px;
                     margin: 0;
                     right: 5px;
+                    top: 0;
+                    height: 90px;
                     background: none;
                     color: #333;
                     box-shadow: none;
@@ -479,6 +494,15 @@ $orange-yellow: #FF7E4A;
             #not-list-container {
                 h1 {
                     font-size: 22px;
+                    margin: 10px 0;
+                }
+
+                #export-button-container {
+                    width: calc(100% - 90px);
+
+                    button {
+                        text-align: left;
+                    }
                 }
 
                 #all-artists-button {
@@ -669,7 +693,7 @@ $orange-yellow: #FF7E4A;
                 </div>
 
                 <div id="export-button-container">
-                    <button v-on:click="getExportLink">Get link to export tracked artists:</button>
+                    <button v-on:click="getExportLink">Get link to export tracked artists</button>
                     <br>
                     <textarea id="" name="" cols="30" rows="10" v-if="shortUrl">{{ shortUrl }}</textarea>
                     <br>
@@ -777,6 +801,10 @@ export default {
                 return new Date(event.datetime);
             })
         }
+    },
+
+    created: function() {
+        window.document.title = 'ConcerTrack - Tracked Artists'
     },
 
     mounted: function() {

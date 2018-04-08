@@ -117,6 +117,10 @@ export default {
     watch: {
     },
 
+    created: function() {
+        window.document.title = 'ConcerTrack - The Creator'
+    },
+
     mounted: function() {
     },
 

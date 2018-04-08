@@ -358,6 +358,10 @@ export default {
         }
     },
 
+    created: function() {
+        window.document.title = 'ConcerTrack - Search For an Artist'
+    },
+
     mounted: function() {
         document.getElementById('input-field').focus();
     },
