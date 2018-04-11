@@ -40,20 +40,13 @@ class DataBaseManager(object):
 
         db_con = DataBaseConnection(self.database_path)
 
-        starts_with = db_con.query(
-                "SELECT DISTINCT Name FROM Artists WHERE lower(Name) LIKE ?",
-                (search_query + '%',)
-        ).fetchall()
-
         contains = db_con.query(
                 "SELECT DISTINCT Name FROM Artists WHERE lower(Name) LIKE ?",
                 ('%' + search_query + '%',)
         ).fetchall()
 
-        starts_with = list(map(lambda artist_tuple: artist_tuple[0], starts_with))
         contains = list(map(lambda artist_tuple: artist_tuple[0], contains))
 
         return json.dumps({
-            'starts_with' : starts_with,
             'contains' : contains
         })
