@@ -155,6 +155,12 @@ $orange-yellow: #FF7E4A;
         }
     }
 }
+
+@media (max-height: 600px) {
+    #search-body {
+        min-height: 500px;
+    }
+}
 </style>
 
 <style lang="scss">
@@ -172,7 +178,7 @@ $orange-yellow: #FF7E4A;
     padding: 20px;
 
     width: 440px;
-    height: 110px;
+    height: 120px;
 
 
     #title {
@@ -224,12 +230,20 @@ $orange-yellow: #FF7E4A;
         box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
         border-radius: 3px;
         background: #eee;
+        color: #333;
 
         transition: box-shadow 200ms cubic-bezier(0.4, 0.0, 0.2, 1);
 
         &:focus, &:hover {
             box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
         }
+    }
+
+    #autocomplete-form::after {
+        content: "Note: the autocomplete list is still 'Work In Progress'. Please contact us with any mistakes.";
+        color: black;
+        font-size: 15px;
+        font-weight: 100;
     }
 
     #submitButton {
