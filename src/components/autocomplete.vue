@@ -306,8 +306,8 @@ export default {
                     }
                 }
 
-                // If this is also not enough fetch more from the database
-                if (this.showMatching.length < maxResults) {
+                // If we are looking for artists and this is also not enough fetch more from the database
+                if (this.showMatching.length < maxResults && this.callback == "artistSearch") {
                     // Get list of artists from database containing search input
                     let fetchArtistsFromDatabase = (search_query) => {
                         return new Promise((resolve, reject) => {
