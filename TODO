@@ -1,0 +1,5 @@
+- Add "New Here" page where users can easily follow artists they like and get offered suggestions based on the artists they like
+- Make extra artist database work with SSL
+- Add "Privacy" page where users can opt-out of tracking and where we inform them of their rights
+- Add distance based location in addition to country based
+- Fix images not loading bug on tracked page
