@@ -9,6 +9,7 @@ import json
 class DataBaseConnection(object):
     def __init__(self, db):
         self.con = sqlite3.connect('artists.db')
+        print(self.con)
 
         with self.con:
             self.cur = self.con.cursor()
@@ -22,6 +23,8 @@ class DataBaseConnection(object):
             # ''')
 
             # self.cur.executemany("INSERT INTO Artists VALUES(?, ?)", artist_file)
+
+            # print("Done")
 
     def query(self, arg, args):
         self.cur.execute(arg, args)

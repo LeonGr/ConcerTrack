@@ -105,7 +105,7 @@ export default {
             try {
                 JSON.parse(plain);
             } catch (e) {
-                this.errorMessage = "Invalid import code. Are you sure you copied the correct URL? <br> It should look something like this: <a href='" + window.location.origin + "/#/import/eyJsaXN0IjpbInJpY2sgYXN0bGV5Il19'>" + window.location.origin + "/#/import/eyJsaXN0IjpbInJpY2sgYXN0bGV5Il19</a>"
+                this.errorMessage = "Invalid import code. Are you sure you copied the correct URL? <br> It should look something like this: <a href='" + window.location.origin + "/import/eyJsaXN0IjpbInJpY2sgYXN0bGV5Il19'>" + window.location.origin + "/import/eyJsaXN0IjpbInJpY2sgYXN0bGV5Il19</a>"
                 return;
             }
 

@@ -717,7 +717,9 @@ $orange-yellow: #FF7E4A;
 
                     <img :src="event.imageUrl" :alt="event.lineup[0]" class="artist-image">
                     <div class="event-info-wrapper">
-                        <h2 class="artist-name"><a v-bind:href="'#/artists/' + event.lineup[0]">{{ event.lineup[0] }}</a></h2>
+                        <h2 class="artist-name">
+                            <router-link :to="{ path: 'artists/' + event.lineup[0] }"> {{ event.lineup[0] }}</router-link>
+                        </h2>
                         <p class="event-date">{{ event.datetime }}</p>
                         <p class="event-city">{{ event.venue.city }}</p>
                         <p class="event-venue">{{ event.venue.name }}</p>
@@ -750,7 +752,8 @@ $orange-yellow: #FF7E4A;
 
                 <div id="tracked-artist-list">
                     <span v-for="artist in trackedArtists.list">
-                        <i class="fa fa-times" v-on:click="removeFromTracked(artist)"></i><a v-on:click="hideAllTrackedArtists" v-bind:href="'#/artists/' + artist" > {{ artist }} </a>
+                        <i class="fa fa-times" v-on:click="removeFromTracked(artist)"></i>
+                        <router-link :to="{ path: 'artists/' + artist }"> {{ artist }}</router-link>
                     </span>
                 </div>
             </div>
@@ -1120,7 +1123,7 @@ export default {
             let encodedArtists = btoa(JSON.stringify({ list: this.trackedArtists.list }));
 
             encodedArtists = encodedArtists.split("=").shift();
-            this.encodedLink = window.location.origin + "/#/import/" + encodedArtists;
+            this.encodedLink = window.location.origin + "/import/" + encodedArtists;
 
             fetch("https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyBNloeeEkS5UZofgsHxbcA-P7gq8XRffMQ", {
                 method: 'POST',

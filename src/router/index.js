@@ -13,6 +13,7 @@ import FAQView from '@/components/body/faq-view.vue'
 Vue.use(Router)
 
 export default new Router({
+    mode: 'history',
     routes: [
         { path: '/faq', component: FAQView },
         { path: '/contact', component: ContactView },

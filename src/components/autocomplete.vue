@@ -365,10 +365,6 @@ export default {
                                 b = b.toLowerCase().replace("the ","");
                                 input = this.inputValue.toLowerCase().replace("the ", "");
 
-                                console.log(a)
-                                console.log(b)
-                                console.log(input)
-
                                 let aBeginsWithInput = a.startsWith(input)
                                 let bBeginsWithInput = b.startsWith(input)
 

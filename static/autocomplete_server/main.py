@@ -9,7 +9,7 @@ import database
 app = Flask(__name__)
 
 @app.route("/get_artists/<search_query>")
-@cross_origin(origins=["http://localhost:8080/*", "http://concertrack.com/*"])
+@cross_origin(origins=["http://localhost:8080/*", "http://concertrack.com/*", "http://167.99.46.123/*", "http://localhost:80/*"])
 def get_artists(search_query):
 
     manager = database.DataBaseManager()
