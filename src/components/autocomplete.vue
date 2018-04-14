@@ -311,7 +311,7 @@ export default {
                     // Get list of artists from database containing search input
                     let fetchArtistsFromDatabase = (search_query) => {
                         return new Promise((resolve, reject) => {
-                            fetch("http://localhost:5000/get_artists/" + search_query, {
+                            fetch("https://api.concertrack.com/get_artists/" + search_query, {
                                 method: 'GET',
                                 headers: {
                                     'accept': 'application/json'
