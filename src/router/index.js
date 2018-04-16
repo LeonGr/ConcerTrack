@@ -9,12 +9,14 @@ import ImportView from '@/components/body/import-view.vue'
 import ContactView from '@/components/body/contact-view.vue'
 import DisclaimerView from '@/components/body/disclaimer-view.vue'
 import FAQView from '@/components/body/faq-view.vue'
+import PrivacyView from '@/components/body/privacy-view.vue'
 
 Vue.use(Router)
 
 export default new Router({
     mode: 'history',
     routes: [
+        { path: '/privacy', component: PrivacyView },
         { path: '/faq', component: FAQView },
         { path: '/contact', component: ContactView },
         { path: '/disclaimer', component: DisclaimerView },
