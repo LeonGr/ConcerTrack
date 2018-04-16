@@ -65,7 +65,7 @@ footer {
     }
 }
 
-@media (max-width: 650px) {
+@media (max-width: 710px) {
     footer {
         bottom: 5px;
 
@@ -85,7 +85,7 @@ footer {
     }
 }
 
-@media (max-width: 360px) {
+@media (max-width: 460px) {
     footer {
         #info-wrapper {
             flex-direction: column;
@@ -98,6 +98,7 @@ footer {
             #links {
                 display: flex;
                 justify-content: center;
+                flex-direction: row-reverse;
             }
         }
     }
@@ -128,6 +129,9 @@ footer {
                 </router-link>
                 <router-link :to="'/disclaimer'" class="footer-link">
                     <p>Disclaimer</p>
+                </router-link>
+                <router-link :to="'/privacy'" class="footer-link">
+                    <p>Privacy</p>
                 </router-link>
             </div>
         </div>
