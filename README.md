@@ -1,6 +1,8 @@
 # ConcerTrack
 
-> Find out when your favourite artists are hosting events
+> Find concerts, track artists. No hassle. ConcerTrack helps you keep track of upcoming concerts from your favourite artists.
+
+> https://concertrack.com/
 
 ## Build Setup
 
