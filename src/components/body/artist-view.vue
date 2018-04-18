@@ -654,7 +654,7 @@ $orange-yellow: #FF7E4A;
         <div id="output">
             <div id="left-side">
                 <!--If we get an image from lastFM show it. Otherwise use the one from BIT-->
-                <img :src="imageUrl" alt="" v-if="imageUrl" id="artist-image">
+                <img :src="imageUrl" :alt="lastFMData.name" v-if="imageUrl" id="artist-image">
 
                 <div id="img-container">
                     <img :src="imageUrl" alt="" v-if="imageUrl" id="artist-image-mobile">

@@ -5,7 +5,7 @@ $orange-red: #CA283D;
 $orange: #F0443A;
 $orange-yellow: #FF7E4A;
 
-#privacy {
+#<name> {
     position: relative;
     min-height: calc(100vh - 100px);
     width: 100%;
@@ -13,7 +13,7 @@ $orange-yellow: #FF7E4A;
     justify-content: center;
     align-items: center;
 
-    #privacy-body {
+    #<name>-body {
         width: 600px;
         height: 400px;
         padding: 30px;
@@ -33,8 +33,8 @@ $orange-yellow: #FF7E4A;
     }
 }
 @media (max-width: 600px) {
-    #privacy {
-        #privacy-body {
+    #<name> {
+        #<name>-body {
             h1 {
                 font-size: 25px;
             }
@@ -43,8 +43,8 @@ $orange-yellow: #FF7E4A;
 }
 
 @media (max-height: 600px) {
-    #contact {
-        #privacy-body {
+    #<name> {
+        #<name>-body {
             h1 {
                 font-size: 25px;
             }
@@ -58,16 +58,12 @@ $orange-yellow: #FF7E4A;
 <style lang="scss"></style>
 
 <template>
-    <div id="privacy">
-        <div id="privacy-body">
-            <h1>Privacy</h1>
+    <div id="<name>">
+        <div id="<name>-body">
+            <h1><name></h1>
 
             <p>
-            <iframe
-                style=""
-                src="https://piwik.concertrack.com/index.php?module=CoreAdminHome&action=optOut&language=en&backgroundColor=ffffff&fontColor=333333&fontSize=16px&fontFamily=sans-serif"
-             >
-            </iframe>
+
             </p>
         </div>
     </div>
@@ -92,7 +88,7 @@ export default {
     },
 
     created: function() {
-        window.document.title = 'ConcerTrack - Privacy'
+        window.document.title = 'ConcerTrack - <name>'
     },
 
     mounted: function() {

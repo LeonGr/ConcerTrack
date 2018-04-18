@@ -891,7 +891,16 @@ export default {
             const apiURL = "https://rest.bandsintown.com/"
             const apiExtension = "?app_id='ConcerTrack v0.0.1'"
 
-            // Get artist information from API
+            /* Data:
+                facebook_page_url: url to facebook page
+                id: artist ID
+                image_url: url to image of artist
+                name: artist name
+                thumb_url: url to thumbnail image
+                tracker_count: number of BIT trackers
+                upcoming_event_count: number of upcoming events
+                url: link to BIT page of artist
+            */
             let getArtistInfo = (artist) => {
                 return new Promise((resolve, reject) => {
                     fetch(apiURL + "artists/" + artist + apiExtension, {
