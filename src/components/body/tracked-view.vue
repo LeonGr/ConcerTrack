@@ -210,11 +210,14 @@ $orange-yellow: #FF7E4A;
             height: 100%;
             padding-left: 50px;
 
+            .tracked-artist-event:not(:last-child) {
+                border-bottom: 1px solid #ccc;
+            }
+
             .tracked-artist-event {
                 height: 120px;
                 display: flex;
                 align-items: center;
-                border-bottom: 1px solid #ccc;
 
                 .artist-image {
                     margin-right: 20px;

@@ -199,6 +199,7 @@ $orange-yellow: #FF7E4A;
     box-shadow: 0 4px 9px 0 rgba(0,0,0,.3);
     border-radius: 5px;
     padding: 20px;
+    margin: 20px 0;
 
     width: 440px;
     height: 120px;
@@ -263,7 +264,6 @@ $orange-yellow: #FF7E4A;
     }
 
     #autocomplete-form::after {
-        content: "Note: the autocomplete list is still 'Work In Progress'. Please contact us with any mistakes.";
         color: black;
         font-size: 15px;
         font-weight: 100;
@@ -323,7 +323,6 @@ $orange-yellow: #FF7E4A;
         top: 0;
         position: relative;
         padding: 10px;
-        margin-top: 1px;
 
         #autocomplete-form {
             h1 {
