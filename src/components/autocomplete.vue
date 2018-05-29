@@ -242,8 +242,22 @@ export default {
 
         inputChanged: function() {
             // Because on mobile the oninput event might not work until focus is lost or space is pressed
+            function getChild(element, localName) {
+                let children = element.children;
+                for(let i = 0, x = children.length; i < x; i++) {
+                    if (children[i].localName == localName) {
+                        return children[i];
+                    }
+                }
+            }
+
+            let form = getChild(this.$el, "form")
+            let inputField = getChild(form, "input")
+            console.log(`input: ${inputField.value}`)
+
             let realInput = document.getElementById('input-field').value;
-            console.log(realInput)
+            console.log(`realInput: ${realInput}`)
+
             if (realInput && realInput != this.inputValue) {
                 this.inputValue = realInput;
             }
