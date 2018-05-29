@@ -263,12 +263,6 @@ $orange-yellow: #FF7E4A;
         }
     }
 
-    #autocomplete-form::after {
-        color: black;
-        font-size: 15px;
-        font-weight: 100;
-    }
-
     #submitButton {
         display: none;
         position: absolute;
