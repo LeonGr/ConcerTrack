@@ -255,8 +255,8 @@ export default {
             let inputField = getChild(form, "input")
             console.log(`input: ${inputField.value}`)
 
-            let realInput = document.getElementById('input-field').value;
-            console.log(`realInput: ${realInput}`)
+            //let realInput = document.getElementById('input-field').value;
+            let realInput = inputField.value;
 
             if (realInput && realInput != this.inputValue) {
                 this.inputValue = realInput;
