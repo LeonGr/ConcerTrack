@@ -241,6 +241,12 @@ export default {
         },
 
         inputChanged: function() {
+            // Because on mobile the oninput event might not work until focus is lost or space is pressed
+            let realInput = document.getElementById('input-field').value;
+            if (realInput != this.inputValue) {
+                this.inputValue = realInput;
+            }
+
             this.selectedSuggestion = null;
             // Start giving suggestions when input is more than minimal amount of characters
             const MIN_CHARS = 1;
@@ -251,6 +257,7 @@ export default {
             let input = this.inputValue.toLowerCase();//.replace(/[^a-zA-Z]/g, ""); <- uncomment to filter special characters
 
             if (input.length > MIN_CHARS) {
+                console.log('test')
 
                 // If the user adds more text to the input field and we already have more than 0 results
                 // Show matching artists from current matching list
