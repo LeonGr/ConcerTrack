@@ -243,7 +243,8 @@ export default {
         inputChanged: function() {
             // Because on mobile the oninput event might not work until focus is lost or space is pressed
             let realInput = document.getElementById('input-field').value;
-            if (realInput != this.inputValue) {
+            console.log(realInput)
+            if (realInput && realInput != this.inputValue) {
                 this.inputValue = realInput;
             }
 
