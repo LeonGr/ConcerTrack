@@ -28,7 +28,6 @@ footer {
     position: relative;
     //position: absolute;
     bottom: 0;
-    margin-top: 10px;
     background-color: white;
 
     span {

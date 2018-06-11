@@ -209,6 +209,7 @@ $orange-yellow: #FF7E4A;
             width: calc(100% - 700px);
             height: 100%;
             padding-left: 50px;
+            padding-bottom: 10px;
 
             .tracked-artist-event:not(:last-child) {
                 border-bottom: 1px solid #ccc;
