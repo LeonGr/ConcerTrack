@@ -253,7 +253,6 @@ export default {
 
             let form = getChild(this.$el, "form")
             let inputField = getChild(form, "input")
-            console.log(`input: ${inputField.value}`)
 
             //let realInput = document.getElementById('input-field').value;
             let realInput = inputField.value;
@@ -272,8 +271,6 @@ export default {
             let input = this.inputValue.toLowerCase();//.replace(/[^a-zA-Z]/g, ""); <- uncomment to filter special characters
 
             if (input.length > MIN_CHARS) {
-                console.log('test')
-
                 // If the user adds more text to the input field and we already have more than 0 results
                 // Show matching artists from current matching list
                 if (input.length > this.lastInputLength && this.allMatching.length > 0) {

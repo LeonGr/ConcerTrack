@@ -289,7 +289,7 @@ $orange-yellow: #FF7E4A;
     #search-results {
         box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
         position: absolute;
-        top: 85px;
+        top: 95px;
         list-style: none;
         background-color: #eee;
         box-sizing: border-box;
@@ -423,8 +423,6 @@ export default {
 
                 // Check if we get a response from BIT API before we redirect
                 store.doesArtistExist(artist).then(data => {
-                    console.log(data)
-
                     // Store new data
                     store.lastArtist = data;
 

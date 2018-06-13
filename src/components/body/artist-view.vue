@@ -945,14 +945,13 @@ export default {
             // Store artist from url in local variable
             this.artist = this.$route.params.artist
 
-            if(store.lastArtistEvents) {
-                this.events = store.lastArtistEvents;
-                this.localEvents = store.lastArtistEventsLocal;
+            if(store.lastArtistEvents && store.lastArtistEvents.name.toLowerCase() == this.artist.toLowerCase()) {
+                this.events = store.lastArtistEvents.events;
+                this.localEvents = store.lastArtistEventsLocal.events;
             }
 
             else {
                 store.getEvents(this.artist).then(data => {
-                    console.log(this)
                     this.events = data;
 
                     this.events.forEach((event) => {
@@ -975,9 +974,13 @@ export default {
                         }
                     })
 
-                    store.lastArtistEvents = this.events;
-                    store.lastArtistEventsLocal = this.localEvents;
-                    console.log(store.lastArtistEvents)
+                    store.lastArtistEvents = {
+                        events: this.events,
+                        name: this.artist
+                    }
+                    store.lastArtistEventsLocal = {
+                        events: this.localEvents,
+                    }
                 })
             }
 
