@@ -876,6 +876,8 @@ export default {
     },
 
     created: function() {
+        document.body.style.overflow = 'auto';
+
         this.getAllInformation();
 
         this.getTrackedArtists();
