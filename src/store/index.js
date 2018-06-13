@@ -25,7 +25,7 @@ store.doesArtistExist = function(artist) {
     }
 
     const apiURL = "https://rest.bandsintown.com/"
-    const apiExtension = "?app_id='ConcerTrack v0.0.1'"
+    const apiExtension = "?app_id=ConcerTrack v0.0.1"
     const output = document.getElementById("output");
 
     return new Promise((resolve, reject) => {
@@ -43,6 +43,121 @@ store.doesArtistExist = function(artist) {
         })
     })
 }
+
+/* Data:
+Array containing all events:
+
+artist_id: artist ID
+datetime: ISO format date of event
+id: event ID
+lineup: Artists present at event
+offers: array of ticket info
+    status: if tickets are available
+    type: what type of offer (seems to be tickets always)
+    url: link to tickets redirect through BIT
+on_sale_datetime: when tickets go on sale
+ticketUrl: another url to tickets
+venue: object with information about venue
+    city: the city
+    country: the country
+    latitude: the latitude
+    longitude: the longitude
+    name: name of the venue
+    region: state or province (or some random number)
+*/
+
+store.getEvents = (artist) => {
+    const apiURL = "https://rest.bandsintown.com/"
+    const apiExtension = "?app_id=ConcerTrack v0.0.1"
+
+    return new Promise((resolve, reject) => {
+        fetch(apiURL + "artists/" + artist + "/events" + apiExtension, {
+            method: 'GET',
+            headers: {
+                'accept': "application/json"
+            }
+        }).then(response => {
+            return response.json()
+        }).then(response => {
+            resolve(response);
+        }).catch(error => {
+            console.log(error);
+        })
+    })
+}
+
+/* Data:
+facebook_page_url: url to facebook page
+id: artist ID
+image_url: url to image of artist
+name: artist name
+thumb_url: url to thumbnail image
+tracker_count: number of BIT trackers
+upcoming_event_count: number of upcoming events
+url: link to BIT page of artist
+*/
+store.getArtistInfo = (artist) => {
+    const apiURL = "https://rest.bandsintown.com/"
+    const apiExtension = "?app_id=ConcerTrack v0.0.1"
+
+    return new Promise((resolve, reject) => {
+        fetch(apiURL + "artists/" + artist + apiExtension, {
+            method: 'GET',
+            headers: {
+                'accept': "application/json"
+            }
+        }).then(response => {
+            return response.json()
+        }).then(response => {
+            resolve(response);
+        }).catch(error => {
+            console.log(error);
+        })
+    })
+}
+
+
+/* Data:
+bio: short description of artist
+image: url to artist image
+name: artist name
+ontour: 1 if artist is on tour otherwise 0
+similar: object with similar artists
+    artists: array of artists
+        image: image of similar artist
+        name: name of similar artist
+        url: url to last fm page of similar artist
+stats: object with lastfm stats
+    listeners: number of listeners
+    playcount: number of plays from listeners
+    streamable: 1 if you can stream from lastfm 0 otherwise
+    tags: object with array of tags
+        tags: array of tags
+*/
+store.getLastFMData = (artist) => {
+    // Encode so lastfm doesn't get trouble with names with for example &
+    let artistName = encodeURIComponent(artist);
+
+    let apiUrl = "https://ws.audioscrobbler.com/2.0/"
+    let apiParams = "?method=artist.getinfo&api_key=a4629fdacfd93267704f599b874a59bf&format=json&artist="
+
+    return new Promise((resolve, reject) => {
+        fetch(apiUrl + apiParams + artistName, {
+            method: 'GET',
+            headers: {
+                'accept': "application/json"
+            }
+        }).then(response => {
+            return response.json()
+        }).then(response => {
+            resolve(response);
+        }).catch(error => {
+            console.log(error);
+        })
+    })
+}
+
+
 
 // Save tracked artists to save data usage
 store.saved = {

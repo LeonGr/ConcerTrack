@@ -423,6 +423,7 @@ export default {
 
                 // Check if we get a response from BIT API before we redirect
                 store.doesArtistExist(artist).then(data => {
+                    console.log(data)
 
                     // Store new data
                     store.lastArtist = data;

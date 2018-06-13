@@ -862,8 +862,6 @@ export default {
             this.getAllInformation();
 
             this.getTrackedArtists();
-
-            //window.document.title = 'ConcerTrack - ' + this.artist
         }
     },
 
@@ -875,15 +873,12 @@ export default {
         firstFiveGlobal: function() {
             return _.slice(this.events, 0, 5);
         },
-
     },
 
     created: function() {
         this.getAllInformation();
 
         this.getTrackedArtists();
-
-        //window.document.title = 'ConcerTrack - ' + this.artist
     },
 
     mounted: function() {
@@ -948,74 +943,14 @@ export default {
             // Store artist from url in local variable
             this.artist = this.$route.params.artist
 
-
-            const apiURL = "https://rest.bandsintown.com/"
-            const apiExtension = "?app_id='ConcerTrack v0.0.1'"
-
-            // Get artist information from API
-            let getArtistInfo = (artist) => {
-                return new Promise((resolve, reject) => {
-                    fetch(apiURL + "artists/" + artist + apiExtension, {
-                        method: 'GET',
-                        headers: {
-                            'accept': "application/json"
-                        }
-                    }).then(response => {
-                        return response.json()
-                    }).then(response => {
-                        resolve(response);
-                    }).catch(error => {
-                        console.log(error);
-                    })
-                })
-            }
-
-            // Get artist's events from API
-            let getEvents = (artist) => {
-                return new Promise((resolve, reject) => {
-                    fetch(apiURL + "artists/" + artist + "/events" + apiExtension, {
-                        method: 'GET',
-                        headers: {
-                            'accept': "application/json"
-                        }
-                    }).then(response => {
-                        return response.json()
-                    }).then(response => {
-                        response.artist = artist;
-                        resolve(response);
-                    }).catch(error => {
-                        console.log(error);
-                    })
-                })
-            }
-
-            if(store.lastArtistEvents && store.lastArtistEvents.artist.toLowerCase() == this.artist.toLowerCase()) {
+            if(store.lastArtistEvents) {
                 this.events = store.lastArtistEvents;
                 this.localEvents = store.lastArtistEventsLocal;
             }
 
             else {
-                /* Data:
-                Array containing all events:
-                    artist_id: artist ID
-                    datetime: ISO format date of event
-                    id: event ID
-                    lineup: Artists present at event
-                    offers: array of ticket info
-                        status: if tickets are available
-                        type: what type of offer (seems to be tickets always)
-                        url: link to tickets redirect through BIT
-                    on_sale_datetime: when tickets go on sale
-                    ticketUrl: another url to tickets
-                    venue: object with information about venue
-                        city: the city
-                        country: the country
-                        latitude: the latitude
-                        longitude: the longitude
-                        name: name of the venue
-                        region: state or province (or some random number)
-                */
-                getEvents(this.artist).then(data => {
+                store.getEvents(this.artist).then(data => {
+                    console.log(this)
                     this.events = data;
 
                     this.events.forEach((event) => {
@@ -1040,23 +975,14 @@ export default {
 
                     store.lastArtistEvents = this.events;
                     store.lastArtistEventsLocal = this.localEvents;
+                    console.log(store.lastArtistEvents)
                 })
             }
 
             if (store.lastArtist && store.lastArtist.name.toLowerCase() == this.artist.toLowerCase()){
                 this.artistInfo = store.lastArtist;
             } else {
-                /* Data:
-                facebook_page_url: url to facebook page
-                id: artist ID
-                image_url: url to image of artist
-                name: artist name
-                thumb_url: url to thumbnail image
-                tracker_count: number of BIT trackers
-                upcoming_event_count: number of upcoming events
-                url: link to BIT page of artist
-                */
-                getArtistInfo(this.artist).then(data => {
+                store.getArtistInfo(this.artist).then(data => {
                     this.artistInfo = data;
                     store.lastArtist = data;
                 })
@@ -1070,29 +996,6 @@ export default {
 
         // Get information from Last.fm API
         getLastFMInfo: function() {
-            let getData = () => {
-                // Encode so lastfm doesn't get trouble with names with for example &
-                let artist = encodeURIComponent(this.artist);
-
-				let apiUrl = "https://ws.audioscrobbler.com/2.0/"
-				let apiParams = "?method=artist.getinfo&api_key=a4629fdacfd93267704f599b874a59bf&format=json&artist="
-
-                return new Promise((resolve, reject) => {
-                    fetch(apiUrl + apiParams + artist, {
-                        method: 'GET',
-                        headers: {
-                            'accept': "application/json"
-                        }
-                    }).then(response => {
-                        return response.json()
-                    }).then(response => {
-                        resolve(response);
-                    }).catch(error => {
-                        console.log(error);
-                    })
-                })
-            }
-
             if (store.lastLastFMdata && store.lastLastFMdata.name.toLowerCase() == this.artist.toLowerCase()) {
                 this.lastFMData = store.lastLastFMdata;
                 this.artist = this.lastFMData.name;
@@ -1103,24 +1006,7 @@ export default {
             }
 
             else {
-                /* Data:
-                bio: short description of artist
-                image: url to artist image
-                name: artist name
-                ontour: 1 if artist is on tour otherwise 0
-                similar: object with similar artists
-                    artists: array of artists
-                        image: image of similar artist
-                        name: name of similar artist
-                        url: url to last fm page of similar artist
-                stats: object with lastfm stats
-                    listeners: number of listeners
-                    playcount: number of plays from listeners
-                    streamable: 1 if you can stream from lastfm 0 otherwise
-                    tags: object with array of tags
-                        tags: array of tags
-                */
-                getData().then(data => {
+                store.getLastFMData(this.artist).then(data => {
                     if (data.error){
                         throw data.message;
                         return;
