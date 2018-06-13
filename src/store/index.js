@@ -24,6 +24,8 @@ store.doesArtistExist = function(artist) {
         return;
     }
 
+    artist = artist.replace("'", "");
+
     const apiURL = "https://rest.bandsintown.com/"
     const apiExtension = "?app_id=ConcerTrack v0.0.1"
     const output = document.getElementById("output");
@@ -70,6 +72,8 @@ store.getEvents = (artist) => {
     const apiURL = "https://rest.bandsintown.com/"
     const apiExtension = "?app_id=ConcerTrack v0.0.1"
 
+    artist = artist.replace("'", "");
+
     return new Promise((resolve, reject) => {
         fetch(apiURL + "artists/" + artist + "/events" + apiExtension, {
             method: 'GET',
@@ -99,6 +103,8 @@ url: link to BIT page of artist
 store.getArtistInfo = (artist) => {
     const apiURL = "https://rest.bandsintown.com/"
     const apiExtension = "?app_id=ConcerTrack v0.0.1"
+
+    artist = artist.replace("'", "");
 
     return new Promise((resolve, reject) => {
         fetch(apiURL + "artists/" + artist + apiExtension, {
