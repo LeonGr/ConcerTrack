@@ -227,6 +227,7 @@ $orange-yellow: #FF7E4A;
 
             <h2>Added artists:</h2>
             <div id="added-artists">
+                <!--{{ addedArtists }}-->
                 <div v-for="artist in addedArtists">
                     <p>{{ artist.name }}</p>
                     <img :src="artist.imageUrl" :alt="artist.name">
@@ -235,9 +236,10 @@ $orange-yellow: #FF7E4A;
 
             <h2>Similar to added artists: (click to track)</h2>
             <div id="similar-artists">
+                <!--{{ similarArtists }}-->
                 <div v-for="artist in similarArtists">
                     <p>{{ artist.name }}</p>
-                    <img :src="artist.imageUrl" :alt="artist.name">
+                    <img :src="artist.imageUrl" :alt="artist.name" v-on:click="getLastFMInfo(artist.name)">
                 </div>
             </div>
         </div>
@@ -251,9 +253,7 @@ export default {
     data: function() {
         return {
             addedArtists: [],
-            similarArtists: [],
-            addedArtistNames: [],
-            similarArtistNames: []
+            similarArtists: []
         }
     },
 
@@ -274,6 +274,7 @@ export default {
     methods: {
         callBackForm: function(callback, value) {
             if (callback == "artistSearch") {
+                console.log(value)
                 let showErrorMessage = (message) => {
                     for(let i = 0, x = this.$children.length; i < x; i++) {
 
@@ -289,21 +290,6 @@ export default {
 
                 let artist = value.toLowerCase();
 
-                if (this.addedArtistNames.includes(artist)) {
-                    showErrorMessage("Artist already added")
-
-                    return
-                }
-
-                if (this.similarArtistNames.includes(artist)) {
-                    for(let i = 0, x = this.similarArtists.length; i < x; i++) {
-                        if (this.similarArtists[i].name.toLowerCase() == artist) {
-                            this.similarArtists.splice(i, 1);
-                            this.similarArtistNames.splice(i, 1);
-                        }
-                    }
-                }
-
                 // Check if we get a response from BIT API before we redirect
                 store.doesArtistExist(artist).then(data => {
                     this.getLastFMInfo(artist);
@@ -317,78 +303,113 @@ export default {
         },
 
         getLastFMInfo: function(artist) {
-            let getData = () => {
-                // Encode so lastfm doesn't get trouble with names with for example &
-                artist = encodeURIComponent(artist);
-
-				let apiUrl = "https://ws.audioscrobbler.com/2.0/"
-				let apiParams = "?method=artist.getinfo&api_key=a4629fdacfd93267704f599b874a59bf&format=json&artist="
-
-                return new Promise((resolve, reject) => {
-                    fetch(apiUrl + apiParams + artist, {
-                        method: 'GET',
-                        headers: {
-                            'accept': "application/json"
-                        }
-                    }).then(response => {
-                        return response.json()
-                    }).then(response => {
-                        resolve(response);
-                    }).catch(error => {
-                        console.log(error);
-                    })
-                })
-            }
-
-            /* Data:
-            bio: short description of artist
-            image: url to artist image
-            name: artist name
-            ontour: 1 if artist is on tour otherwise 0
-            similar: object with similar artists
-                artists: array of artists
-                    image: image of similar artist
-                    name: name of similar artist
-                    url: url to last fm page of similar artist
-            stats: object with lastfm stats
-                listeners: number of listeners
-                playcount: number of plays from listeners
-                streamable: 1 if you can stream from lastfm 0 otherwise
-                tags: object with array of tags
-                    tags: array of tags
-            */
-            getData().then(data => {
+            store.getLastFMData(artist).then(data => {
                 if (data.error){
                     throw data.message;
                     return;
                 }
 
-                let artistObject = {};
+                console.log(data)
 
-                let similarArtists;
+                let artistInfo = {
+                    name: data.artist.name,
+                    imageUrl: data.artist.image[data.artist.image.length - 1]["#text"],
+                    similarArtists: []
+                }
 
-                artistObject.name = data.artist.name;
-                artistObject.imageUrl = data.artist.image[data.artist.image.length - 1]["#text"];
-                similarArtists = data.artist.similar.artist;
+                let similarArtists = data.artist.similar.artist;
 
                 for(let i = 0, x = similarArtists.length; i < x; i++) {
                     let artist = similarArtists[i];
 
-                    let similarArtistObject = {};
+                    let similarArtist = {
+                        name: artist.name,
+                        imageUrl: artist.image[data.artist.image.length - 1]["#text"]
+                    };
 
-                    similarArtistObject.name = artist.name;
-                    similarArtistObject.imageUrl = artist.image[data.artist.image.length - 1]["#text"];
-
-                    // If the artist is already added dont add it again
-                    if (this.similarArtistNames.includes(similarArtistObject.name.toLowerCase())) return
-
-                    this.similarArtistNames.push(similarArtistObject.name.toLowerCase());
-                    this.similarArtists.push(similarArtistObject);
+                    artistInfo.similarArtists.push(similarArtist);
                 }
 
-                this.addedArtistNames.push(artistObject.name.toLowerCase());
-                this.addedArtists.push(artistObject);
+                return artistInfo;
+            }).then(artistInfo => {
+                this.addToAddedArtists(artistInfo);
             })
+        },
+
+        addToAddedArtists: function(artistInfo) {
+            console.log(artistInfo);
+
+            let artistToAddName = artistInfo.name.toLowerCase();
+
+            for(let i = 0, x = this.addedArtists.length; i < x; i++) {
+                let currentComparingArtistName = this.addedArtists[i].name.toLowerCase();
+
+                if (artistToAddName == currentComparingArtistName) {
+                    // Artist already added
+                    console.log(`${artistToAddName} already added to addedArtists`)
+                    return
+                }
+            }
+
+            this.addedArtists.push(artistInfo)
+
+            this.addToSimilarArtists(artistInfo.similarArtists);
+
+            let artistInSimilarArtistsIndex = (artistToCheck) => {
+                for(let i = 0, x = this.similarArtists.length; i < x; i++) {
+                    let currentComparingArtistName = this.similarArtists[i].name.toLowerCase();
+
+                    if (artistToCheck == currentComparingArtistName) {
+                        // Artist already added
+                        console.log(`${artistToCheck} already added to similarArtists`)
+                        return i;
+                    }
+                }
+
+                return -1;
+            }
+
+            let indexOfArtist = artistInSimilarArtistsIndex(artistToAddName);
+            if (indexOfArtist > -1) {
+                console.log(`should remove ${artistToAddName} from similarArtists at index ${indexOfArtist}`);
+                this.similarArtists.splice(indexOfArtist, 1);
+            }
+        },
+
+        addToSimilarArtists: function(similarArtistsList) {
+            console.log(similarArtistsList)
+
+            let artistAlreadyAdded = (artistToCheck) => {
+                for(let i = 0, x = this.similarArtists.length; i < x; i++) {
+                    let currentComparingArtistName = this.similarArtists[i].name.toLowerCase();
+
+                    if (artistToCheck == currentComparingArtistName) {
+                        // Artist already added
+                        console.log(`${artistToCheck} already added to similarArtists`)
+                        return true;
+                    }
+                }
+
+                for(let i = 0, x = this.addedArtists.length; i < x; i++) {
+                    let currentComparingArtistName = this.addedArtists[i].name.toLowerCase();
+
+                    if (artistToCheck == currentComparingArtistName) {
+                        // Artist already added
+                        console.log(`${artistToCheck} already added to addedArtists`)
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            for(let i = 0, x = similarArtistsList.length; i < x; i++) {
+                let similarArtistToAddName = similarArtistsList[i].name.toLowerCase();
+
+                if (!artistAlreadyAdded(similarArtistToAddName)) {
+                    this.similarArtists.push(similarArtistsList[i]);
+                }
+            }
         }
     }
 }
