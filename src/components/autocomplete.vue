@@ -429,10 +429,10 @@ export default {
                         })
                     }
 
-                    // Reset timeout every time this function is called
-                    // If it isn't reset for 1s we make a request to the database
-                    clearTimeout(this.waiting)
-                    this.waiting = setTimeout(fetchFunction, 500)
+//                    // Reset timeout every time this function is called
+//                    // If it isn't reset for 1s we make a request to the database
+//                    clearTimeout(this.waiting)
+//                    this.waiting = setTimeout(fetchFunction, 500)
 
                 }
             }
