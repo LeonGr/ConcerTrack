@@ -803,8 +803,8 @@ export default {
             artistImages: [],
             encodedLink: '',
             loading: true,
-            lastFMlast: false,
-            BITlast: false,
+            infoResolvedLast: false,
+            eventsResolvedLast: false,
             startTime: 0,
             trackedArtists: {"list": []},
             removedArtist: '',
@@ -864,7 +864,7 @@ export default {
         // Get events for each artists
         for(let i = 0, x = this.trackedArtists.list.length; i < x; i++) {
             let artist = this.trackedArtists.list[i];
-            this.getLastFMInfo(artist);
+            this.getArtistInfo(artist);
             this.getArtistEvents(artist);
         }
 
@@ -937,9 +937,9 @@ export default {
             }).then(() => {
                 // If the information we're getting is the last artist from the list start a timeout
                 if (artist == this.trackedArtists.list[this.trackedArtists.list.length - 1]) {
-                    this.BITlast = true;
+                    this.eventsResolvedLast = true;
 
-                    if (!this.lastFMlast) return;
+                    if (!this.infoResolvedLast) return;
 
 
                     this.showLocalEvents();
@@ -947,28 +947,22 @@ export default {
             })
         },
 
-        // Get information from Last.fm API
-        getLastFMInfo: function(artist) {
-            store.getLastFMData(artist).then(data => {
-                if (data.error){
-                    throw data.message;
-                    return;
-                }
-
-                let imageUrl = data.artist.image[data.artist.image.length - 4]["#text"];
+        getArtistInfo: function(artist) {
+            store.getArtistInfo(artist).then(data => {
+                let imageUrl = data.thumb_url;
                 this.artistImages.push({
                     "artist": artist,
                     "url": imageUrl
                 });
             }).then(() => {
                 if (artist == this.trackedArtists.list[this.trackedArtists.list.length - 1]) {
-                    this.lastFMlast = true;
+                    this.infoResolvedLast = true;
 
-                    if (!this.BITlast) return;
+                    if (!this.eventsResolvedLast) return;
 
                     this.showLocalEvents();
                 }
-            })
+            });
         },
 
         // Function that determines what happens with output from autocomplete inputs
@@ -1009,7 +1003,7 @@ export default {
 
                 for(let i = 0, x = this.trackedArtists.list.length; i < x; i++) {
                     let artist = this.trackedArtists.list[i];
-                    this.getLastFMInfo(artist);
+                    this.getArtistInfo(artist);
                     this.getArtistEvents(artist);
                 }
             }

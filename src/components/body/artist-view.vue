@@ -669,7 +669,6 @@ $orange-yellow: #FF7E4A;
     <div id="output-container">
         <div id="output">
             <div id="left-side">
-                <!--If we get an image from lastFM show it. Otherwise use the one from BIT-->
                 <img :src="imageUrl" :alt="lastFMData.name" v-if="imageUrl" id="artist-image">
 
                 <div id="img-container">
@@ -1005,7 +1004,7 @@ export default {
                 this.lastFMData = store.lastLastFMdata;
                 this.artist = this.lastFMData.name;
                 this.artistBio = this.lastFMData.bio.summary;
-                this.imageUrl = this.lastFMData.image[this.lastFMData.image.length - 1]["#text"] || this.artistInfo.image_url;
+                this.imageUrl = this.artistInfo.thumb_url;
 
                 window.document.title = 'ConcerTrack - ' + this.lastFMData.name;
             }
@@ -1020,7 +1019,7 @@ export default {
                     this.lastFMData = data.artist;
                     this.artist = this.lastFMData.name;
                     this.artistBio = this.lastFMData.bio.summary;
-                    this.imageUrl = this.lastFMData.image[this.lastFMData.image.length - 1]["#text"] || this.artistInfo.image_url;
+                    this.imageUrl = this.artistInfo.thumb_url;
 
                     store.lastLastFMdata = this.lastFMData;
 
