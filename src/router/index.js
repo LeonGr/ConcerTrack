@@ -31,7 +31,7 @@ import NewHereView from '@/components/body/newhere-view.vue'
 Vue.use(Router)
 
 export default new Router({
-    mode: 'history',
+    mode: 'hash',
     routes: [
         { path: '/newhere', component: NewHereView },
         { path: '/privacy', component: PrivacyView },
