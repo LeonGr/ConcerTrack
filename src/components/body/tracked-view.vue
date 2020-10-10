@@ -715,9 +715,9 @@ $orange-yellow: #FF7E4A;
                 <div id="export-button-container">
                     <button v-on:click="getExportLink">Get link to export tracked artists</button>
                     <br>
-                    <textarea id="" name="" cols="30" rows="10" v-if="shortUrl">{{ shortUrl }}</textarea>
+                    <textarea id="" name="" cols="30" rows="10" v-if="encodedLink">{{ encodedLink }}</textarea>
                     <br>
-                    <p v-if="shortUrl">Open this URL in any other browser to share your tracked artists.</p>
+                    <p v-if="encodedLink">Open this URL in any other browser to share your tracked artists.</p>
                 </div>
 
                 <button id="all-artists-button" v-on:click="showAllTrackedArtists">All Tracked Artists</button>
@@ -808,7 +808,6 @@ export default {
             startTime: 0,
             trackedArtists: {"list": []},
             removedArtist: '',
-            shortUrl: ''
         }
     },
 
@@ -1038,22 +1037,7 @@ export default {
             let encodedArtists = btoa(JSON.stringify({ list: this.trackedArtists.list }));
 
             encodedArtists = encodedArtists.split("=").shift();
-            this.encodedLink = window.location.origin + "/import/" + encodedArtists;
-
-            fetch("https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyBNloeeEkS5UZofgsHxbcA-P7gq8XRffMQ", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'accept': 'application/json'
-                },
-                body: JSON.stringify({
-                    longUrl: this.encodedLink
-                })
-            }).then(response => {
-                return response.json()
-            }).then(data => {
-                this.shortUrl = data.id;
-            })
+            this.encodedLink = window.location.origin + "/#/import/" + encodedArtists;
         },
 
         showLocalEvents: function() {
