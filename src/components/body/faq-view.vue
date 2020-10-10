@@ -86,19 +86,19 @@ $orange-yellow: #FF7E4A;
 
             <div class="question">
                 <h2>Why does <i>artist_name</i> not show up in the autocomplete list?</h2>
-                <p>We are trying to get as many artists as possible in our autocomplete function. But sometimes the artist just does not exist in any of the lists we are using. This does not always mean that we don't have info on the artist! You can contact us as <a href="mailto:contact@concertrack.com">contact@concertrack.com</a> and we'll gladly add them to our list.</p>
+                <p>We are trying to get as many artists as possible in our autocomplete function. But sometimes the artist just does not exist in any of the lists we are using. This does not always mean that we don't have info on the artist! You can open an issue ticket at <a href="https://github.com/LeonGr/ConcerTrack/issues">https://github.com/LeonGr/ConcerTrack/issues</a> and we'll gladly add them to our list.</p>
             </div>
             <div class="question">
                 <h2>Why does <i>artist_name</i> show up in the autocomplete list but gives an "artist not found" error?</h2>
-                <p>We are using the <a href="https://bandsintown.com">bandsintown</a> and <a href="https://last.fm">last.fm</a> APIs to get our information. So if they don't have information about the artist, we unfortunately can't provide you with information either.</p>
+                <p>We use data from other services to retrieve the information we display on this site. However, these services do not provide a full list of available artists. Therefore our autocomplete list does not always correspond to the available artists. More specifically: we are using the <a href="https://bandsintown.com">bandsintown</a> and <a href="https://last.fm">last.fm</a> APIs to get our information. So if they don't have information about the artist, we unfortunately can't provide you with information either.</p>
             </div>
             <div class="question">
                 <h2>This site sucks!</h2>
-                <p>That's not a question. However, we are always happy to hear suggestions on how to improve our site! Send us a message at <a href="mailto:contact@concertrack.com">contact@concertrack.com</a>.</p>
+                <p>That's not a question. However, we are always happy to hear suggestions on how to improve our site! You can open an issue ticket at <a href="https://github.com/LeonGr/ConcerTrack/issues">https://github.com/LeonGr/ConcerTrack/issues</a>.</p>
             </div>
             <div class="question">
                 <h2>More questions?</h2>
-                <p>We can help! Just send us an email and we will try to get back to you as soon as possible: <a href="mailto:contact@concertrack.com">contact@concertrack.com</a>.</p>
+                <p>We can help! Just send us an email and we will try to get back to you as soon as possible: <a href="mailto:leongrasmeijer+concertrack@gmail.com">click here</a>.</p>
             </div>
         </div>
     </div>

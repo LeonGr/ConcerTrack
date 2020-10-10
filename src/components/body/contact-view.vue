@@ -82,7 +82,7 @@ $orange-yellow: #FF7E4A;
                 Do you have a question, an idea for improvement or do you just want to thanks us for building this website?
                 <br>
                 <br>
-                You can contact us at <a href="mailto:contact@ConcerTrack.com">contact@ConcerTrack.com</a>.
+                You can contact us <a href="mailto:leongrasmeijer+concertrack@gmail.com">here</a>.
             </p>
         </div>
     </div>
