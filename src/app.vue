@@ -91,7 +91,7 @@ import SiteBody from './components/body.vue'
 import SiteFooter from './components/footer.vue'
 
 export default {
-    data () {
+    data() {
         return {}
     },
 

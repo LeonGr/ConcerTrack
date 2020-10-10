@@ -133,7 +133,7 @@ footer {
 
         <div id="info-wrapper">
              <p id="footer-disclaimer">
-                Made possible by <a href="https://bandsintown.com">Bandsintown</a>.<br>
+                Made possible with the <a href="https://bandsintown.com">Bandsintown</a> API.<br>
             </p>
 
             <div id="links">
