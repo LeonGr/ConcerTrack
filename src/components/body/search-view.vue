@@ -164,10 +164,6 @@ $orange-yellow: #FF7E4A;
             #img-container {
                 height: 40vh;
             }
-
-            img {
-                //margin-top: 10px;
-            }
         }
     }
 }

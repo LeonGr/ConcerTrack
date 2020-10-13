@@ -15,10 +15,10 @@
 -->
 <style lang="scss">
 // Declare main colourscheme colours
-$purple-red: #530030;
-$red: #7E0030;
-$orange-red: #CA283D;
-$orange: #F0443A;
+$purple-red:    #530030;
+$red:           #7E0030;
+$orange-red:    #CA283D;
+$orange:        #F0443A;
 $orange-yellow: #FF7E4A;
 
 html, body, * {
@@ -84,8 +84,6 @@ html {
 </template>
 
 <script>
-import store from './store'
-
 import SiteHeader from './components/header.vue'
 import SiteBody from './components/body.vue'
 import SiteFooter from './components/footer.vue'

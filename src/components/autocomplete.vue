@@ -24,6 +24,7 @@
             <ul id="search-results" v-if="showMatching.length">
                 <li
                     v-for="(match, index) in showMatching"
+                    v-bind:key="match"
                     v-on:click="clickSearchResult($event)"
                     v-on:mouseover="hoverSearchResult($event)"
                     class="animated fadeIn"
@@ -36,7 +37,6 @@
 </template>
 
 <script>
-import _ from 'lodash'
 import store from '@/store/index.js'
 
 export default {
@@ -58,11 +58,13 @@ export default {
 
     // Variables from autocomplete element in parent
     props: {
-        title: '',
-        placeholder: '',
-        data: '',
-        callback: '',
-        submitText: ''
+        title: String,
+        placeholder: String,
+        data: Object,
+        callback: function() {
+            return {}
+        },
+        submitText: String,
     },
 
     watch: {
@@ -131,7 +133,7 @@ export default {
                     }).then(response => {
                         resolve(response);
                     }).catch(error => {
-                        console.log(error);
+                        reject(error);
                     })
                 })
             }
@@ -341,100 +343,100 @@ export default {
                     }
                 }
 
-                // If we are looking for artists and this is also not enough fetch more from the database
-                if (this.showMatching.length < maxResults && this.callback == "artistSearch") {
-                    // Get list of artists from database containing search input
-                    let fetchArtistsFromDatabase = (search_query) => {
-                        return new Promise((resolve, reject) => {
-                            fetch("https://api.concertrack.com/get_artists/" + search_query, {
-                                method: 'GET',
-                                headers: {
-                                    'accept': 'application/json'
-                                }
-                            }).then(response => {
-                                return response.json()
-                            }).then(response => {
-                                resolve(response)
-                            }).catch(error => {
-                                reject(error)
-                            })
-                        })
-                    }
-
-                    let fetchFunction = () => {
-                        fetchArtistsFromDatabase(this.inputValue).then(response => {
-                            let contains = response.contains;
-
-                            // Make sure there are no duplicates
-                            let inArray = (name) => {
-                                let isIn = false;
-
-                                name = name.toLowerCase();
-
-                                for(let i = 0, x = this.showMatching.length; i < x; i++) {
-                                    let artist = this.showMatching[i].toLowerCase();
-
-                                    if (artist == name) {
-                                        isIn = true;
-                                        break;
-                                    }
-                                }
-
-                                return isIn;
-                            }
-
-                            let stillNeeded = maxResults - this.showMatching.length;
-
-                            // add from full list until full
-                            for(let i = 0, x = stillNeeded; i < x; i++) {
-
-                                if (i < contains.length && !inArray(contains[i]))
-                                    this.showMatching.push(contains[i]);
-                            }
-
-
-                            // Sort array, giving priority to elements that start with input
-                            this.showMatching.sort((a, b) => {
-                                // Exclude "The" from sort
-                                a = a.toLowerCase().replace("the ","");
-                                b = b.toLowerCase().replace("the ","");
-                                input = this.inputValue.toLowerCase().replace("the ", "");
-
-                                let aBeginsWithInput = a.startsWith(input)
-                                let bBeginsWithInput = b.startsWith(input)
-
-                                if (aBeginsWithInput && !bBeginsWithInput) {
-                                    return -1;
-                                }
-
-                                if (!aBeginsWithInput && bBeginsWithInput) {
-                                    return 1;
-                                }
-
-                                // If neither begin with input sort normally
-                                if (!aBeginsWithInput && !bBeginsWithInput) {
-                                    if (a > b) {
-                                        return 1;
-                                    }
-
-                                    if (a < b) {
-                                        return -1;
-                                    }
-                                }
-
-                                return 0;
-                            })
-
-
-                        })
-                    }
-
-//                    // Reset timeout every time this function is called
-//                    // If it isn't reset for 1s we make a request to the database
-//                    clearTimeout(this.waiting)
-//                    this.waiting = setTimeout(fetchFunction, 500)
-
-                }
+//                // If we are looking for artists and this is also not enough fetch more from the database
+//                if (this.showMatching.length < maxResults && this.callback == "artistSearch") {
+//                    // Get list of artists from database containing search input
+//                    let fetchArtistsFromDatabase = (search_query) => {
+//                        return new Promise((resolve, reject) => {
+//                            fetch("https://api.concertrack.com/get_artists/" + search_query, {
+//                                method: 'GET',
+//                                headers: {
+//                                    'accept': 'application/json'
+//                                }
+//                            }).then(response => {
+//                                return response.json()
+//                            }).then(response => {
+//                                resolve(response)
+//                            }).catch(error => {
+//                                reject(error)
+//                            })
+//                        })
+//                    }
+//
+//                    let fetchFunction = () => {
+//                        fetchArtistsFromDatabase(this.inputValue).then(response => {
+//                            let contains = response.contains;
+//
+//                            // Make sure there are no duplicates
+//                            let inArray = (name) => {
+//                                let isIn = false;
+//
+//                                name = name.toLowerCase();
+//
+//                                for(let i = 0, x = this.showMatching.length; i < x; i++) {
+//                                    let artist = this.showMatching[i].toLowerCase();
+//
+//                                    if (artist == name) {
+//                                        isIn = true;
+//                                        break;
+//                                    }
+//                                }
+//
+//                                return isIn;
+//                            }
+//
+//                            let stillNeeded = maxResults - this.showMatching.length;
+//
+//                            // add from full list until full
+//                            for(let i = 0, x = stillNeeded; i < x; i++) {
+//
+//                                if (i < contains.length && !inArray(contains[i]))
+//                                    this.showMatching.push(contains[i]);
+//                            }
+//
+//
+//                            // Sort array, giving priority to elements that start with input
+//                            this.showMatching.sort((a, b) => {
+//                                // Exclude "The" from sort
+//                                a = a.toLowerCase().replace("the ","");
+//                                b = b.toLowerCase().replace("the ","");
+//                                input = this.inputValue.toLowerCase().replace("the ", "");
+//
+//                                let aBeginsWithInput = a.startsWith(input)
+//                                let bBeginsWithInput = b.startsWith(input)
+//
+//                                if (aBeginsWithInput && !bBeginsWithInput) {
+//                                    return -1;
+//                                }
+//
+//                                if (!aBeginsWithInput && bBeginsWithInput) {
+//                                    return 1;
+//                                }
+//
+//                                // If neither begin with input sort normally
+//                                if (!aBeginsWithInput && !bBeginsWithInput) {
+//                                    if (a > b) {
+//                                        return 1;
+//                                    }
+//
+//                                    if (a < b) {
+//                                        return -1;
+//                                    }
+//                                }
+//
+//                                return 0;
+//                            })
+//
+//
+//                        })
+//                    }
+//
+////                    // Reset timeout every time this function is called
+////                    // If it isn't reset for 1s we make a request to the database
+////                    clearTimeout(this.waiting)
+////                    this.waiting = setTimeout(fetchFunction, 500)
+//
+//                }
             }
 
             else {

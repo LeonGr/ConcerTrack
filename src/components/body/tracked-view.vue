@@ -151,7 +151,6 @@ $orange-yellow: #FF7E4A;
 
         #tracked-artist-list-container {
             height: 100%;
-            //width: calc(50% - 350px);
             width: 350px;
             align-self: flex-end;
 
@@ -174,6 +173,7 @@ $orange-yellow: #FF7E4A;
             #tracked-artist-list {
                 height: calc(100% - 50px);
                 overflow-y: scroll;
+                scroll-behavior: smooth;
 
                 span {
                     display: block;
@@ -204,13 +204,15 @@ $orange-yellow: #FF7E4A;
             justify-content: center;
         }
 
-        #tracked-artist-events-list {
+        #tracked-artist-events-list, #tracked-artist-events-placeholder {
             overflow-y: scroll;
             width: calc(100% - 700px);
             height: 100%;
             padding-left: 50px;
             padding-bottom: 10px;
+        }
 
+        #tracked-artist-events-list {
             .tracked-artist-event:not(:last-child) {
                 border-bottom: 1px solid #ccc;
             }
@@ -286,14 +288,9 @@ $orange-yellow: #FF7E4A;
                 height: 40px;
             }
 
-            #tracked-artist-events-list {
+            #tracked-artist-events-list, #tracked-artist-events-placeholder {
                 width: calc(100% - 660px);
                 padding-left: 10px;
-            }
-
-            #tracked-artist-list-container {
-                #tracked-artist-list {
-                }
             }
         }
     }
@@ -310,16 +307,14 @@ $orange-yellow: #FF7E4A;
                 }
             }
 
-            #tracked-artist-events-list {
+            #tracked-artist-events-list, #tracked-artist-events-placeholder {
                 width: calc(100% - 310px);
             }
 
             #tracked-artist-list-container {
                 height: calc(100vh);
-                //position: absolute;
-                //top: 1px;
+                height: calc(var(--vh, 1vh) * 100);
                 position: fixed;
-                //top: 50px;
                 top: 0;
                 right: 0;
                 z-index: 3;
@@ -328,7 +323,6 @@ $orange-yellow: #FF7E4A;
                 box-shadow: -2px 0px 20px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
 
                 #artist-list-header {
-                   // box-shadow: -6px 8px 6px -6px rgba(0, 0, 0, 0.3);
                     box-shadow: -0px 2px 6px 2px rgba(0, 0, 0, 0.3);
 
                     p {
@@ -406,7 +400,7 @@ $orange-yellow: #FF7E4A;
 
                 #export-button-container {
                     button {
-                        margin-top: 2px;
+                        margin-top: 5px;
                         font-size: 15px;
                     }
 
@@ -436,14 +430,17 @@ $orange-yellow: #FF7E4A;
                 }
             }
 
-            #tracked-artist-events-list {
-                width: 100%;
-                min-height: calc(100vh - 190px);
-                overflow: auto;
+            .message-div {
+                height: calc(90vh - 190px);
+            }
 
-                .message-div {
-                    height: calc(90vh - 190px);
-                }
+            #tracked-artist-events-list, #tracked-artist-events-placeholder {
+                width: 100%;
+                overflow: auto;
+            }
+
+            #tracked-artist-events-list {
+                min-height: calc(100vh - 190px);
 
                 .tracked-artist-event {
                     padding: 0 10px;
@@ -480,6 +477,13 @@ $orange-yellow: #FF7E4A;
                         .event-combined {
                             width: 100%;
                             display: block;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                            overflow: hidden;
+
+                            br {
+                                margin: 5px;
+                            }
                         }
 
                         .event-tickets {
@@ -715,7 +719,7 @@ $orange-yellow: #FF7E4A;
                 <div id="export-button-container">
                     <button v-on:click="getExportLink">Get link to export tracked artists</button>
                     <br>
-                    <textarea id="" name="" cols="30" rows="10" v-if="encodedLink">{{ encodedLink }}</textarea>
+                    <textarea id="" name="" cols="30" rows="10" v-if="encodedLink" v-model="encodedLink"></textarea>
                     <br>
                     <p v-if="encodedLink">Open this URL in any other browser to share your tracked artists.</p>
                 </div>
@@ -724,14 +728,10 @@ $orange-yellow: #FF7E4A;
 
             </div>
 
-            <div id="tracked-artist-events-list" class="scrollable">
-                <div class="message-div" v-if="loading && countrySet">
-                    Loading events...
-                </div>
-
+            <div id="tracked-artist-events-list" class="scrollable" v-if="showEvents && !showAllEvents">
                 <div
                     v-for="(event, index) in orderedEvents"
-                    v-if="showEvents && !showAllEvents"
+                    v-bind:key="event"
                     class="tracked-artist-event animated fadeInLeft"
                     :style="{ animationDelay: index * 0.1 + 's' }">
 
@@ -748,6 +748,12 @@ $orange-yellow: #FF7E4A;
                         <a class="event-tickets" :href="event.searchUrl" v-else>Search for tickets</a>
                     </div>
                 </div>
+            </div>
+
+            <div id="tracked-artist-events-placeholder" v-else>
+                <div class="message-div" v-if="loading && countrySet">
+                    Loading events...
+                </div>
 
                 <div class="message-div" v-if="showEvents && !orderedEvents.length && countrySet">
                     No local events :(
@@ -761,9 +767,6 @@ $orange-yellow: #FF7E4A;
                     No tracked artists.
                 </div>
 
-                <!--<p v-for="event in allEvents" v-if="showEvents && showAllEvents">-->
-                    <!--{{ event.lineup[0] }} {{ event.datetime }} {{ event.venue.country }} {{ event.venue.city }} {{ event.venue.name }}-->
-                <!--</p>-->
             </div>
 
             <!--Show list of all tracked artists if there's any.-->
@@ -771,7 +774,7 @@ $orange-yellow: #FF7E4A;
                 <div id="artist-list-header"><p>All tracked artists:</p> <i class="fa fa-times" v-on:click="hideAllTrackedArtists"></i></div>
 
                 <div id="tracked-artist-list">
-                    <span v-for="artist in trackedArtists.list">
+                    <span v-for="artist in trackedArtists.list" v-bind:key="artist">
                         <i class="fa fa-times" v-on:click="removeFromTracked(artist)"></i>
                         <router-link :to="{ path: 'artists/' + artist }"> {{ artist }}</router-link>
                     </span>
@@ -826,7 +829,14 @@ export default {
     },
 
     created: function() {
-        window.document.title = 'ConcerTrack - Tracked Artists'
+        window.document.title = 'ConcerTrack - Tracked Artists';
+
+        window.onresize = _.debounce(function() {
+            let vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', vh + "px");
+            console.log(vh);
+        }, 400);
+
     },
 
     mounted: function() {
@@ -879,10 +889,6 @@ export default {
             artistList.classList.add('slideInRight');
             document.body.style.overflow = 'hidden';
 
-            let removeAnimationClass = () => {
-                artistList.classList
-            }
-
             artistList.addEventListener("animationend", function() {
                 this.classList.remove('slideInRight');
                 this.style.display = 'block';
@@ -894,10 +900,6 @@ export default {
 
             artistList.classList.add('slideOutRight');
             document.body.style.overflow = 'auto';
-
-            let removeAnimationClass = () => {
-                artistList.classList
-            }
 
             artistList.addEventListener("animationend", function() {
                 this.classList.remove('slideOutRight');
