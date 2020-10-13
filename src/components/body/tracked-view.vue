@@ -350,6 +350,7 @@ $orange-yellow: #FF7E4A;
 
         #main-content {
             padding: 0;
+            flex-direction: row;
 
             #not-list-container {
                 width: 400px;
