@@ -31,6 +31,7 @@ $orange-yellow: #FF7E4A;
 
     #privacy-body {
         width: 600px;
+        height: 400px;
         padding: 30px;
         box-sizing: border-box;
         color: #333;
@@ -96,8 +97,6 @@ $orange-yellow: #FF7E4A;
 </template>
 
 <script>
-import store from '@/store/index.js'
-
 export default {
     data: function() {
         console.log('data')
