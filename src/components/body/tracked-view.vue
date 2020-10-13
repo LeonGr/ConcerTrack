@@ -275,8 +275,6 @@ $orange-yellow: #FF7E4A;
 @media (max-width: 1300px) {
     #output-container {
         #main-content {
-            flex-direction: row;
-
             #not-list-container {
                 align-self: flex-start;
                 box-sizing: border-box;
