@@ -613,7 +613,6 @@ $orange-yellow: #FF7E4A;
 
         #search-results {
             border-bottom: 5px solid $orange-yellow;
-            //border: 1px solid $orange-yellow;
             position: absolute;
             box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
             top: 80px;
@@ -786,7 +785,7 @@ $orange-yellow: #FF7E4A;
                     <div class="list-header-mobile"> <p>Date</p> <p>Venue/Location</p> </div>
 
                     <div id="event-list" class="event-list" v-if="events.length && !showAllGlobal">
-                        <div  v-for="event in firstFiveGlobal" class="event-div">
+                        <div  v-for="event in firstFiveGlobal" class="event-div" v-bind:key="event">
                             <p class="event-date">{{ event.datetime }}</p>
                             <p class="event-venue">{{ event.venue.name }}</p>
                             <p class="event-city">{{ event.venue.city }}, {{ event.venue.country }}</p>
@@ -804,7 +803,7 @@ $orange-yellow: #FF7E4A;
                     </div>
 
                     <div id="event-list" class="event-list" v-if="events.length && showAllGlobal">
-                        <div  v-for="event in events" class="event-div">
+                        <div  v-for="event in events" class="event-div" v-bind:key="event">
                             <p class="event-date">{{ event.datetime }}</p>
                             <p class="event-venue">{{ event.venue.name }}</p>
                             <p class="event-city">{{ event.venue.city }}, {{ event.venue.country }}</p>
@@ -1013,7 +1012,6 @@ export default {
                 store.getLastFMData(this.artist).then(data => {
                     if (data.error){
                         throw data.message;
-                        return;
                     }
 
                     this.lastFMData = data.artist;

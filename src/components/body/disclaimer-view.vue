@@ -86,8 +86,6 @@ $orange-yellow: #FF7E4A;
 </template>
 
 <script>
-import store from '@/store/index.js'
-
 export default {
     data: function() {
         console.log('data')

@@ -79,7 +79,7 @@ $orange-yellow: #FF7E4A;
 <template>
     <div id="error-container">
         <div id="error-message-container">
-            <h1>Whoopsie daisy!</h1>
+            <h1 v-if="errorMessage">Whoopsie daisy!</h1>
 
             <p v-html="errorMessage"></p>
 
@@ -89,11 +89,8 @@ $orange-yellow: #FF7E4A;
 </template>
 
 <script>
-import store from '@/store/index.js'
-
 export default {
     data: function() {
-        console.log('data')
         return {
             // Init local variables
             errorMessage: '',
