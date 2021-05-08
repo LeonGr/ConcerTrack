@@ -98,7 +98,7 @@ $orange-yellow: #FF7E4A;
             </div>
             <div class="question">
                 <h2>More questions?</h2>
-                <p>We can help! Just send us an email and we will try to get back to you as soon as possible: <a href="mailto:leongrasmeijer+concertrack@gmail.com">click here</a>.</p>
+                <p>We can help! Just send us an email and we will try to get back to you as soon as possible: <a href="mailto:ConcerTrack@leongr.nl">click here</a>.</p>
             </div>
         </div>
     </div>

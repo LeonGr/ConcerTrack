@@ -104,7 +104,7 @@
                         <i class="fa fa-github" aria-hidden="true"></i>
                     </a>
 
-                    <a href="mailto:leongrasmeijer@gmail.com" class="link-icon">
+                    <a href="mailto:ConcerTrack@leongr.nl" class="link-icon">
                         <i class="fa fa-envelope-o" aria-hidden="true"></i>
                     </a>
 
