@@ -228,7 +228,7 @@ $orange-yellow: #FF7E4A;
             <h2>Added artists:</h2>
             <div id="added-artists">
                 <!--{{ addedArtists }}-->
-                <div v-for="artist in addedArtists">
+                <div v-for="artist in addedArtists" v-bind:key="artist">
                     <p>{{ artist.name }}</p>
                     <img :src="artist.imageUrl" :alt="artist.name">
                 </div>
@@ -237,7 +237,7 @@ $orange-yellow: #FF7E4A;
             <h2>Similar to added artists: (click to track)</h2>
             <div id="similar-artists">
                 <!--{{ similarArtists }}-->
-                <div v-for="artist in similarArtists">
+                <div v-for="artist in similarArtists" v-bind:key="artist">
                     <p>{{ artist.name }}</p>
                     <img :src="artist.imageUrl" :alt="artist.name" v-on:click="getLastFMInfo(artist.name)">
                 </div>
@@ -291,7 +291,7 @@ export default {
                 let artist = value.toLowerCase();
 
                 // Check if we get a response from BIT API before we redirect
-                store.doesArtistExist(artist).then(data => {
+                store.doesArtistExist(artist).then(() => {
                     this.getLastFMInfo(artist);
                 }).catch(error => {
                     // If we get an error that means the artist has not been found
@@ -306,7 +306,6 @@ export default {
             store.getLastFMData(artist).then(data => {
                 if (data.error){
                     throw data.message;
-                    return;
                 }
 
                 console.log(data)

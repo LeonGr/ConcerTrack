@@ -28,7 +28,6 @@ store.doesArtistExist = function(artist) {
 
     const apiURL = "https://rest.bandsintown.com/"
     const apiExtension = "?app_id=ConcerTrack v0.0.1"
-    const output = document.getElementById("output");
 
     return new Promise((resolve, reject) => {
         fetch(apiURL + "artists/" + artist + apiExtension, {
@@ -85,7 +84,7 @@ store.getEvents = (artist) => {
         }).then(response => {
             resolve(response);
         }).catch(error => {
-            console.log(error);
+            reject(error);
         })
     })
 }
@@ -117,7 +116,7 @@ store.getArtistInfo = (artist) => {
         }).then(response => {
             resolve(response);
         }).catch(error => {
-            console.log(error);
+            reject(error);
         })
     })
 }
@@ -158,7 +157,7 @@ store.getLastFMData = (artist) => {
         }).then(response => {
             resolve(response);
         }).catch(error => {
-            console.log(error);
+            reject(error);
         })
     })
 }
