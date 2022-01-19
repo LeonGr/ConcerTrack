@@ -192,3 +192,17 @@ store.lastLastFMdata;
 
 // Artist list
 store.autocompleteList = {};
+
+// Generate a random alphabetical string of length 32 to be used as trackCode
+store.makeTrackCode = function() {
+    let alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+    let trackCode = "";
+    for (let i = 0; i < 32; i++) {
+        let randomIndex = Math.floor(Math.random() * alphabet.length);
+        let next = alphabet[randomIndex];
+        trackCode += next;
+    }
+
+    return trackCode;
+}

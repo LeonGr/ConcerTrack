@@ -851,17 +851,18 @@ export default {
         }
 
         this.startTime = new Date();
-        // If the page loads for the first time get all information
 
-        let trackedInfo = localStorage.getItem('Tracked')
-        if (trackedInfo) {
-            let parsed = JSON.parse(trackedInfo);
-            let artistList = parsed.list;
+        // If the page loads for the first time get all information
+        let hasTrackedArtists = this.userHasTracked();
+
+        if (hasTrackedArtists) {
+            let artistList = this.getTrackedArtists();
 
             this.trackedArtists = artistList;
             store.saved.trackedArtists = artistList;
-        } else
+        } else {
             this.loading = false;
+        }
 
         this.sortTrackedArtists();
 
@@ -876,13 +877,11 @@ export default {
         // Get events for each artists
         for(let i = 0, x = this.trackedArtists.length; i < x; i++) {
             let artist = this.trackedArtists[i];
-            console.log("artist", artist);
             this.getArtistInfo(artist);
             this.getArtistEvents(artist);
         }
 
         store.saved.loaded = true;
-
     },
 
     methods: {
@@ -1145,6 +1144,41 @@ export default {
             undoNotificationElement.addEventListener('animationend', function() {
                 clearErrorMessage();
             })
+        },
+
+        userHasTracked: function() {
+            let oldTrackedInfo = localStorage.getItem('Tracked');
+            let trackCode = localStorage.getItem("trackCode");
+
+            if (oldTrackedInfo || trackCode) {
+                return true;
+            } else {
+                return false;
+            }
+        },
+
+        getTrackedArtists: function() {
+            let trackCode = localStorage.getItem("trackCode");
+            let oldTrackedInfo = localStorage.getItem('Tracked');
+
+            if (oldTrackedInfo && trackCode) {
+                console.log("Has both:", trackCode, oldTrackedInfo);
+            } else if (trackCode) {
+                // get tracked from API
+            } else if (oldTrackedInfo) {
+                this.migrateArtists();
+            }
+
+
+            let parsed = JSON.parse(oldTrackedInfo);
+
+            return parsed.list;
+        },
+
+        migrateArtists: function() {
+            let newTrackCode = store.makeTrackCode();
+
+            console.log("New code:", newTrackCode);
         }
     }
 }
