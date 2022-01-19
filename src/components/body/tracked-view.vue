@@ -762,7 +762,7 @@ $orange-yellow: #FF7E4A;
                     Choose a location to see local events.
                 </div>
 
-                <div class="message-div" v-if="countrySet && !trackedArtists.list.length">
+                <div class="message-div" v-if="countrySet && !trackedArtists.length">
                     No tracked artists.
                 </div>
 
@@ -773,7 +773,7 @@ $orange-yellow: #FF7E4A;
                 <div id="artist-list-header"><p>All tracked artists:</p> <i class="fa fa-times" v-on:click="hideAllTrackedArtists"></i></div>
 
                 <div id="tracked-artist-list">
-                    <span v-for="artist in trackedArtists.list" v-bind:key="artist">
+                    <span v-for="artist in trackedArtists" v-bind:key="artist">
                         <i class="fa fa-times" v-on:click="removeFromTracked(artist)"></i>
                         <router-link :to="{ path: 'artists/' + artist }"> {{ artist }}</router-link>
                     </span>
@@ -846,6 +846,7 @@ export default {
             this.artistImages = store.saved.artistImages;
             this.loading = false;
             this.showEvents = true;
+
             return;
         }
 
@@ -854,8 +855,11 @@ export default {
 
         let trackedInfo = localStorage.getItem('Tracked')
         if (trackedInfo) {
-            this.trackedArtists = JSON.parse(trackedInfo);
-            store.saved.trackedArtists = this.trackedArtists;
+            let parsed = JSON.parse(trackedInfo);
+            let artistList = parsed.list;
+
+            this.trackedArtists = artistList;
+            store.saved.trackedArtists = artistList;
         } else
             this.loading = false;
 
@@ -870,8 +874,9 @@ export default {
         }
 
         // Get events for each artists
-        for(let i = 0, x = this.trackedArtists.list.length; i < x; i++) {
-            let artist = this.trackedArtists.list[i];
+        for(let i = 0, x = this.trackedArtists.length; i < x; i++) {
+            let artist = this.trackedArtists[i];
+            console.log("artist", artist);
             this.getArtistInfo(artist);
             this.getArtistEvents(artist);
         }
@@ -936,7 +941,7 @@ export default {
 
             }).then(() => {
                 // If the information we're getting is the last artist from the list start a timeout
-                if (artist == this.trackedArtists.list[this.trackedArtists.list.length - 1]) {
+                if (artist == this.trackedArtists[this.trackedArtists.length - 1]) {
                     this.eventsResolvedLast = true;
 
                     if (!this.infoResolvedLast) return;
@@ -955,7 +960,7 @@ export default {
                     "url": imageUrl
                 });
             }).then(() => {
-                if (artist == this.trackedArtists.list[this.trackedArtists.list.length - 1]) {
+                if (artist == this.trackedArtists[this.trackedArtists.length - 1]) {
                     this.infoResolvedLast = true;
 
                     if (!this.eventsResolvedLast) return;
@@ -1001,8 +1006,8 @@ export default {
 
                 this.startTime = new Date();
 
-                for(let i = 0, x = this.trackedArtists.list.length; i < x; i++) {
-                    let artist = this.trackedArtists.list[i];
+                for(let i = 0, x = this.trackedArtists.length; i < x; i++) {
+                    let artist = this.trackedArtists[i];
                     this.getArtistInfo(artist);
                     this.getArtistEvents(artist);
                 }
@@ -1019,14 +1024,14 @@ export default {
         trackArtist: function() {
             if (!this.tracking) {
                 this.tracking = true;
-                if (!this.trackedArtists.list.includes(this.lastFMData.name.toLowerCase())) {
-                    this.trackedArtists.list.push(this.lastFMData.name.toLowerCase())
+                if (!this.trackedArtists.includes(this.lastFMData.name.toLowerCase())) {
+                    this.trackedArtists.push(this.lastFMData.name.toLowerCase())
                 }
             } else {
                 this.tracking = false;
-                let index = this.trackedArtists.list.indexOf(this.lastFMData.name)
+                let index = this.trackedArtists.indexOf(this.lastFMData.name)
                 if (index != -1) {
-                    this.trackedArtists.list.splice(index, 1);
+                    this.trackedArtists.splice(index, 1);
                 }
             }
 
@@ -1035,7 +1040,7 @@ export default {
 
         getExportLink: function() {
             // Convert list of artists to base64 because it looks better I guess
-            let encodedArtists = btoa(JSON.stringify({ list: this.trackedArtists.list }));
+            let encodedArtists = btoa(JSON.stringify({ list: this.trackedArtists }));
 
             encodedArtists = encodedArtists.split("=").shift();
             this.encodedLink = window.location.origin + "/#/import/" + encodedArtists;
@@ -1069,9 +1074,9 @@ export default {
         },
 
         removeFromTracked: function(artist) {
-            let index = this.trackedArtists.list.indexOf(artist)
+            let index = this.trackedArtists.indexOf(artist)
             if (index != -1) {
-                this.trackedArtists.list.splice(index, 1);
+                this.trackedArtists.splice(index, 1);
             }
 
             localStorage.setItem('Tracked', JSON.stringify(this.trackedArtists));
@@ -1082,15 +1087,15 @@ export default {
         undoRemove: function() {
             let inList = false;
 
-            for(let i = 0, x = this.trackedArtists.list.length; i < x; i++) {
-                let artist = this.trackedArtists.list[i]
+            for(let i = 0, x = this.trackedArtists.length; i < x; i++) {
+                let artist = this.trackedArtists[i]
                 if (artist.toLowerCase() == this.removedArtist.toLowerCase()) {
                     inList = true;
                 }
             }
 
             if (!inList) {
-                this.trackedArtists.list.push(this.removedArtist);
+                this.trackedArtists.push(this.removedArtist);
             }
 
             localStorage.setItem('Tracked', JSON.stringify(this.trackedArtists));
@@ -1112,7 +1117,7 @@ export default {
 
         sortTrackedArtists: function() {
             // Sort list of artists alphabetically exluding "The"
-            this.trackedArtists.list.sort(function(a, b) {
+            this.trackedArtists.sort(function(a, b) {
                 a = a.replace("The ","").toLowerCase();
                 b = b.replace("The ","").toLowerCase();
 

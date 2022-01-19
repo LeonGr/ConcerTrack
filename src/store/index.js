@@ -168,7 +168,7 @@ store.getLastFMData = (artist) => {
 store.saved = {
     loaded: false,
     allLocalEvents: [],
-    trackedArtists: {"list": []},
+    trackedArtists: [],
     countrySet: false,
     artistImages: []
 }
@@ -178,7 +178,7 @@ store.resetSaved = function() {
     store.saved = {
         loaded: false,
         allLocalEvents: [],
-        trackedArtists: {"list": []},
+        trackedArtists: [],
         countrySet: false,
         artistImages: []
     }
