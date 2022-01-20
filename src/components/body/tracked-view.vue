@@ -876,15 +876,28 @@ export default {
 
                 this.sortTrackedArtists();
 
+                const promises = [];
+
                 // Get events for each artists
                 for(let i = 0, x = this.trackedArtists.length; i < x; i++) {
                     let artist = this.trackedArtists[i];
-                    this.getArtistInfo(artist);
-                    this.getArtistEvents(artist);
+
+                    let artistPromise = this.getArtistInfo(artist);
+                    let eventPromise = this.getArtistEvents(artist);
+
+                    promises.push(artistPromise);
+                    promises.push(eventPromise);
                 }
 
-                store.saved.loaded = true;
-                this.loading = false;
+                Promise.all(promises)
+                    .then(results => {
+                        console.log("All promises done", results);
+
+                        store.saved.loaded = true;
+                        this.loading = false;
+                    }).catch(errors => {
+                        console.error("Promise errors", errors);
+                    });
             }).catch(error => {
                 console.log(error);
             });
@@ -917,62 +930,73 @@ export default {
         },
 
         getArtistEvents: function(artist) {
-            // Get list of events first then add to list
-            store.getEvents(artist).then(data => {
-                this.events = data;
+            return new Promise((resolve, reject) => {
+                // Get list of events first then add to list
+                store.getEvents(artist).then(data => {
+                    this.events = data;
 
-                this.events.forEach((event) => {
-                    // Change ISO date to readable date format
-                    let date = new Date(event.datetime);
-                    let months = ["Jan","Feb","Mar","Apr","May", "June","July","Aug","Sept","Oct","Nov","Dec"];
-                    //event.datetime = `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
-                    event.datetime = `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+                    this.events.forEach((event) => {
+                        // Change ISO date to readable date format
+                        let date = new Date(event.datetime);
+                        let months = ["Jan","Feb","Mar","Apr","May", "June","July","Aug","Sept","Oct","Nov","Dec"];
+                        //event.datetime = `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+                        event.datetime = `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
 
-                    // If we have a ticket url show it otherwise redirect to search
-                    if(event.url){
-                        event.ticketUrl = event.url;
-                    } else {
-                        event.searchUrl = "https://duckduckgo.com/?q=" + artist + " " + event.datetime;
+                        // If we have a ticket url show it otherwise redirect to search
+                        if(event.url){
+                            event.ticketUrl = event.url;
+                        } else {
+                            event.searchUrl = "https://duckduckgo.com/?q=" + artist + " " + event.datetime;
+                        }
+
+                        if (event.venue.country == this.countrySet) {
+                            this.localEvents.push(event);
+                            this.allLocalEvents.push(event);
+                        }
+
+                        this.allEvents.push(event);
+                    });
+                }).then(() => {
+                    // If the information we're getting is the last artist from the list start a timeout
+                    if (artist == this.trackedArtists[this.trackedArtists.length - 1]) {
+                        this.eventsResolvedLast = true;
+
+                        if (!this.infoResolvedLast) return;
+
+
+                        this.showLocalEvents();
                     }
 
-                    if (event.venue.country == this.countrySet) {
-                        this.localEvents.push(event);
-                        this.allLocalEvents.push(event);
-                    }
-
-                    this.allEvents.push(event);
+                    resolve();
+                }).catch(error => {
+                    reject(error);
                 });
-
-
-            }).then(() => {
-                // If the information we're getting is the last artist from the list start a timeout
-                if (artist == this.trackedArtists[this.trackedArtists.length - 1]) {
-                    this.eventsResolvedLast = true;
-
-                    if (!this.infoResolvedLast) return;
-
-
-                    this.showLocalEvents();
-                }
-            })
+            });
         },
 
         getArtistInfo: function(artist) {
-            store.getArtistInfo(artist).then(data => {
-                let imageUrl = data.thumb_url;
-                this.artistImages.push({
-                    "artist": artist,
-                    "url": imageUrl
+            return new Promise((resolve, reject) => {
+                store.getArtistInfo(artist).then(data => {
+                    let imageUrl = data.thumb_url;
+                    this.artistImages.push({
+                        "artist": artist,
+                        "url": imageUrl
+                    });
+                }).then(() => {
+                    if (artist == this.trackedArtists[this.trackedArtists.length - 1]) {
+                        this.infoResolvedLast = true;
+
+                        if (!this.eventsResolvedLast) return;
+
+                        this.showLocalEvents();
+
+                    }
+
+                    resolve();
+                }).catch(error => {
+                    reject(error);
                 });
-            }).then(() => {
-                if (artist == this.trackedArtists[this.trackedArtists.length - 1]) {
-                    this.infoResolvedLast = true;
-
-                    if (!this.eventsResolvedLast) return;
-
-                    this.showLocalEvents();
-                }
-            });
+            })
         },
 
         // Function that determines what happens with output from autocomplete inputs
@@ -1185,7 +1209,6 @@ export default {
             let getTrackedFromAPI = (code) => {
                 return store.getTrackedArtists(code)
                     .then(response => {
-                        console.log("API response", response);
                         return response;
                     }).catch(error => {
                         console.error(error);
@@ -1193,11 +1216,8 @@ export default {
             }
 
             if (trackCode) {
-                console.log("Has new");
-
                 return getTrackedFromAPI(trackCode);
             } else if (oldTrackedInfo) {
-                console.log("Only old");
                 let parsed = JSON.parse(oldTrackedInfo);
 
                 let newTrackCode = store.makeTrackCode();
@@ -1213,11 +1233,7 @@ export default {
         },
 
         migrateArtists: function(newTrackCode, artists) {
-            console.log("New code:", newTrackCode);
-
             for (let artist of artists) {
-                console.log(artist);
-
                 store.trackArtist(artist, newTrackCode)
                     .then(response => {
                         console.log(artist, response);
