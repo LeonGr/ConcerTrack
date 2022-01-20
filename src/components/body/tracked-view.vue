@@ -1084,9 +1084,16 @@ export default {
                 this.trackedArtists.splice(index, 1);
             }
 
-            localStorage.setItem('Tracked', JSON.stringify(this.trackedArtists));
+            //localStorage.setItem('Tracked', JSON.stringify(this.trackedArtists));
+            let trackCode = localStorage.getItem("trackCode");
+            store.removeTrackedArtist(artist, trackCode)
+                .then(response => {
+                    console.log(response);
 
-            this.removedArtist = artist;
+                    this.removedArtist = artist;
+                }).catch(error => {
+                    console.error(error);
+                });
         },
 
         undoRemove: function() {
@@ -1101,9 +1108,17 @@ export default {
 
             if (!inList) {
                 this.trackedArtists.push(this.removedArtist);
+
+                let trackCode = localStorage.getItem("trackCode");
+                store.trackArtist(this.removedArtist, trackCode)
+                    .then(response => {
+                        console.log(response);
+                    }).catch(error => {
+                        console.error(error);
+                    });
             }
 
-            localStorage.setItem('Tracked', JSON.stringify(this.trackedArtists));
+            //localStorage.setItem('Tracked', JSON.stringify(this.trackedArtists));
 
             let undoNotification = document.getElementById('undo-notification')
             undoNotification.classList.add('lightSpeedOut');

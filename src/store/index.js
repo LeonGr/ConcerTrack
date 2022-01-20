@@ -23,7 +23,7 @@ const appID = "?app_id=ConcerTrack v0.0.1";
 const apiURL = "http://io.lhax.xyz:8000/"
 // const apiURL = "http://localhost:8000/"
 
-let get = function(resource) {
+let getRequest = function(resource) {
     return new Promise((resolve, reject) => {
         fetch(resource, {
             method: "GET",
@@ -40,12 +40,31 @@ let get = function(resource) {
     });
 };
 
-let post = function(resource, body) {
+let postRequest = function(resource, body) {
     console.log("body", JSON.stringify(body));
 
     return new Promise((resolve, reject) => {
         fetch(resource, {
             method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "accept": "application/json",
+            },
+            body: body,
+        }).then(response => {
+            resolve(response);
+        }).catch(error => {
+            reject(error);
+        })
+    });
+};
+
+let deleteRequest = function(resource, body) {
+    console.log("body", JSON.stringify(body));
+
+    return new Promise((resolve, reject) => {
+        fetch(resource, {
+            method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
                 "accept": "application/json",
@@ -70,7 +89,7 @@ store.doesArtistExist = function(artist) {
 
     let resource = bandInTownAPI + "artists/" + artist + appID;
 
-    return get(resource);
+    return getRequest(resource);
 }
 
 /* Data:
@@ -100,7 +119,7 @@ store.getEvents = (artist) => {
 
     let resource = bandInTownAPI + "artists/" + artist + "/events" + appID;
 
-    return get(resource);
+    return getRequest(resource);
 }
 
 /* Data:
@@ -118,7 +137,7 @@ store.getArtistInfo = (artist) => {
 
     let resource = bandInTownAPI + "artists/" + artist + appID;
 
-    return get(resource);
+    return getRequest(resource);
 }
 
 
@@ -148,7 +167,7 @@ store.getLastFMData = (artist) => {
 
     let resource = lastFmAPI + apiParams + artistName;
 
-    return get(resource);
+    return getRequest(resource);
 }
 
 
@@ -184,16 +203,20 @@ store.autocompleteList = {};
 store.trackArtist = function(artist, trackCode) {
     let resource = apiURL + "tracked/" + trackCode;
 
-    console.log("POST:", resource, artist);
-
-    return post(resource, artist);
+    return postRequest(resource, artist);
 };
+
+store.removeTrackedArtist = function(artist, trackCode) {
+    let resource = apiURL + "tracked/" + trackCode;
+
+    return deleteRequest(resource, artist);
+}
 
 store.getTrackedArtists = function(trackCode) {
     let resource = apiURL + "tracked/" + trackCode;
 
-    return get(resource);
-}
+    return getRequest(resource);
+};
 
 // Generate a random alphabetical string of length 32 to be used as trackCode
 store.makeTrackCode = function() {
