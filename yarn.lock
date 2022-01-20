@@ -3663,6 +3663,7 @@ __metadata:
     core-js: ^3.6.5
     eslint: ^6.7.2
     eslint-plugin-vue: ^6.2.2
+    lodash: ^4.17.21
     sass: ^1.32.12
     sass-loader: ^8.0.2
     vue: ^2.6.11
