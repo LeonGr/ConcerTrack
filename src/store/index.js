@@ -20,8 +20,8 @@ export default store;
 const bandInTownAPI = "https://rest.bandsintown.com/";
 const appID = "?app_id=ConcerTrack v0.0.1";
 
-const apiURL = "http://io.lhax.xyz:8000/"
-// const apiURL = "http://localhost:8000/"
+const apiURL = "https://io.lhax.xyz:5000/"
+// const apiURL = "http://localhost:5000/"
 
 let getRequest = function(resource) {
     return new Promise((resolve, reject) => {
