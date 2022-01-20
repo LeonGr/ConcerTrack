@@ -696,14 +696,22 @@ $orange-yellow: #FF7E4A;
                             {{ artistBio }}
                         </p>
 
-                        <button id="track-button-tracked" class="mobile-button" v-if="tracking" v-on:click="trackArtist">Stop Tracking</button>
-                        <button id="track-button" class="mobile-button" v-else v-on:click="trackArtist">Track Artist</button>
+                        <button id="track-button-tracked" class="mobile-button" v-if="tracking" v-on:click="toggleTrackArtist">
+                            Stop Tracking
+                        </button>
+                        <button id="track-button" class="mobile-button" v-else v-on:click="toggleTrackArtist">
+                            Track Artist
+                        </button>
                     </div>
                 </div>
 
 
-                <button id="track-button-tracked" class="normal-button" v-if="tracking" v-on:click="trackArtist">Stop Tracking</button>
-                <button id="track-button" class="normal-button" v-else v-on:click="trackArtist">Track Artist</button>
+                <button id="track-button-tracked" class="normal-button" v-if="tracking" v-on:click="toggleTrackArtist">
+                    Stop Tracking
+                </button>
+                <button id="track-button" class="normal-button" v-else v-on:click="toggleTrackArtist">
+                    Track Artist
+                </button>
                 <p v-if="lastFMData" v-html="artistBio" id="mobile-bio">
                     {{ artistBio }}
                 </p>
@@ -1064,27 +1072,46 @@ export default {
             this.countrySet = false;
         },
 
-        trackArtist: function() {
+        toggleTrackArtist: function() {
+            let artist = this.lastFMData.name;
+
             if (!this.tracking) {
                 this.tracking = true;
 
                 let inList = false;
 
                 for(let i = 0, x = this.trackedArtists.list.length; i < x; i++) {
-                    let artist = this.trackedArtists.list[i]
-                    if (artist.toLowerCase() == this.lastFMData.name.toLowerCase()) {
+                    if (this.trackedArtists.list[i].toLowerCase() == artist.toLowerCase()) {
                         inList = true;
                     }
                 }
 
                 if (!inList) {
-                    this.trackedArtists.list.push(this.lastFMData.name)
+                    this.trackedArtists.list.push(artist);
+
+                    let trackCode = localStorage.getItem("trackCode");
+                    store.trackArtist(this.removedArtist, trackCode)
+                        .then(response => {
+                            console.log(response);
+                        }).catch(error => {
+                            console.error(error);
+                        });
                 }
             } else {
                 this.tracking = false;
                 let index = this.trackedArtists.list.indexOf(this.lastFMData.name)
                 if (index != -1) {
                     this.trackedArtists.list.splice(index, 1);
+
+                    let trackCode = localStorage.getItem("trackCode");
+                    store.removeTrackedArtist(artist, trackCode)
+                        .then(response => {
+                            console.log(response);
+
+                            this.removedArtist = artist;
+                        }).catch(error => {
+                            console.error(error);
+                        });
                 }
             }
 
