@@ -94,7 +94,6 @@ export default {
         return {
             // Init local variables
             errorMessage: '',
-            importCode: '',
             trackedArtists: {"list": []}
         }
     },
@@ -113,18 +112,22 @@ export default {
 
     methods: {
         loadImport: function() {
-            this.importCode = this.$route.params.importCode;
-            let plain = atob(this.importCode);
-            try {
-                JSON.parse(plain);
-            } catch (e) {
-                this.errorMessage = "Invalid import code. Are you sure you copied the correct URL? <br> It should look something like this: <a href='" + window.location.origin + "/import/eyJsaXN0IjpbInJpY2sgYXN0bGV5Il19'>" + window.location.origin + "/import/eyJsaXN0IjpbInJpY2sgYXN0bGV5Il19</a>"
-                return;
-            }
+            let importCode = this.$route.params.importCode;
 
-            localStorage.setItem("Tracked", plain);
-            this.$router.push({ path: "/tracked" })
-            alert("Import Successful")
+            // let plain = atob(this.importCode);
+            // try {
+            //     JSON.parse(plain);
+            // } catch (e) {
+            //     this.errorMessage = "Invalid import code. Are you sure you copied the correct URL? <br> It should look something like this: <a href='" + window.location.origin + "/import/eyJsaXN0IjpbInJpY2sgYXN0bGV5Il19'>" + window.location.origin + "/import/eyJsaXN0IjpbInJpY2sgYXN0bGV5Il19</a>"
+            //     return;
+            // }
+
+            // localStorage.setItem("Tracked", plain);
+
+            localStorage.setItem("trackCode", importCode);
+
+            this.$router.push({ path: "/tracked" });
+            alert("Import Successful");
         },
 
         goBack: function() {

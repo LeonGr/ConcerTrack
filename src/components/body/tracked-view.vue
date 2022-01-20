@@ -114,8 +114,8 @@ $orange-yellow: #FF7E4A;
             }
 
             textarea {
-                width: 260px;
-                height: 20px;
+                width: 100%;
+                // height: 20px;
                 margin: 10px 0;
                 border: 1px solid #ccc;
             }
@@ -718,7 +718,7 @@ $orange-yellow: #FF7E4A;
                 <div id="export-button-container">
                     <button v-on:click="getExportLink">Get link to export tracked artists</button>
                     <br>
-                    <textarea id="" name="" cols="30" rows="10" v-if="encodedLink" v-model="encodedLink"></textarea>
+                    <textarea id="" name="" cols="30" rows="3" v-if="encodedLink" v-model="encodedLink"></textarea>
                     <br>
                     <p v-if="encodedLink">Open this URL in any other browser to share your tracked artists.</p>
                 </div>
@@ -1069,10 +1069,14 @@ export default {
 
         getExportLink: function() {
             // Convert list of artists to base64 because it looks better I guess
-            let encodedArtists = btoa(JSON.stringify({ list: this.trackedArtists }));
+            // let encodedArtists = btoa(JSON.stringify({ list: this.trackedArtists }));
 
-            encodedArtists = encodedArtists.split("=").shift();
-            this.encodedLink = window.location.origin + "/#/import/" + encodedArtists;
+            // encodedArtists = encodedArtists.split("=").shift();
+            // this.encodedLink = window.location.origin + "/#/import/" + encodedArtists;
+
+            let trackCode = localStorage.getItem("trackCode");
+
+            this.encodedLink = window.location.origin + "/#/import/" + trackCode;
         },
 
         showLocalEvents: function() {
