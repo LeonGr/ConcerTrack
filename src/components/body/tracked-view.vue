@@ -730,7 +730,7 @@ $orange-yellow: #FF7E4A;
             <div id="tracked-artist-events-list" class="scrollable" v-if="showEvents && !showAllEvents">
                 <div
                     v-for="(event, index) in orderedEvents"
-                    v-bind:key="event"
+                    v-bind:key="index"
                     class="tracked-artist-event animated fadeInLeft"
                     :style="{ animationDelay: index * 0.1 + 's' }">
 
@@ -805,9 +805,6 @@ export default {
             artistImages: [],
             encodedLink: '',
             loading: true,
-            infoResolvedLast: false,
-            eventsResolvedLast: false,
-            startTime: 0,
             trackedArtists: [],
             removedArtist: '',
         }
@@ -823,7 +820,7 @@ export default {
         orderedEvents: function() {
             return _.orderBy(this.allLocalEvents, function(event) {
                 return new Date(event.datetime);
-            })
+            });
         }
     },
 
@@ -850,8 +847,6 @@ export default {
             return;
         }
 
-        this.startTime = new Date();
-
         let userCountry = localStorage.getItem('Country');
         if (userCountry) {
             this.countrySet = userCountry;
@@ -869,8 +864,7 @@ export default {
             return;
         }
 
-        this.getTrackedArtists()
-            .then(artistList => {
+        this.getTrackedArtists().then(artistList => {
                 this.trackedArtists = artistList;
                 store.saved.trackedArtists = artistList;
 
@@ -890,8 +884,8 @@ export default {
                 }
 
                 Promise.all(promises)
-                    .then(results => {
-                        console.log("All promises done", results);
+                    .then(() => {
+                        this.showLocalEvents();
 
                         store.saved.loaded = true;
                         this.loading = false;
@@ -956,16 +950,6 @@ export default {
 
                         this.allEvents.push(event);
                     });
-                }).then(() => {
-                    // If the information we're getting is the last artist from the list start a timeout
-                    if (artist == this.trackedArtists[this.trackedArtists.length - 1]) {
-                        this.eventsResolvedLast = true;
-
-                        if (!this.infoResolvedLast) return;
-
-
-                        this.showLocalEvents();
-                    }
 
                     resolve();
                 }).catch(error => {
@@ -983,15 +967,6 @@ export default {
                         "url": imageUrl
                     });
                 }).then(() => {
-                    if (artist == this.trackedArtists[this.trackedArtists.length - 1]) {
-                        this.infoResolvedLast = true;
-
-                        if (!this.eventsResolvedLast) return;
-
-                        this.showLocalEvents();
-
-                    }
-
                     resolve();
                 }).catch(error => {
                     reject(error);
@@ -1033,13 +1008,29 @@ export default {
                 this.allLocalEvents = [];
                 this.allEvents = [];
 
-                this.startTime = new Date();
+                const promises = [];
 
                 for(let i = 0, x = this.trackedArtists.length; i < x; i++) {
                     let artist = this.trackedArtists[i];
-                    this.getArtistInfo(artist);
-                    this.getArtistEvents(artist);
+
+                    let artistPromise = this.getArtistInfo(artist);
+                    let eventPromise = this.getArtistEvents(artist);
+
+                    promises.push(artistPromise);
+                    promises.push(eventPromise);
                 }
+
+                Promise.all(promises)
+                    .then((results) => {
+                        console.log("All promises done", results);
+
+                        // this.showLocalEvents();
+
+                        // store.saved.loaded = true;
+                        // this.loading = false;
+                    }).catch(errors => {
+                        console.error("Promise errors", errors);
+                    });
             }
         },
 
@@ -1080,27 +1071,20 @@ export default {
         },
 
         showLocalEvents: function() {
-            let endTime = new Date();
+            for(let i = 0, x = this.allLocalEvents.length; i < x; i++) {
+                let localEvent = this.allLocalEvents[i];
 
-            let timeTaken = endTime.getTime() - this.startTime.getTime();
+                for(let j = 0, y = this.artistImages.length; j < y; j++) {
+                    let artistImage = this.artistImages[j];
 
-            // Timeout because apis take some time to load
-            setTimeout(() => {
-                for(let i = 0, x = this.allLocalEvents.length; i < x; i++) {
-                    let localEvent = this.allLocalEvents[i];
-
-                    for(let j = 0, y = this.artistImages.length; j < y; j++) {
-                        let artistImage = this.artistImages[j];
-
-                        if (artistImage.artist.toLowerCase() == localEvent.lineup[0].toLowerCase()) {
-                            this.allLocalEvents[i].imageUrl = artistImage.url;
-                        }
+                    if (artistImage.artist.toLowerCase() == localEvent.lineup[0].toLowerCase()) {
+                        this.allLocalEvents[i].imageUrl = artistImage.url;
                     }
                 }
+            }
 
-                this.showEvents = true;
-                this.loading = false;
-            }, timeTaken / 10)
+            this.showEvents = true;
+            this.loading = false;
 
             store.saved.allLocalEvents = this.allLocalEvents;
             store.saved.artistImages = this.artistImages;

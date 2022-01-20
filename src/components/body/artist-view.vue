@@ -793,7 +793,7 @@ $orange-yellow: #FF7E4A;
                     <div class="list-header-mobile"> <p>Date</p> <p>Venue/Location</p> </div>
 
                     <div id="event-list" class="event-list" v-if="events.length && !showAllGlobal">
-                        <div  v-for="event in firstFiveGlobal" class="event-div" v-bind:key="event">
+                        <div  v-for="event in firstFiveGlobal" class="event-div" v-bind:key="event.datetime">
                             <p class="event-date">{{ event.datetime }}</p>
                             <p class="event-venue">{{ event.venue.name }}</p>
                             <p class="event-city">{{ event.venue.city }}, {{ event.venue.country }}</p>
@@ -811,7 +811,7 @@ $orange-yellow: #FF7E4A;
                     </div>
 
                     <div id="event-list" class="event-list" v-if="events.length && showAllGlobal">
-                        <div  v-for="event in events" class="event-div" v-bind:key="event">
+                        <div  v-for="event in events" class="event-div" v-bind:key="event.datetime">
                             <p class="event-date">{{ event.datetime }}</p>
                             <p class="event-venue">{{ event.venue.name }}</p>
                             <p class="event-city">{{ event.venue.city }}, {{ event.venue.country }}</p>
@@ -854,7 +854,7 @@ export default {
             countrySet: false,
             localEvents: [],
             tracking: false,
-            trackedArtists: {"list": []},
+            trackedArtists: [],
             showAllLocal: false,
             showAllGlobal: false
         }
@@ -865,9 +865,7 @@ export default {
         '$route' () {
             this.localEvents = [];
 
-            this.getAllInformation();
-
-            this.getTrackedArtists();
+            this.onLoad();
         }
     },
 
@@ -884,21 +882,27 @@ export default {
     created: function() {
         document.body.style.overflow = 'auto';
 
-        this.getAllInformation();
-
-        this.getTrackedArtists();
+        this.onLoad();
     },
 
     mounted: function() {
         // If the page loads for the first time get all information
-
         let userCountry = localStorage.getItem('Country');
+
         if (userCountry) {
             this.countrySet = userCountry;
         }
     },
 
     methods: {
+        onLoad: function() {
+            this.getTrackedArtists().then(() => {
+                this.getAllInformation();
+            }).catch(error => {
+                console.error(error);
+            });
+        },
+
         toggleMoreLessGlobal: function() {
             let list = document.getElementById('event-list');
             let scrollDistance = list.scrollTop;
@@ -926,38 +930,55 @@ export default {
         },
 
         getTrackedArtists: function() {
-            let trackedInfo =  JSON.parse(localStorage.getItem('Tracked'))
-            if (trackedInfo)
-                this.trackedArtists = trackedInfo;
+            let isTracking = (artist, trackedArtists) => {
+                this.tracking = false;
 
+                for(let i = 0, x = trackedArtists.length; i < x; i++) {
+                    let current = trackedArtists[i];
 
-            this.tracking = false;
-
-            for(let i = 0, x = this.trackedArtists.list.length; i < x; i++) {
-                let artist = this.trackedArtists.list[i]
-                if (artist.toLowerCase() == this.$route.params.artist.toLowerCase()) {
-                    this.tracking = true;
+                    if (current.toLowerCase() == artist.toLowerCase()) {
+                        this.tracking = true;
+                    }
                 }
             }
+
+            let artist = this.$route.params.artist;
+
+            return new Promise((resolve, reject) => {
+                if (store.saved.loaded) {
+                    this.trackedArtists = store.saved.trackedArtists;
+
+                    isTracking(artist, this.trackedArtists);
+
+                    resolve();
+                } else {
+                    let trackCode = localStorage.getItem("trackCode");
+                    store.getTrackedArtists(trackCode).then(artists => {
+                        this.trackedArtists = artists;
+
+                        isTracking(artist, this.trackedArtists);
+
+                        resolve();
+                    }).catch(error => {
+                        reject(error);
+                    });
+                }
+            });
         },
 
-        getAllInformation: function() {
-            this.getArtistEvents();
-            this.checkBandcampAccount();
-            this.getLastFMInfo();
+        getAllInformation: function(artist) {
+            this.getArtistInfo(artist);
+            this.getArtistEvents(artist);
+            this.checkBandcampAccount(artist);
+            this.getLastFMInfo(artist);
         },
 
-        getArtistEvents: function() {
-            // Store artist from url in local variable
-            this.artist = this.$route.params.artist
-
-            if(store.lastArtistEvents && store.lastArtistEvents.name.toLowerCase() == this.artist.toLowerCase()) {
+        getArtistEvents: function(artist) {
+            if(store.lastArtistEvents && store.lastArtistEvents.name.toLowerCase() == artist.toLowerCase()) {
                 this.events = store.lastArtistEvents.events;
                 this.localEvents = store.lastArtistEventsLocal.events;
-            }
-
-            else {
-                store.getEvents(this.artist).then(data => {
+            } else {
+                store.getEvents(artist).then(data => {
                     this.events = data;
 
                     this.events.forEach((event) => {
@@ -982,57 +1003,59 @@ export default {
 
                     store.lastArtistEvents = {
                         events: this.events,
-                        name: this.artist
-                    }
+                        name: artist,
+                    };
+
                     store.lastArtistEventsLocal = {
                         events: this.localEvents,
-                    }
-                })
-            }
-
-            if (store.lastArtist && store.lastArtist.name.toLowerCase() == this.artist.toLowerCase()){
-                this.artistInfo = store.lastArtist;
-            } else {
-                store.getArtistInfo(this.artist).then(data => {
-                    this.artistInfo = data;
-                    store.lastArtist = data;
+                    };
                 })
             }
         },
 
-        checkBandcampAccount: function() {
+        getArtistInfo: function(artist) {
+            if (store.lastArtist && store.lastArtist.name.toLowerCase() == artist.toLowerCase()){
+                this.artistInfo = store.lastArtist;
+
+                this.imageUrl = this.artistInfo.thumb_url;
+            } else {
+                store.getArtistInfo(artist).then(data => {
+                    this.artistInfo = data;
+                    store.lastArtist = data;
+
+                    this.imageUrl = this.artistInfo.thumb_url;
+                });
+            }
+        },
+
+        checkBandcampAccount: function(artist) {
             // Cant get results from bandcamp yet so we just redirect to the search page
-            this.bandcampUrl = "https://bandcamp.com/search?q=" + this.artist.toLowerCase();
+            this.bandcampUrl = "https://bandcamp.com/search?q=" + artist.toLowerCase();
         },
 
         // Get information from Last.fm API
-        getLastFMInfo: function() {
-            if (store.lastLastFMdata && store.lastLastFMdata.name.toLowerCase() == this.artist.toLowerCase()) {
+        getLastFMInfo: function(artist) {
+            if (store.lastLastFMdata && store.lastLastFMdata.name.toLowerCase() == artist.toLowerCase()) {
                 this.lastFMData = store.lastLastFMdata;
-                this.artist = this.lastFMData.name;
+                artist = this.lastFMData.name;
                 this.artistBio = this.lastFMData.bio.summary;
-                this.imageUrl = this.artistInfo.thumb_url;
 
                 window.document.title = 'ConcerTrack - ' + this.lastFMData.name;
-            }
-
-            else {
-                store.getLastFMData(this.artist).then(data => {
+            } else {
+                store.getLastFMData(artist).then(data => {
                     if (data.error){
                         throw data.message;
                     }
 
                     this.lastFMData = data.artist;
-                    this.artist = this.lastFMData.name;
+                    artist = this.lastFMData.name;
                     this.artistBio = this.lastFMData.bio.summary;
-                    this.imageUrl = this.artistInfo.thumb_url;
 
                     store.lastLastFMdata = this.lastFMData;
 
                     window.document.title = 'ConcerTrack - ' + this.lastFMData.name;
-                })
+                });
             }
-
         },
 
         callBackForm: function(callback, value) {
@@ -1050,7 +1073,7 @@ export default {
                     if (error.toString().includes("SyntaxError")) {
                         this.$children[1].errorMessage = "Sorry, we couldn't find that artist :(";
                     }
-                })
+                });
             } else if (callback == "countrySearch") {
                 let country = value;
                 localStorage.setItem('Country', country);
@@ -1080,14 +1103,14 @@ export default {
 
                 let inList = false;
 
-                for(let i = 0, x = this.trackedArtists.list.length; i < x; i++) {
-                    if (this.trackedArtists.list[i].toLowerCase() == artist.toLowerCase()) {
+                for(let i = 0, x = this.trackedArtists.length; i < x; i++) {
+                    if (this.trackedArtists[i].toLowerCase() == artist.toLowerCase()) {
                         inList = true;
                     }
                 }
 
                 if (!inList) {
-                    this.trackedArtists.list.push(artist);
+                    this.trackedArtists.push(artist);
 
                     let trackCode = localStorage.getItem("trackCode");
                     store.trackArtist(this.removedArtist, trackCode)
@@ -1099,9 +1122,10 @@ export default {
                 }
             } else {
                 this.tracking = false;
-                let index = this.trackedArtists.list.indexOf(this.lastFMData.name)
+                let index = this.trackedArtists.indexOf(this.lastFMData.name)
+
                 if (index != -1) {
-                    this.trackedArtists.list.splice(index, 1);
+                    this.trackedArtists.splice(index, 1);
 
                     let trackCode = localStorage.getItem("trackCode");
                     store.removeTrackedArtist(artist, trackCode)
@@ -1115,7 +1139,7 @@ export default {
                 }
             }
 
-            localStorage.setItem('Tracked', JSON.stringify(this.trackedArtists));
+            // localStorage.setItem('Tracked', JSON.stringify(this.trackedArtists));
 
             store.resetSaved();
         }
