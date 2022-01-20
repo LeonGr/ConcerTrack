@@ -808,7 +808,7 @@ export default {
             infoResolvedLast: false,
             eventsResolvedLast: false,
             startTime: 0,
-            trackedArtists: {"list": []},
+            trackedArtists: [],
             removedArtist: '',
         }
     },
@@ -852,20 +852,6 @@ export default {
 
         this.startTime = new Date();
 
-        // If the page loads for the first time get all information
-        let hasTrackedArtists = this.userHasTracked();
-
-        if (hasTrackedArtists) {
-            let artistList = this.getTrackedArtists();
-
-            this.trackedArtists = artistList;
-            store.saved.trackedArtists = artistList;
-        } else {
-            this.loading = false;
-        }
-
-        this.sortTrackedArtists();
-
         let userCountry = localStorage.getItem('Country');
         if (userCountry) {
             this.countrySet = userCountry;
@@ -874,14 +860,34 @@ export default {
             return;
         }
 
-        // Get events for each artists
-        for(let i = 0, x = this.trackedArtists.length; i < x; i++) {
-            let artist = this.trackedArtists[i];
-            this.getArtistInfo(artist);
-            this.getArtistEvents(artist);
+        // If the page loads for the first time get all information
+        let hasTrackedArtists = this.userHasTracked();
+
+        if (!hasTrackedArtists) {
+            this.loading = false;
+
+            return;
         }
 
-        store.saved.loaded = true;
+        this.getTrackedArtists()
+            .then(artistList => {
+                this.trackedArtists = artistList;
+                store.saved.trackedArtists = artistList;
+
+                this.sortTrackedArtists();
+
+                // Get events for each artists
+                for(let i = 0, x = this.trackedArtists.length; i < x; i++) {
+                    let artist = this.trackedArtists[i];
+                    this.getArtistInfo(artist);
+                    this.getArtistEvents(artist);
+                }
+
+                store.saved.loaded = true;
+                this.loading = false;
+            }).catch(error => {
+                console.log(error);
+            });
     },
 
     methods: {
@@ -907,7 +913,7 @@ export default {
             artistList.addEventListener("animationend", function() {
                 this.classList.remove('slideOutRight');
                 this.style.display = 'none';
-            })
+            });
         },
 
         getArtistEvents: function(artist) {
@@ -935,7 +941,7 @@ export default {
                     }
 
                     this.allEvents.push(event);
-                })
+                });
 
 
             }).then(() => {
@@ -1159,26 +1165,51 @@ export default {
 
         getTrackedArtists: function() {
             let trackCode = localStorage.getItem("trackCode");
-            let oldTrackedInfo = localStorage.getItem('Tracked');
+            let oldTrackedInfo = localStorage.getItem("Tracked");
 
-            if (oldTrackedInfo && trackCode) {
-                console.log("Has both:", trackCode, oldTrackedInfo);
-            } else if (trackCode) {
-                // get tracked from API
-            } else if (oldTrackedInfo) {
-                this.migrateArtists();
+            let getTrackedFromAPI = (code) => {
+                return store.getTrackedArtists(code)
+                    .then(response => {
+                        console.log("API response", response);
+                        return response;
+                    }).catch(error => {
+                        console.error(error);
+                    });
             }
 
+            if (trackCode) {
+                console.log("Has new");
 
-            let parsed = JSON.parse(oldTrackedInfo);
+                return getTrackedFromAPI(trackCode);
+            } else if (oldTrackedInfo) {
+                console.log("Only old");
+                let parsed = JSON.parse(oldTrackedInfo);
 
-            return parsed.list;
+                let newTrackCode = store.makeTrackCode();
+
+                this.migrateArtists(newTrackCode, parsed.list);
+
+                localStorage.setItem("trackCode", newTrackCode);
+
+                setTimeout(() => {
+                    location.reload();
+                }, 3000);
+            }
         },
 
-        migrateArtists: function() {
-            let newTrackCode = store.makeTrackCode();
-
+        migrateArtists: function(newTrackCode, artists) {
             console.log("New code:", newTrackCode);
+
+            for (let artist of artists) {
+                console.log(artist);
+
+                store.trackArtist(artist, newTrackCode)
+                    .then(response => {
+                        console.log(artist, response);
+                    }).catch(error => {
+                        console.error(artist, error);
+                    });
+            }
         }
     }
 }

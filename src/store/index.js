@@ -17,6 +17,48 @@ let store = {}
 
 export default store;
 
+const bandInTownAPI = "https://rest.bandsintown.com/";
+const appID = "?app_id=ConcerTrack v0.0.1";
+
+const apiURL = "http://io.lhax.xyz:8000/"
+// const apiURL = "http://localhost:8000/"
+
+let get = function(resource) {
+    return new Promise((resolve, reject) => {
+        fetch(resource, {
+            method: "GET",
+            headers: {
+                "accept": "application/json",
+            }
+        }).then(response => {
+            return response.json()
+        }).then(response => {
+            resolve(response);
+        }).catch(error => {
+            reject(error);
+        })
+    });
+};
+
+let post = function(resource, body) {
+    console.log("body", JSON.stringify(body));
+
+    return new Promise((resolve, reject) => {
+        fetch(resource, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "accept": "application/json",
+            },
+            body: body,
+        }).then(response => {
+            resolve(response);
+        }).catch(error => {
+            reject(error);
+        })
+    });
+}
+
 // Check if we get a response from BIT API for supplied artist name
 store.doesArtistExist = function(artist) {
     if (artist.toLowerCase() == "leon grasmeijer") {
@@ -26,23 +68,9 @@ store.doesArtistExist = function(artist) {
 
     artist = artist.replace("'", "");
 
-    const apiURL = "https://rest.bandsintown.com/"
-    const apiExtension = "?app_id=ConcerTrack v0.0.1"
+    let resource = bandInTownAPI + "artists/" + artist + appID;
 
-    return new Promise((resolve, reject) => {
-        fetch(apiURL + "artists/" + artist + apiExtension, {
-            method: 'GET',
-            headers: {
-                'accept': "application/json"
-            }
-        }).then(response => {
-            return response.json()
-        }).then(response => {
-            resolve(response);
-        }).catch(error => {
-            reject(error);
-        })
-    })
+    return get(resource);
 }
 
 /* Data:
@@ -68,25 +96,11 @@ venue: object with information about venue
 */
 
 store.getEvents = (artist) => {
-    const apiURL = "https://rest.bandsintown.com/"
-    const apiExtension = "?app_id=ConcerTrack v0.0.1"
-
     artist = artist.replace("'", "");
 
-    return new Promise((resolve, reject) => {
-        fetch(apiURL + "artists/" + artist + "/events" + apiExtension, {
-            method: 'GET',
-            headers: {
-                'accept': "application/json"
-            }
-        }).then(response => {
-            return response.json()
-        }).then(response => {
-            resolve(response);
-        }).catch(error => {
-            reject(error);
-        })
-    })
+    let resource = bandInTownAPI + "artists/" + artist + "/events" + appID;
+
+    return get(resource);
 }
 
 /* Data:
@@ -100,25 +114,11 @@ upcoming_event_count: number of upcoming events
 url: link to BIT page of artist
 */
 store.getArtistInfo = (artist) => {
-    const apiURL = "https://rest.bandsintown.com/"
-    const apiExtension = "?app_id=ConcerTrack v0.0.1"
-
     artist = artist.replace("'", "");
 
-    return new Promise((resolve, reject) => {
-        fetch(apiURL + "artists/" + artist + apiExtension, {
-            method: 'GET',
-            headers: {
-                'accept': "application/json"
-            }
-        }).then(response => {
-            return response.json()
-        }).then(response => {
-            resolve(response);
-        }).catch(error => {
-            reject(error);
-        })
-    })
+    let resource = bandInTownAPI + "artists/" + artist + appID;
+
+    return get(resource);
 }
 
 
@@ -143,25 +143,13 @@ store.getLastFMData = (artist) => {
     // Encode so lastfm doesn't get trouble with names with for example &
     let artistName = encodeURIComponent(artist);
 
-    let apiUrl = "https://ws.audioscrobbler.com/2.0/"
+    let lastFmAPI = "https://ws.audioscrobbler.com/2.0/"
     let apiParams = "?method=artist.getinfo&api_key=a4629fdacfd93267704f599b874a59bf&format=json&artist="
 
-    return new Promise((resolve, reject) => {
-        fetch(apiUrl + apiParams + artistName, {
-            method: 'GET',
-            headers: {
-                'accept': "application/json"
-            }
-        }).then(response => {
-            return response.json()
-        }).then(response => {
-            resolve(response);
-        }).catch(error => {
-            reject(error);
-        })
-    })
-}
+    let resource = lastFmAPI + apiParams + artistName;
 
+    return get(resource);
+}
 
 
 // Save tracked artists to save data usage
@@ -192,6 +180,20 @@ store.lastLastFMdata;
 
 // Artist list
 store.autocompleteList = {};
+
+store.trackArtist = function(artist, trackCode) {
+    let resource = apiURL + "tracked/" + trackCode;
+
+    console.log("POST:", resource, artist);
+
+    return post(resource, artist);
+};
+
+store.getTrackedArtists = function(trackCode) {
+    let resource = apiURL + "tracked/" + trackCode;
+
+    return get(resource);
+}
 
 // Generate a random alphabetical string of length 32 to be used as trackCode
 store.makeTrackCode = function() {

@@ -60,10 +60,11 @@ export default {
     props: {
         title: String,
         placeholder: String,
-        data: Object,
-        callback: function() {
-            return {}
-        },
+        data: String,
+        //callback: function() {
+            //return {}
+        //},
+        callback: String,
         submitText: String,
     },
 
