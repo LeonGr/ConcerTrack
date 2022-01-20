@@ -88,8 +88,11 @@ $orange-yellow: #FF7E4A;
             <h1>Privacy</h1>
 
             <p>
-                We respect your privacy and do not collect any data about our users. The artists you track are saved only in the local storage of your browser. <br>
-                However, ConcerTrack is hosted using <a href="https://pages.github.com/">Github Pages</a>, and GitHub may collect some personal information, such as the IP addresses of visitors. <br>
+                We respect your privacy and do not collect any identifying information about our users.
+                <br>
+                The artists you track are saved with a random identification code, when you enter our website only this code is sent to our server to retrieve your tracked artists.
+                <br>
+                However, the ConcerTrack website is hosted using <a href="https://pages.github.com/">Github Pages</a>, and GitHub may collect some personal information, such as the IP addresses of visitors. <br>
                 <a href="https://docs.github.com/en/free-pro-team@latest/github/site-policy/github-privacy-statement#github-pages">Github's privacy statement relating to Github Pages</a>.
             </p>
         </div>
