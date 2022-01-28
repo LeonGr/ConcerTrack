@@ -51,6 +51,14 @@ $orange-yellow: #FF7E4A;
                 display: none;
             }
 
+            #error-message {
+                margin: 15px 30px;
+                color: $orange-red;
+                font-weight: bold;
+                text-align: center;
+                width: calc(50% - 60px);
+            }
+
             .normal-button {
                 width: calc(50% - 60px);
                 margin: 0 30px 0 30px;
@@ -422,6 +430,14 @@ $orange-yellow: #FF7E4A;
                     }
                 }
 
+                #error-message-container {
+                    width: 100%;
+
+                    #error-message {
+                        width: calc(100% - 60px);
+                    }
+                }
+
                 #info-container {
                     #info-wrapper {
                         width: 100%;
@@ -696,22 +712,30 @@ $orange-yellow: #FF7E4A;
                             {{ artistBio }}
                         </p>
 
-                        <button id="track-button-tracked" class="mobile-button" v-if="tracking" v-on:click="toggleTrackArtist">
-                            Stop Tracking
-                        </button>
-                        <button id="track-button" class="mobile-button" v-else v-on:click="toggleTrackArtist">
-                            Track Artist
-                        </button>
+                        <div v-if="apiAvailable">
+                            <button id="track-button-tracked" class="mobile-button" v-if="tracking" v-on:click="toggleTrackArtist">
+                                Stop Tracking
+                            </button>
+                            <button id="track-button" class="mobile-button" v-else v-on:click="toggleTrackArtist">
+                                Track Artist
+                            </button>
+                        </div>
                     </div>
                 </div>
 
 
-                <button id="track-button-tracked" class="normal-button" v-if="tracking" v-on:click="toggleTrackArtist">
-                    Stop Tracking
-                </button>
-                <button id="track-button" class="normal-button" v-else v-on:click="toggleTrackArtist">
-                    Track Artist
-                </button>
+                <div v-if="apiAvailable">
+                    <button id="track-button-tracked" class="normal-button" v-if="tracking" v-on:click="toggleTrackArtist">
+                        Stop Tracking
+                    </button>
+                    <button id="track-button" class="normal-button" v-else v-on:click="toggleTrackArtist">
+                        Track Artist
+                    </button>
+                </div>
+                <div v-else id="error-message-container">
+                    <p id="error-message">{{ errorMessage }}</p>
+                </div>
+
                 <p v-if="lastFMData" v-html="artistBio" id="mobile-bio">
                     {{ artistBio }}
                 </p>
@@ -843,6 +867,7 @@ export default {
     data: function() {
         return {
             // Init local variables
+            apiAvailable: false,
             artist: '',
             artistInfo: {},
             bandcampUrl: '',
@@ -896,10 +921,20 @@ export default {
 
     methods: {
         onLoad: function() {
+            let getArtistInfo = () => {
+                let artist = this.$route.params.artist;
+                this.getAllInformation(artist);
+            };
+
             this.getTrackedArtists().then(() => {
-                this.getAllInformation();
+                this.apiAvailable = true;
+                getArtistInfo();
             }).catch(error => {
                 console.error(error);
+
+                this.apiAvailable = false;
+                this.errorMessage = "Tracking unavailable, could not reach server."
+                getArtistInfo();
             });
         },
 

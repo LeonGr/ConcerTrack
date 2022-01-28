@@ -27,6 +27,11 @@ $orange-yellow: #FF7E4A;
     color: #222;
     position: relative;
 
+    .error {
+        color: $orange-red;
+        font-weight: bold;
+    }
+
     #undo-notification {
         border-left: 5px solid $orange-yellow;
         padding: 15px 5px;
@@ -750,22 +755,28 @@ $orange-yellow: #FF7E4A;
             </div>
 
             <div id="tracked-artist-events-placeholder" v-else>
+
                 <div class="message-div" v-if="loading && countrySet">
                     Loading events...
-                </div>
-
-                <div class="message-div" v-if="showEvents && !orderedEvents.length && countrySet">
-                    No local events :(
                 </div>
 
                 <div class="message-div" v-if="!countrySet">
                     Choose a location to see local events.
                 </div>
 
-                <div class="message-div" v-if="countrySet && !trackedArtists.length">
-                    No tracked artists.
-                </div>
 
+                <div v-if="apiAvailable">
+                    <div class="message-div" v-if="showEvents && !orderedEvents.length && countrySet">
+                        No local events :(
+                    </div>
+
+                    <div class="message-div" v-if="countrySet && !trackedArtists.length">
+                        No tracked artists.
+                    </div>
+                </div>
+                <div v-else class="message-div error">
+                    {{ errorMessage }}
+                </div>
             </div>
 
             <!--Show list of all tracked artists if there's any.-->
@@ -779,10 +790,6 @@ $orange-yellow: #FF7E4A;
                     </span>
                 </div>
             </div>
-
-            <!--<div>-->
-                <!--<img v-for="image in artistImages" :src="image.url" class="artist-image" :alt="image.artist">-->
-            <!--</div>-->
         </div>
     </div>
 </template>
@@ -795,6 +802,8 @@ export default {
     data: function() {
         return {
             // Init local variables
+            apiAvailable: false,
+            errorMessage: "",
             events: {},
             allEvents: [],
             allLocalEvents: [],
@@ -889,11 +898,16 @@ export default {
 
                         store.saved.loaded = true;
                         this.loading = false;
+                        this.apiAvailable = true;
                     }).catch(errors => {
                         console.error("Promise errors", errors);
                     });
             }).catch(error => {
-                console.log(error);
+                console.error(error);
+
+                this.loading = false;
+                this.apiAvailable = false;
+                this.errorMessage = "Could not retrieve tracked artists.";
             });
     },
 
@@ -1195,12 +1209,20 @@ export default {
             let oldTrackedInfo = localStorage.getItem("Tracked");
 
             let getTrackedFromAPI = (code) => {
-                return store.getTrackedArtists(code)
-                    .then(response => {
-                        return response;
-                    }).catch(error => {
-                        console.error(error);
-                    });
+                return new Promise((resolve, reject) => {
+                    store.getTrackedArtists(code)
+                        .then(response => {
+                            resolve(response);
+                        }).catch(error => {
+                            reject(error);
+                        });
+                });
+                // return store.getTrackedArtists(code)
+                //     .then(response => {
+                //         return response;
+                //     }).catch(error => {
+                //         console.error(error);
+                //     });
             }
 
             if (trackCode) {
