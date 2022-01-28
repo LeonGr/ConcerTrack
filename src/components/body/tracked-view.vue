@@ -736,7 +736,8 @@ $orange-yellow: #FF7E4A;
                 <div
                     v-for="(event, index) in orderedEvents"
                     v-bind:key="index"
-                    class="tracked-artist-event animated fadeInLeft"
+                    class="tracked-artist-event fadeInLeft"
+                    v-bind:class="{'animated':(animate)}"
                     :style="{ animationDelay: index * 0.1 + 's' }">
 
                     <img :src="event.imageUrl" :alt="event.lineup[0]" class="artist-image">
@@ -802,6 +803,7 @@ export default {
     data: function() {
         return {
             // Init local variables
+            animate: true,
             apiAvailable: false,
             errorMessage: "",
             events: {},
@@ -852,6 +854,7 @@ export default {
             this.artistImages = store.saved.artistImages;
             this.loading = false;
             this.showEvents = true;
+            this.animate = false;
 
             return;
         }
