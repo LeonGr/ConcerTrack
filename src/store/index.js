@@ -41,8 +41,6 @@ let getRequest = function(resource) {
 };
 
 let postRequest = function(resource, body) {
-    console.log("body", JSON.stringify(body));
-
     return new Promise((resolve, reject) => {
         fetch(resource, {
             method: "POST",

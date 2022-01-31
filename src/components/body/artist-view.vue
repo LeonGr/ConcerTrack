@@ -1148,7 +1148,7 @@ export default {
                     this.trackedArtists.push(artist);
 
                     let trackCode = localStorage.getItem("trackCode");
-                    store.trackArtist(this.removedArtist, trackCode)
+                    store.trackArtist(artist, trackCode)
                         .then(response => {
                             console.log(response);
                         }).catch(error => {
