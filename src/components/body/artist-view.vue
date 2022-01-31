@@ -872,6 +872,7 @@ export default {
             artistInfo: {},
             bandcampUrl: '',
             events: [],
+            errorMessage: "",
             lastFMData: {},
             artistBio: '',
             onTour: false,
