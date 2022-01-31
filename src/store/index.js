@@ -41,6 +41,8 @@ let getRequest = function(resource) {
 };
 
 let postRequest = function(resource, body) {
+    console.log("post:", body);
+
     return new Promise((resolve, reject) => {
         fetch(resource, {
             method: "POST",
@@ -58,7 +60,7 @@ let postRequest = function(resource, body) {
 };
 
 let deleteRequest = function(resource, body) {
-    console.log("body", JSON.stringify(body));
+    console.log("delete: ", body);
 
     return new Promise((resolve, reject) => {
         fetch(resource, {
