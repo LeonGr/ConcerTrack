@@ -989,15 +989,25 @@ export default {
                     resolve();
                 } else {
                     let trackCode = localStorage.getItem("trackCode");
-                    store.getTrackedArtists(trackCode).then(artists => {
-                        this.trackedArtists = artists;
 
-                        isTracking(artist, this.trackedArtists);
+                    if (trackCode) {
+                        store.getTrackedArtists(trackCode).then(artists => {
+                            this.trackedArtists = artists;
+
+                            isTracking(artist, this.trackedArtists);
+
+                            resolve();
+                        }).catch(error => {
+                            reject(error);
+                        });
+                    } else {
+                        console.log("No track code");
+                        let newTrackCode = store.makeTrackCode();
+
+                        localStorage.setItem("trackCode", newTrackCode);
 
                         resolve();
-                    }).catch(error => {
-                        reject(error);
-                    });
+                    }
                 }
             });
         },

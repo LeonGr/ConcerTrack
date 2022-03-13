@@ -757,27 +757,35 @@ $orange-yellow: #FF7E4A;
 
             <div id="tracked-artist-events-placeholder" v-else>
 
-                <div class="message-div" v-if="loading && countrySet">
-                    Loading events...
-                </div>
-
-                <div class="message-div" v-if="!countrySet">
-                    Choose a location to see local events.
-                </div>
-
-
-                <div v-if="apiAvailable">
-                    <div class="message-div" v-if="showEvents && !orderedEvents.length && countrySet">
-                        No local events :(
+                <span v-if="!apiAvailable">
+                    <div class="message-div error">
+                        {{ errorMessage }}
+                    </div>
+                </span>
+                <span v-else>
+                    <div class="message-div" v-if="loading && countrySet">
+                        Loading events...
                     </div>
 
-                    <div class="message-div" v-if="countrySet && !trackedArtists.length">
-                        No tracked artists.
+                    <div class="message-div" v-if="!countrySet">
+                        Choose a location to see local events.
                     </div>
-                </div>
-                <div v-else class="message-div error">
-                    {{ errorMessage }}
-                </div>
+
+
+                    <div v-if="apiAvailable">
+                        <div class="message-div" v-if="showEvents && !orderedEvents.length && countrySet">
+                            No local events :(
+                        </div>
+
+                        <div class="message-div" v-if="countrySet && !trackedArtists.length">
+                            No tracked artists.
+                        </div>
+                    </div>
+                </span>
+
+                <!-- <div v-else class="message-div error"> -->
+                    <!-- {{ errorMessage }} -->
+                <!-- </div> -->
             </div>
 
             <!--Show list of all tracked artists if there's any.-->
@@ -863,9 +871,10 @@ export default {
         if (userCountry) {
             this.countrySet = userCountry;
             store.saved.countrySet = this.countrySet;
-        } else {
-            return;
         }
+        // else {
+        //     return;
+        // }
 
         // If the page loads for the first time get all information
         let hasTrackedArtists = this.userHasTracked();
@@ -873,7 +882,8 @@ export default {
         if (!hasTrackedArtists) {
             this.loading = false;
 
-            return;
+            let newTrackCode = store.makeTrackCode();
+            localStorage.setItem("trackCode", newTrackCode);
         }
 
         this.getTrackedArtists().then(artistList => {
@@ -1220,12 +1230,6 @@ export default {
                             reject(error);
                         });
                 });
-                // return store.getTrackedArtists(code)
-                //     .then(response => {
-                //         return response;
-                //     }).catch(error => {
-                //         console.error(error);
-                //     });
             }
 
             if (trackCode) {
