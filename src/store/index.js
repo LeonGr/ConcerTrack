@@ -20,8 +20,8 @@ export default store;
 const bandInTownAPI = "https://rest.bandsintown.com/";
 const appID = "?app_id=ConcerTrack v0.0.1";
 
-const apiURL = "https://io.lhax.xyz:5000/"
-// const apiURL = "http://localhost:5000/"
+// const apiURL = "https://io.lhax.xyz:5000/"
+const apiURL = "http://localhost:5000/"
 
 let getRequest = function(resource) {
     return new Promise((resolve, reject) => {
@@ -41,8 +41,6 @@ let getRequest = function(resource) {
 };
 
 let postRequest = function(resource, body) {
-    console.log("post:", body);
-
     return new Promise((resolve, reject) => {
         fetch(resource, {
             method: "POST",
@@ -60,8 +58,6 @@ let postRequest = function(resource, body) {
 };
 
 let deleteRequest = function(resource, body) {
-    console.log("delete: ", body);
-
     return new Promise((resolve, reject) => {
         fetch(resource, {
             method: "DELETE",
@@ -230,4 +226,20 @@ store.makeTrackCode = function() {
     }
 
     return trackCode;
+}
+
+store.migrateArtists = async function(newTrackCode, artists) {
+    const promises = [];
+
+    for (let artist of artists) {
+        let trackArtist = store.trackArtist(artist, newTrackCode);
+        promises.push(trackArtist);
+    }
+
+    try {
+        await Promise.all(promises);
+        console.log("Migrating done");
+    } catch (errors) {
+        console.error("Promise errors", errors);
+    }
 }

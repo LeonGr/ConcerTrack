@@ -42,7 +42,9 @@ $orange-yellow: #FF7E4A;
             }
 
             #artist-image {
-                width: calc(50% - 60px);
+                // width: calc(50% - 60px);
+                width: calc(25vw - 60px);
+                height: calc(25vw - 60px);
                 box-shadow: 0 4px 9px 0 rgba(0, 0, 0, 0.3);
                 margin: 30px 30px 0 30px;
             }
@@ -685,6 +687,7 @@ $orange-yellow: #FF7E4A;
         <div id="output">
             <div id="left-side">
                 <img :src="imageUrl" :alt="lastFMData.name" v-if="imageUrl" id="artist-image">
+                <img v-else id="artist-image">
 
                 <div id="img-container">
                     <img :src="imageUrl" alt="" v-if="imageUrl" id="artist-image-mobile">
@@ -982,31 +985,54 @@ export default {
 
             return new Promise((resolve, reject) => {
                 if (store.saved.loaded) {
+                    console.log("store")
                     this.trackedArtists = store.saved.trackedArtists;
 
                     isTracking(artist, this.trackedArtists);
 
                     resolve();
                 } else {
+                    console.log("new")
                     let trackCode = localStorage.getItem("trackCode");
+                    let oldTrackedInfo = localStorage.getItem("Tracked");
+
+                    let getTrackedFromAPI = (code) => {
+                        return new Promise((resolve, reject) => {
+                            store.getTrackedArtists(code)
+                                .then(response => {
+                                    resolve(response);
+                                }).catch(error => {
+                                    reject(error);
+                                });
+                        });
+                    }
 
                     if (trackCode) {
-                        store.getTrackedArtists(trackCode).then(artists => {
-                            this.trackedArtists = artists;
+                        getTrackedFromAPI(trackCode)
+                            .then(response => {
+                                this.trackedArtists = response;
+                                isTracking(artist, this.trackedArtists);
 
-                            isTracking(artist, this.trackedArtists);
+                                resolve()
+                            }).catch(error => {
+                                reject(error);
+                            });
+                    } else if (oldTrackedInfo) {
+                        let parsed = JSON.parse(oldTrackedInfo);
 
-                            resolve();
-                        }).catch(error => {
-                            reject(error);
-                        });
-                    } else {
-                        console.log("No track code");
                         let newTrackCode = store.makeTrackCode();
 
+                        store.migrateArtists(newTrackCode, parsed.list)
+                            .then(() => {
+                                localStorage.setItem("trackCode", newTrackCode);
+
+                                location.reload();
+                            }).catch(() => {})
+                    } else {
+                        let newTrackCode = store.makeTrackCode();
                         localStorage.setItem("trackCode", newTrackCode);
 
-                        resolve();
+                        location.reload();
                     }
                 }
             });

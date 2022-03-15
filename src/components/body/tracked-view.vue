@@ -179,6 +179,7 @@ $orange-yellow: #FF7E4A;
                 height: calc(100% - 50px);
                 overflow-y: scroll;
                 scroll-behavior: smooth;
+                box-shadow: 0 2px 6px 2px rgba(0, 0, 0, 0.3);
 
                 span {
                     display: block;
@@ -732,7 +733,12 @@ $orange-yellow: #FF7E4A;
 
             </div>
 
-            <div id="tracked-artist-events-list" class="scrollable" v-if="showEvents && !showAllEvents">
+            <div id="tracked-artist-events-placeholder" v-if="loading">
+                <div class="message-div">
+                    Loading events...
+                </div>
+            </div>
+            <div id="tracked-artist-events-list" class="scrollable" v-else-if="showEvents && orderedEvents.length">
                 <div
                     v-for="(event, index) in orderedEvents"
                     v-bind:key="index"
@@ -754,25 +760,21 @@ $orange-yellow: #FF7E4A;
                     </div>
                 </div>
             </div>
-
             <div id="tracked-artist-events-placeholder" v-else>
-
                 <span v-if="!apiAvailable">
-                    <div class="message-div error">
+                    <div class="message-div error" v-if="errorMessage">
                         {{ errorMessage }}
                     </div>
                 </span>
                 <span v-else>
-                    <div class="message-div" v-if="loading && countrySet">
-                        Loading events...
+                    <div class="message-div" v-if="!trackedArtists.length">
+                        No tracked artists.
                     </div>
+                    <span v-else>
+                        <div class="message-div" v-if="!countrySet">
+                            Choose a location to see local events.
+                        </div>
 
-                    <div class="message-div" v-if="!countrySet">
-                        Choose a location to see local events.
-                    </div>
-
-
-                    <div v-if="apiAvailable">
                         <div class="message-div" v-if="showEvents && !orderedEvents.length && countrySet">
                             No local events :(
                         </div>
@@ -780,12 +782,8 @@ $orange-yellow: #FF7E4A;
                         <div class="message-div" v-if="countrySet && !trackedArtists.length">
                             No tracked artists.
                         </div>
-                    </div>
+                    </span>
                 </span>
-
-                <!-- <div v-else class="message-div error"> -->
-                    <!-- {{ errorMessage }} -->
-                <!-- </div> -->
             </div>
 
             <!--Show list of all tracked artists if there's any.-->
@@ -820,7 +818,6 @@ export default {
             countrySet: false,
             localEvents: [],
             showEvents: false,
-            showAllEvents: false,
             artistImages: [],
             encodedLink: '',
             loading: true,
@@ -872,16 +869,11 @@ export default {
             this.countrySet = userCountry;
             store.saved.countrySet = this.countrySet;
         }
-        // else {
-        //     return;
-        // }
 
         // If the page loads for the first time get all information
-        let hasTrackedArtists = this.userHasTracked();
+        let hasTrackCode = this.userHasTrackCode();
 
-        if (!hasTrackedArtists) {
-            this.loading = false;
-
+        if (!hasTrackCode) {
             let newTrackCode = store.makeTrackCode();
             localStorage.setItem("trackCode", newTrackCode);
         }
@@ -1050,11 +1042,6 @@ export default {
                 Promise.all(promises)
                     .then((results) => {
                         console.log("All promises done", results);
-
-                        // this.showLocalEvents();
-
-                        // store.saved.loaded = true;
-                        // this.loading = false;
                     }).catch(errors => {
                         console.error("Promise errors", errors);
                     });
@@ -1206,7 +1193,7 @@ export default {
             })
         },
 
-        userHasTracked: function() {
+        userHasTrackCode: function() {
             let oldTrackedInfo = localStorage.getItem('Tracked');
             let trackCode = localStorage.getItem("trackCode");
 
@@ -1221,44 +1208,32 @@ export default {
             let trackCode = localStorage.getItem("trackCode");
             let oldTrackedInfo = localStorage.getItem("Tracked");
 
-            let getTrackedFromAPI = (code) => {
-                return new Promise((resolve, reject) => {
+            return new Promise((resolve, reject) => {
+                let getTrackedFromAPI = (code) => {
                     store.getTrackedArtists(code)
                         .then(response => {
                             resolve(response);
                         }).catch(error => {
                             reject(error);
                         });
-                });
-            }
+                }
 
-            if (trackCode) {
-                return getTrackedFromAPI(trackCode);
-            } else if (oldTrackedInfo) {
-                let parsed = JSON.parse(oldTrackedInfo);
+                if (trackCode) {
+                    return getTrackedFromAPI(trackCode);
+                } else if (oldTrackedInfo) {
+                    let parsed = JSON.parse(oldTrackedInfo);
 
-                let newTrackCode = store.makeTrackCode();
+                    let newTrackCode = store.makeTrackCode();
 
-                this.migrateArtists(newTrackCode, parsed.list);
+                    store.migrateArtists(newTrackCode, parsed.list)
+                        .then(() => {
+                            localStorage.setItem("trackCode", newTrackCode);
 
-                localStorage.setItem("trackCode", newTrackCode);
-
-                setTimeout(() => {
-                    location.reload();
-                }, 3000);
-            }
+                            location.reload();
+                        }).catch(() => {})
+                }
+            });
         },
-
-        migrateArtists: function(newTrackCode, artists) {
-            for (let artist of artists) {
-                store.trackArtist(artist, newTrackCode)
-                    .then(response => {
-                        console.log(artist, response);
-                    }).catch(error => {
-                        console.error(artist, error);
-                    });
-            }
-        }
     }
 }
 </script>
