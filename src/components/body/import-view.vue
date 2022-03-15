@@ -128,6 +128,8 @@ export default {
 
             this.$router.push({ path: "/tracked" });
             alert("Import Successful");
+
+            location.reload();
         },
 
         goBack: function() {
