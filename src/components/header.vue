@@ -555,7 +555,7 @@ export default {
                 let artist = value;
 
                 // Check if we get a response from BIT API before we redirect
-                store.doesArtistExist(artist).then(data => {
+                store.getArtist(artist).then(data => {
                     this.showSearchMobile = false;
 
                     // Store new data
@@ -567,7 +567,7 @@ export default {
                     }
                 }).catch(error => {
                     // If we get an error that means the artist has not been found
-                    if (error.toString().includes("SyntaxError")) {
+                    if (error.toString().includes("SyntaxError") || error === "Artist not found") {
 
                         for(let i = 0, x = this.$children.length; i < x; i++) {
 

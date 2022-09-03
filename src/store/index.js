@@ -75,7 +75,7 @@ let deleteRequest = function(resource, body) {
 }
 
 // Check if we get a response from BIT API for supplied artist name
-store.doesArtistExist = function(artist) {
+store.getArtist = function(artist) {
     if (artist.toLowerCase() == "leon grasmeijer") {
         this.$router.push({ path: "/" + "artists/" + "Leon Grasmeijer" })
         return;
@@ -85,7 +85,17 @@ store.doesArtistExist = function(artist) {
 
     let resource = bandInTownAPI + "artists/" + artist + appID;
 
-    return getRequest(resource);
+    return new Promise((resolve, reject) => {
+        getRequest(resource).then(artistInfo => {
+            if (artistInfo.name) {
+                resolve(artistInfo);
+            } else {
+                reject("Artist not found");
+            }
+        }).catch(error => {
+            reject(error);
+        })
+    })
 }
 
 /* Data:

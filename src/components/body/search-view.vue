@@ -49,7 +49,7 @@ $orange-yellow: #FF7E4A;
     justify-content: space-around;
     flex-direction: column;
 
-    background:linear-gradient(0deg,rgba(240, 68, 58, 0.7),rgba(240, 68, 58, 0.7)), url("/static/musician.jpg");
+    background: linear-gradient(0deg,rgba(240, 68, 58, 0.7),rgba(240, 68, 58, 0.7)), url("/static/musician.jpg");
     background-size: cover;
     background-repeat: no-repeat;
 
@@ -418,7 +418,7 @@ export default {
                 let artist = value;
 
                 // Check if we get a response from BIT API before we redirect
-                store.doesArtistExist(artist).then(data => {
+                store.getArtist(artist).then(data => {
                     // Store new data
                     store.lastArtist = data;
 
@@ -428,8 +428,8 @@ export default {
                     }
                 }).catch(error => {
                     // If we get an error that means the artist has not been found
-                    if (error.toString().includes("SyntaxError")) {
-                        for(let i = 0, x = this.$children.length; i < x; i++) {
+                    if (error.toString().includes("SyntaxError") || error === "Artist not found") {
+                        for (let i = 0, x = this.$children.length; i < x; i++) {
 
                             let child = this.$children[i];
 
@@ -437,7 +437,8 @@ export default {
                                 child.inputValue = artist;
                                 child.errorMessage = "Sorry, we couldn't find that artist :("
                             }
-                        }                    }
+                        }
+                    }
                 })
             }
         },

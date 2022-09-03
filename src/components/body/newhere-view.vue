@@ -291,11 +291,11 @@ export default {
                 let artist = value.toLowerCase();
 
                 // Check if we get a response from BIT API before we redirect
-                store.doesArtistExist(artist).then(() => {
+                store.getArtist(artist).then(() => {
                     this.getLastFMInfo(artist);
                 }).catch(error => {
                     // If we get an error that means the artist has not been found
-                    if (error.toString().includes("SyntaxError")) {
+                    if (error.toString().includes("SyntaxError") || error === "Artist not found") {
                          showErrorMessage("Sorry, we couldn't find that artist :(");
                     }
                 })

@@ -1135,14 +1135,14 @@ export default {
                 let artist = value;
 
                 // Check if we get a response from BIT API before we redirect
-                store.doesArtistExist(artist).then(data => {
+                store.getArtist(artist).then(data => {
                     // If the response contains an ID redirect to artist-view
                     if (data.id) {
                         this.$router.push({ path: "/" + "artists/" + artist })
                     }
                 }).catch(error => {
                     // If we get an error that means the artist has not been found
-                    if (error.toString().includes("SyntaxError")) {
+                    if (error.toString().includes("SyntaxError") || error === "Artist not found") {
                         this.$children[1].errorMessage = "Sorry, we couldn't find that artist :(";
                     }
                 });
